@@ -1,16 +1,19 @@
 ﻿
 #include "toolsForMannga.h"
 
+std::string path;
+const std::array<int, 2> WINDOW_SIZE_USER = { GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN) };
+
 int getMiddleOfHight(int height)
 {
-	int y = (WINDOW_SIZE[1] - height) / 2;
+	int y = (WINDOW_SIZE_USER[1] - height) / 2;
 	return y;
 }
 
 int getMiddleOfWidth(int width, bool isLeftOrRight)
 {
 	int x = 0;
-	int m = WINDOW_SIZE[0] / 2;
+	int m = WINDOW_SIZE_USER[0] / 2;
 	isLeftOrRight ? x = m - width : x = m;
 	return x;
 }
