@@ -1,5 +1,10 @@
 ﻿
 #include "ManngaBook.h"
+#include <Windows.h>
+#include <commdlg.h>
+#include <ShlObj.h>
+#include <conio.h>
+
 
 ManngaBook::ManngaBook() : hwnd(nullptr), imgLeft(), imgRight(), n(0.475)//n(0.775)
 {
@@ -13,8 +18,25 @@ void ManngaBook::readBook()
 {
 	initBook();
 
-	int c = 0;
 	int p = 2;
+
+	char path_ch[4096];
+
+	BROWSEINFO bInfo = { 0 };
+	bInfo.hwndOwner = GetForegroundWindow(); //父窗口
+	bInfo.lpszTitle = TEXT("Browse File Folder");
+	bInfo.ulFlags = BIF_RETURNONLYFSDIRS | BIF_USENEWUI /*包含一个编辑框 用户可以手动填写路径 对话框可以调整大小之类的..*/ |
+		BIF_UAHINT /*带TIPS提示*/;
+	LPITEMIDLIST lpDlist;
+	lpDlist = SHBrowseForFolder(&bInfo);
+	if (lpDlist != NULL)
+	{
+		SHGetPathFromIDList(lpDlist, path_ch);
+		path = std::string(path_ch);
+	}
+	else {
+		path = PATH_2;
+	}
 	do
 	{
 		imgRight = getImg(p);
@@ -23,24 +45,28 @@ void ManngaBook::readBook()
 		showImg(imgRight, 0);
 		showImg(imgLeft, 1);
 		
-		if (_getch() == 13) { break; }
-		c = _getch();
-
-		switch (c)
+		ExMessage msg;
+		getmessage(&msg);
+		if (msg.vkcode == VK_RETURN)
 		{
-		case 75:
+			break;
+		}
+
+		switch (msg.vkcode)
+		{
+		case 'a':
 			p += 2;
 			break;
 
-		case 80:
+		case 's':
 			p += 1;
 			break;
 
-		case 77:
+		case 'f':
 			p -= 2;
 			break;
 
-		case 72:
+		case 'd':
 			p -= 1;
 			break;
 
@@ -55,7 +81,7 @@ void ManngaBook::readBook()
 
 void ManngaBook::initBook()
 {
-	hwnd = initgraph(WINDOW_SIZE[0], WINDOW_SIZE[1], SHOWCONSOLE);
+	hwnd = initgraph(WINDOW_SIZE_USER[0], WINDOW_SIZE_USER[1], SHOWCONSOLE);
 	setbkcolor(0x333333);
 	clearcliprgn();
 	fullScreen();
@@ -83,7 +109,8 @@ IMAGE ManngaBook::getImg(int num)
 	std::cout << hight << std::endl;
 
 	IMAGE img1;
-	loadimage(&img1, (PATH_2 + std::to_string(num) + ".jpg").c_str(), width * n, hight * n);
+	loadimage(&img1, (path + "/" + std::to_string(num) + ".jpg").c_str(), width * n, hight * n);
+	//loadimage(&img1, "D:/KH_qBittorrent/static/IKA/1.jpg", width * n, hight * n);
 
 	width = img1.getwidth();
 	std::cout << width << std::endl;

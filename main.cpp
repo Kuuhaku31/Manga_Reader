@@ -3,8 +3,7 @@
 
 int main()
 {
-	ManngaBook* book = new ManngaBook();
-	book->readBook();
-	delete book;
+	ManngaBook book;
+	book.readBook();
 	return 0;
 }
