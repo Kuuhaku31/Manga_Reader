@@ -50,7 +50,7 @@
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -127,40 +127,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="HiEasyX\HiCanvas.cpp" />
-    <ClCompile Include="HiEasyX\HiContainer.cpp" />
-    <ClCompile Include="HiEasyX\HiDrawingProperty.cpp" />
-    <ClCompile Include="HiEasyX\HiFPS.cpp" />
-    <ClCompile Include="HiEasyX\HiFunc.cpp" />
-    <ClCompile Include="HiEasyX\HiGdiplus.cpp" />
-    <ClCompile Include="HiEasyX\HiGif.cpp" />
-    <ClCompile Include="HiEasyX\HiIcon.cpp" />
-    <ClCompile Include="HiEasyX\HiMouseDrag.cpp" />
-    <ClCompile Include="HiEasyX\HiMusicMCI.cpp" />
-    <ClCompile Include="HiEasyX\HiStart.cpp" />
-    <ClCompile Include="HiEasyX\HiWindow.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="ManngaBook.cpp" />
-    <ClCompile Include="toolsForMannga.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="HiEasyX.h" />
-    <ClInclude Include="HiEasyX\HiCanvas.h" />
-    <ClInclude Include="HiEasyX\HiContainer.h" />
-    <ClInclude Include="HiEasyX\HiDef.h" />
-    <ClInclude Include="HiEasyX\HiDrawingProperty.h" />
-    <ClInclude Include="HiEasyX\HiFPS.h" />
-    <ClInclude Include="HiEasyX\HiFunc.h" />
-    <ClInclude Include="HiEasyX\HiGdiplus.h" />
-    <ClInclude Include="HiEasyX\HiGif.h" />
-    <ClInclude Include="HiEasyX\HiIcon.h" />
-    <ClInclude Include="HiEasyX\HiMacro.h" />
-    <ClInclude Include="HiEasyX\HiMouseDrag.h" />
-    <ClInclude Include="HiEasyX\HiMusicMCI.h" />
-    <ClInclude Include="HiEasyX\HiStart.h" />
-    <ClInclude Include="HiEasyX\HiWindow.h" />
     <ClInclude Include="ManngaBook.h" />
-    <ClInclude Include="toolsForMannga.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
