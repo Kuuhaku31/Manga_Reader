@@ -2,49 +2,92 @@
 #pragma once
 
 #include <iostream>
-#include <array>
+#include <filesystem>
+#include <ShlObj.h>
 #include <string>
 
 #include <graphics.h>
-#include <conio.h>
-
-#include <Windows.h>
-#include <commdlg.h>
-#include <ShlObj.h>
-#include <conio.h>
-
 
 class ManngaBook
 {
 public:
 
-	std::string path;
-	const std::array<int, 2> WINDOW_SIZE_USER = { GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN) };
-
-	//std::array<int, 2> WINDOW_SIZE_USER;
-	//std::array<int, 2> PAGE_SIZE;
-
-	std::string PATH_1 = "./Mannga/少女Null v01s DL-Raw.Se/少女Null v01s/P - ";
-	std::string PATH_2 = "./Mannga/Test/P - ";
-
-	HWND hwnd;
-	IMAGE imgLeft;
-	IMAGE imgRight;
-
-	double n;
-
-	ManngaBook() : hwnd(nullptr), imgLeft(), imgRight(), n(0.475)//n(0.775)
-	{}
-	~ManngaBook()
+	void 
+	READ()
 	{
+		if (!init()) { return; }
 
+		do
+		{
+			print_page(manga_pages[now_page], false);
+			print_page(manga_pages[now_page + 1], true);
+			Sleep(500);
+			flushmessage();
+
+			getmessage(&msg);
+			switch (msg.vkcode)
+			{
+			case VK_LEFT:
+				now_page += 2;
+				break;
+
+			case VK_UP:
+				now_page += 1;
+				break;
+
+			case VK_RIGHT:
+				now_page -= 2;
+				break;
+
+			case VK_DOWN:
+				now_page -= 1;
+				break;
+
+			default:
+				break;
+			}
+
+			if (now_page < 0)
+			{
+				now_page = 0;
+			}
+			if (now_page >= page_num - 1)
+			{
+				now_page = page_num - 2;
+			}
+
+		} while (msg.vkcode != VK_RETURN);
+
+		close_book();
 	}
 
-	void readBook()
-	{
-		initBook();
+private:
 
-		int p = 2;
+	IMAGE** manga_pages;
+
+	ExMessage msg;
+
+	int page_num = 0;
+	int now_page = 0;
+
+
+	std::string file_path;
+
+	const int WINDOW_WIDE = GetSystemMetrics(SM_CXSCREEN);
+	const int WINDOW_HIGH = GetSystemMetrics(SM_CYSCREEN);
+
+	HWND graph_HWND;
+
+	inline bool
+	init()
+	{
+		graph_HWND = initgraph(WINDOW_WIDE, WINDOW_HIGH, SHOWCONSOLE);
+		setbkcolor(0x333333);
+		clearcliprgn();
+
+		// 全屏
+		SetWindowLong(graph_HWND, GWL_STYLE, GetWindowLong(graph_HWND, GWL_STYLE) - WS_CAPTION);
+		SetWindowPos(graph_HWND, HWND_TOP, 0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), SWP_SHOWWINDOW);
 
 		char path_ch[4096];
 
@@ -58,99 +101,62 @@ public:
 		if (lpDlist != NULL)
 		{
 			SHGetPathFromIDList(lpDlist, path_ch);
-			path = std::string(path_ch);
+			file_path = std::string(path_ch);
 		}
-		else {
-			path = PATH_2;
-		}
-		do
+		else
 		{
-			imgRight = getImg(p);
-			imgLeft = getImg(p + 1);
+			return false;
+		}
 
-			showImg(imgRight, 0);
-			showImg(imgLeft, 1);
+		return load_manga_pages();
+	}
 
-			ExMessage msg;
-			getmessage(&msg);
-			if (msg.vkcode == VK_RETURN)
+	inline bool
+	load_manga_pages()
+	{
+		if (std::filesystem::exists(file_path))
+		{
+			std::vector<std::filesystem::path> jpg_files;
+
+			for (const auto& entry : std::filesystem::directory_iterator(file_path))
 			{
-				break;
+				if (entry.path().extension() == ".jpg")
+				{
+					jpg_files.push_back(entry.path());
+				}
 			}
+			std::sort(jpg_files.begin(), jpg_files.end());
+			//std::reverse(jpg_files.begin(), jpg_files.end());
 
-			switch (msg.vkcode)
+			page_num = jpg_files.size();
+			manga_pages = new IMAGE* [page_num];
+
+			for (int i = 0; i < page_num; i++)
 			{
-			case 'a':
-				p += 2;
-				break;
-
-			case 's':
-				p += 1;
-				break;
-
-			case 'f':
-				p -= 2;
-				break;
-
-			case 'd':
-				p -= 1;
-				break;
-
-			default:
-				break;
+				manga_pages[i] = new IMAGE();
+				loadimage(manga_pages[i], jpg_files[i].string().c_str(), 0, 0, true);
 			}
-		} while (1);
+			return true;
+		}
+		else
+		{
+			std::cout << "目录不存在: " << file_path << std::endl;
+			return false;
+		}
+	}
 
+	void 
+	print_page(IMAGE* img, bool is_in_right)
+	{
+		int a = WINDOW_WIDE / 2;
+		putimage(is_in_right ? a - img->getwidth() : a, (WINDOW_HIGH - img->getheight()) / 2, img);
+	}
+
+	void
+	close_book()
+	{
+		delete[] manga_pages;
 		closegraph();
-	}
-
-	void initBook()
-	{
-		hwnd = initgraph(WINDOW_SIZE_USER[0], WINDOW_SIZE_USER[1], SHOWCONSOLE);
-		setbkcolor(0x333333);
-		clearcliprgn();
-		fullScreen();
-	}
-
-	void fullScreen()
-	{
-		SetWindowLong(hwnd, GWL_STYLE, GetWindowLong(hwnd, GWL_STYLE) - WS_CAPTION);
-		SetWindowPos(hwnd, HWND_TOP, 0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), SWP_SHOWWINDOW);
-	}
-
-	IMAGE getImg(int num)
-	{
-		IMAGE img0;
-		loadimage(&img0, (PATH_2 + std::to_string(num) + ".jpg").c_str());
-
-		int width = img0.getwidth();
-		std::cout << width << std::endl;
-		int hight = img0.getheight();
-		std::cout << hight << std::endl;
-
-		IMAGE img1;
-		loadimage(&img1, (path + "/" + std::to_string(num) + ".jpg").c_str(), width * n, hight * n);
-		//loadimage(&img1, "D:/KH_qBittorrent/static/IKA/1.jpg", width * n, hight * n);
-
-		width = img1.getwidth();
-		std::cout << width << std::endl;
-		hight = img1.getheight();
-		std::cout << hight << std::endl;
-
-		return img1;
-	}
-
-	void showImg(IMAGE img, bool i)
-	{
-		int x = 0;
-		int y = 0;
-
-		int m = WINDOW_SIZE_USER[0] / 2;
-		i ? x = m - img.getwidth() : x = m;
-
-		y = (WINDOW_SIZE_USER[1] - img.getheight()) / 2;
-		
-		putimage(x, y, &img);
 	}
 };
 

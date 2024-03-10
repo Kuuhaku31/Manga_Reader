@@ -1,9 +1,10 @@
 ﻿
 #include "ManngaBook.h"
 
-int main()
+int 
+main()
 {
 	ManngaBook book;
-	book.readBook();
+	book.READ();
 	return 0;
 }

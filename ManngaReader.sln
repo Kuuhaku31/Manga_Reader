@@ -5,6 +5,8 @@ VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ManngaReader", "ManngaReader.vcxproj", "{9C88EF17-FA7A-497B-9B07-2370F9F8E986}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Note", "..\Note\Note.vcxproj", "{304DE8C1-7FC9-46F5-A125-DD3FD16F96E5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,14 @@ Global
 		{9C88EF17-FA7A-497B-9B07-2370F9F8E986}.Release|x64.Build.0 = Release|x64
 		{9C88EF17-FA7A-497B-9B07-2370F9F8E986}.Release|x86.ActiveCfg = Release|Win32
 		{9C88EF17-FA7A-497B-9B07-2370F9F8E986}.Release|x86.Build.0 = Release|Win32
+		{304DE8C1-7FC9-46F5-A125-DD3FD16F96E5}.Debug|x64.ActiveCfg = Debug|x64
+		{304DE8C1-7FC9-46F5-A125-DD3FD16F96E5}.Debug|x64.Build.0 = Debug|x64
+		{304DE8C1-7FC9-46F5-A125-DD3FD16F96E5}.Debug|x86.ActiveCfg = Debug|Win32
+		{304DE8C1-7FC9-46F5-A125-DD3FD16F96E5}.Debug|x86.Build.0 = Debug|Win32
+		{304DE8C1-7FC9-46F5-A125-DD3FD16F96E5}.Release|x64.ActiveCfg = Release|x64
+		{304DE8C1-7FC9-46F5-A125-DD3FD16F96E5}.Release|x64.Build.0 = Release|x64
+		{304DE8C1-7FC9-46F5-A125-DD3FD16F96E5}.Release|x86.ActiveCfg = Release|Win32
+		{304DE8C1-7FC9-46F5-A125-DD3FD16F96E5}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
