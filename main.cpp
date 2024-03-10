@@ -6,5 +6,6 @@ main()
 {
 	ManngaBook book;
 	book.READ();
+
 	return 0;
 }

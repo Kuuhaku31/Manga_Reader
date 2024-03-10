@@ -15,45 +15,65 @@ public:
 	void 
 	READ()
 	{
-		if (!init()) { return; }
+		if (!init() || 0 == page_num) { return; }
 
+		bool r = false;
 		do
 		{
+			cleardevice();
 			print_page(manga_pages[now_page], false);
 			print_page(manga_pages[now_page + 1], true);
-			Sleep(500);
-			flushmessage();
 
-			getmessage(&msg);
-			switch (msg.vkcode)
+			if(r)
 			{
-			case VK_LEFT:
-				now_page += 2;
-				break;
-
-			case VK_UP:
-				now_page += 1;
-				break;
-
-			case VK_RIGHT:
-				now_page -= 2;
-				break;
-
-			case VK_DOWN:
-				now_page -= 1;
-				break;
-
-			default:
-				break;
+				Sleep(100);
 			}
 
-			if (now_page < 0)
+			if (msg.message == WM_KEYUP); { r = true; }
+			if (msg.message == WM_KEYDOWN); { r = false; }
+
+			getmessage(&msg, EX_KEY);
+			
+			if (msg.message == WM_KEYDOWN)
 			{
-				now_page = 0;
-			}
-			if (now_page >= page_num - 1)
-			{
-				now_page = page_num - 2;
+				switch (msg.vkcode)
+				{
+				case VK_LEFT:
+					now_page += 2;
+					break;
+
+				case VK_UP:
+					now_page += 1;
+					break;
+
+				case VK_RIGHT:
+					now_page -= 2;
+					break;
+
+				case VK_DOWN:
+					now_page -= 1;
+					break;
+
+				case 188:
+					size += 0.1;
+					break;
+
+				case 190:
+					size -= 0.1;
+					break;
+
+				default:
+					break;
+				}
+
+				if (now_page < 0)
+				{
+					now_page = 0;
+				}
+				if (now_page >= page_num - 1)
+				{
+					now_page = page_num - 2;
+				}
 			}
 
 		} while (msg.vkcode != VK_RETURN);
@@ -70,6 +90,7 @@ private:
 	int page_num = 0;
 	int now_page = 0;
 
+	float size = 1.0f;
 
 	std::string file_path;
 
@@ -84,6 +105,9 @@ private:
 		graph_HWND = initgraph(WINDOW_WIDE, WINDOW_HIGH, SHOWCONSOLE);
 		setbkcolor(0x333333);
 		clearcliprgn();
+
+		HDC mainDC = GetImageHDC(NULL);					// 获取主窗口的 DC
+		SetStretchBltMode(mainDC, STRETCH_HALFTONE);	// 设置拉伸贴图模式为抗锯齿
 
 		// 全屏
 		SetWindowLong(graph_HWND, GWL_STYLE, GetWindowLong(graph_HWND, GWL_STYLE) - WS_CAPTION);
@@ -121,12 +145,9 @@ private:
 			for (const auto& entry : std::filesystem::directory_iterator(file_path))
 			{
 				if (entry.path().extension() == ".jpg")
-				{
-					jpg_files.push_back(entry.path());
-				}
+				{ jpg_files.push_back(entry.path()); }
 			}
 			std::sort(jpg_files.begin(), jpg_files.end());
-			//std::reverse(jpg_files.begin(), jpg_files.end());
 
 			page_num = jpg_files.size();
 			manga_pages = new IMAGE* [page_num];
@@ -148,8 +169,23 @@ private:
 	void 
 	print_page(IMAGE* img, bool is_in_right)
 	{
-		int a = WINDOW_WIDE / 2;
-		putimage(is_in_right ? a - img->getwidth() : a, (WINDOW_HIGH - img->getheight()) / 2, img);
+		int wide = img->getwidth() * size;
+		int high = img->getheight() * size;
+
+		StretchBlt
+		(
+			  GetImageHDC()
+			, is_in_right ? WINDOW_WIDE / 2 - wide : WINDOW_WIDE / 2
+			, (WINDOW_HIGH - high) / 2
+			, wide
+			, high
+			, GetImageHDC(img)
+			, 0
+			, 0	
+			, img->getwidth()
+			, img->getheight()
+			, SRCCOPY
+		);		
 	}
 
 	void
