@@ -21,8 +21,15 @@ public:
 		do
 		{
 			cleardevice();
-			print_page(manga_pages[now_page], false);
-			print_page(manga_pages[now_page + 1], true);
+			if (is_one_page)
+			{
+				print_page_midle(manga_pages[now_page]);
+			}
+			else
+			{
+				print_page(manga_pages[now_page], false);
+				print_page(manga_pages[now_page + 1], true);
+			}
 
 			if(r)
 			{
@@ -62,6 +69,10 @@ public:
 					size -= 0.1;
 					break;
 
+				case 191:
+					is_one_page = !is_one_page;
+					break;
+
 				default:
 					break;
 				}
@@ -87,6 +98,8 @@ private:
 
 	ExMessage msg;
 
+	bool is_one_page = false;
+
 	int page_num = 0;
 	int now_page = 0;
 
@@ -102,7 +115,7 @@ private:
 	inline bool
 	init()
 	{
-		graph_HWND = initgraph(WINDOW_WIDE, WINDOW_HIGH, SHOWCONSOLE);
+		graph_HWND = initgraph(WINDOW_WIDE, WINDOW_HIGH);
 		setbkcolor(0x333333);
 		clearcliprgn();
 
@@ -186,6 +199,28 @@ private:
 			, img->getheight()
 			, SRCCOPY
 		);		
+	}
+
+	void
+	print_page_midle(IMAGE* img)
+	{
+		int wide = img->getwidth() * size;
+		int high = img->getheight() * size;
+
+		StretchBlt
+		(
+			GetImageHDC()
+			, (WINDOW_WIDE - wide) / 2
+			, (WINDOW_HIGH - high) / 2
+			, wide
+			, high
+			, GetImageHDC(img)
+			, 0
+			, 0
+			, img->getwidth()
+			, img->getheight()
+			, SRCCOPY
+		);
 	}
 
 	void
