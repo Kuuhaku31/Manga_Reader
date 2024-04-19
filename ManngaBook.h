@@ -5,6 +5,7 @@
 #include <filesystem>
 #include <ShlObj.h>
 #include <string>
+#include <vector>
 
 #include <graphics.h>
 
@@ -15,7 +16,7 @@ public:
 	void 
 	READ()
 	{
-		if (!init() || 0 == page_num) { return; }
+		if (!init()) { return; }
 
 		bool r = false;
 		do
@@ -23,12 +24,12 @@ public:
 			cleardevice();
 			if (is_one_page)
 			{
-				print_page_midle(manga_pages[now_page]);
+                print_page_M(page_A);
 			}
 			else
 			{
-				print_page(manga_pages[now_page], false);
-				print_page(manga_pages[now_page + 1], true);
+				print_page_R(page_B);
+				print_page_L(page_A);
 			}
 
 			if(r)
@@ -46,19 +47,19 @@ public:
 				switch (msg.vkcode)
 				{
 				case VK_LEFT:
-					now_page += 2;
+					page_A += 2;
 					break;
 
 				case VK_UP:
-					now_page += 1;
+                    page_A += 1;
 					break;
 
 				case VK_RIGHT:
-					now_page -= 2;
+                    page_A -= 2;
 					break;
 
 				case VK_DOWN:
-					now_page -= 1;
+                    page_A -= 1;
 					break;
 
 				case 188:
@@ -77,14 +78,18 @@ public:
 					break;
 				}
 
-				if (now_page < 0)
+                page_B = page_A + 1;
+
+				if (page_B < 0)
 				{
-					now_page = 0;
+                    page_A = -1;
+                    page_B = 0;
 				}
-				if (now_page >= page_num - 1)
-				{
-					now_page = page_num - 2;
-				}
+                if(page_A >= page_count)
+                {
+                    page_A = page_count - 1;
+                    page_B = page_count;
+                }
 			}
 
 		} while (msg.vkcode != VK_RETURN);
@@ -94,18 +99,17 @@ public:
 
 private:
 
-	IMAGE** manga_pages;
+    std::string file_path;
+    std::vector<IMAGE> manga_pages;
+    int page_count = 0;
 
 	ExMessage msg;
 
 	bool is_one_page = false;
-
-	int page_num = 0;
-	int now_page = 0;
+	int page_A = 0;
+    int page_B = 1;
 
 	float size = 1.0f;
-
-	std::string file_path;
 
 	const int WINDOW_WIDE = GetSystemMetrics(SM_CXSCREEN);
 	const int WINDOW_HIGH = GetSystemMetrics(SM_CYSCREEN);
@@ -158,18 +162,20 @@ private:
 			for (const auto& entry : std::filesystem::directory_iterator(file_path))
 			{
 				if (entry.path().extension() == ".jpg")
-				{ jpg_files.push_back(entry.path()); }
+				{ 
+                    jpg_files.push_back(entry.path());
+                }
 			}
 			std::sort(jpg_files.begin(), jpg_files.end());
 
-			page_num = jpg_files.size();
-			manga_pages = new IMAGE* [page_num];
-
-			for (int i = 0; i < page_num; i++)
+            for(int i = 0; i < jpg_files.size(); i++)
 			{
-				manga_pages[i] = new IMAGE();
-				loadimage(manga_pages[i], jpg_files[i].string().c_str(), 0, 0, true);
+				IMAGE img;
+                loadimage(&img, jpg_files[i].string().c_str(), 0, 0, true);
+                manga_pages.push_back(img);
 			}
+            page_count = manga_pages.size();
+
 			return true;
 		}
 		else
@@ -180,15 +186,18 @@ private:
 	}
 
 	void 
-	print_page(IMAGE* img, bool is_in_right)
+	print_page_R(int n)
 	{
-		int wide = img->getwidth() * size;
+        if(0 > n || page_count <= n) { return; }
+
+        IMAGE* img = &manga_pages[n];
+        int wide = img->getwidth() * size;
 		int high = img->getheight() * size;
 
 		StretchBlt
 		(
 			  GetImageHDC()
-			, is_in_right ? WINDOW_WIDE / 2 - wide : WINDOW_WIDE / 2
+			, WINDOW_WIDE / 2 - wide
 			, (WINDOW_HIGH - high) / 2
 			, wide
 			, high
@@ -201,9 +210,37 @@ private:
 		);		
 	}
 
+    void
+    print_page_L(int n)
+    {
+        if(0 > n || page_count <= n) { return; }
+
+        IMAGE* img = &manga_pages[n];
+        int wide = img->getwidth() * size;
+        int high = img->getheight() * size;
+
+        StretchBlt
+        (
+            GetImageHDC()
+            , WINDOW_WIDE / 2
+            , (WINDOW_HIGH - high) / 2
+            , wide
+            , high
+            , GetImageHDC(img)
+            , 0
+            , 0
+            , img->getwidth()
+            , img->getheight()
+            , SRCCOPY
+        );
+    }
+
 	void
-	print_page_midle(IMAGE* img)
+	print_page_M(int n)
 	{
+        if(0 > n || page_count <= n) { return; }
+
+        IMAGE* img = &manga_pages[n];
 		int wide = img->getwidth() * size;
 		int high = img->getheight() * size;
 
@@ -226,7 +263,6 @@ private:
 	void
 	close_book()
 	{
-		delete[] manga_pages;
 		closegraph();
 	}
 };
