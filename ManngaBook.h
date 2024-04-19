@@ -9,6 +9,8 @@
 
 #include <graphics.h>
 
+#define PI 3.14159265358979323846264338
+
 class ManngaBook
 {
 public:
@@ -62,6 +64,14 @@ public:
                     page_A -= 1;
 					break;
 
+                case 'N':
+                    revolve ++;
+                    break;
+
+                case 'M':
+                    revolve --;
+                    break;
+
 				case 188:
 					size += 0.1;
 					break;
@@ -90,6 +100,15 @@ public:
                     page_A = page_count - 1;
                     page_B = page_count;
                 }
+
+                if(-2 > revolve)
+                {
+                    revolve = +1;
+                }
+                if(+2 < revolve)
+                {
+                    revolve = -1;
+                }
 			}
 
 		} while (msg.vkcode != VK_RETURN);
@@ -105,6 +124,7 @@ private:
 
 	ExMessage msg;
 
+    int revolve = 0;
 	bool is_one_page = false;
 	int page_A = 0;
     int page_B = 1;
@@ -235,14 +255,37 @@ private:
         );
     }
 
-	void
-	print_page_M(int n)
+    void
+    print_page_M(int n)
 	{
         if(0 > n || page_count <= n) { return; }
 
-        IMAGE* img = &manga_pages[n];
-		int wide = img->getwidth() * size;
-		int high = img->getheight() * size;
+        IMAGE img;
+        switch(revolve)
+        {
+        case 0:
+            img = manga_pages[n];
+            break;
+
+        case -2:
+        case +2:
+            rotateimage(&img, &manga_pages[n], PI, 0x333333, true, false);
+            break;
+
+        case +1:
+            rotateimage(&img, &manga_pages[n], PI/2, 0x333333, true, false);
+            break;
+
+        case -1:
+            rotateimage(&img, &manga_pages[n], -PI/2, 0x333333, true, false);
+            break;
+
+        default:
+            break;
+        }
+       
+		int wide = img.getwidth() * size;
+		int high = img.getheight() * size;
 
 		StretchBlt
 		(
@@ -251,11 +294,11 @@ private:
 			, (WINDOW_HIGH - high) / 2
 			, wide
 			, high
-			, GetImageHDC(img)
+			, GetImageHDC(&img)
 			, 0
 			, 0
-			, img->getwidth()
-			, img->getheight()
+			, img.getwidth()
+			, img.getheight()
 			, SRCCOPY
 		);
 	}
