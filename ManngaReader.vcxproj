@@ -133,6 +133,8 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="DATA.h" />
     <ClInclude Include="ManngaBook.h" />
     <ClInclude Include="ManngaPages.h" />
   </ItemGroup>

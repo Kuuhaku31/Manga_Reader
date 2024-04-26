@@ -58,7 +58,7 @@ class ManngaPages
     IMAGE*
     Get_Page(int n)
     {
-        if(0 > n || manga_pages.size() <= n) { n = 0; }
+        if(0 > n || manga_pages.size() <= n) { return nullptr; }
         return &manga_pages[n];
     }
 

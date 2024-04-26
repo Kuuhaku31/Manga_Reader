@@ -6,5 +6,7 @@
   <ItemGroup>
     <ClInclude Include="ManngaBook.h" />
     <ClInclude Include="ManngaPages.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="DATA.h" />
   </ItemGroup>
 </Project>

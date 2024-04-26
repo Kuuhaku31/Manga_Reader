@@ -9,9 +9,9 @@
 
 #include <graphics.h>
 
+#include "DATA.h"
 #include "ManngaPages.h"
-
-#define PI 3.14159265358979323846264338
+#include "Camera.h"
 
 class ManngaBook
 {   public:
@@ -27,12 +27,12 @@ class ManngaBook
 			cleardevice();
 			if (is_one_page)
 			{
-                print_page_M(page_A);
+                camera.Print_page_M(mannga_pages.Get_Page(page_A));
 			}
 			else
 			{
-				print_page_R(page_B);
-				print_page_L(page_A);
+                camera.Print_page_R(mannga_pages.Get_Page(page_B));
+                camera.Print_page_L(mannga_pages.Get_Page(page_A));
 			}
 
 			if(r)
@@ -66,19 +66,19 @@ class ManngaBook
 					break;
 
                 case 'N':
-                    revolve ++;
+                    camera.Revolve_pp();
                     break;
 
                 case 'M':
-                    revolve --;
+                    camera.Revolve_mm();
                     break;
 
 				case 188:
-					size += 0.1;
+					camera.Size_pp();
 					break;
 
 				case 190:
-					size -= 0.1;
+					camera.Size_mm();
 					break;
 
 				case 191:
@@ -98,52 +98,36 @@ class ManngaBook
 				}
                 if(page_A >= page_count)
                 {
-                    page_A = page_count - 1;
-                    page_B = page_count;
-                }
-
-                if(-2 > revolve)
-                {
-                    revolve = +1;
-                }
-                if(+2 < revolve)
-                {
-                    revolve = -1;
+                    page_A = page_count;
+                    page_B = page_count + 1;
                 }
 			}
 
 		} while (msg.vkcode != VK_RETURN);
 
-		close_book();
+        closegraph();
 	}
 
 private:
 
-    ManngaPages mannga_pages;
-
     std::string file_path;
-    //std::vector<IMAGE> manga_pages;
+
+    ManngaPages mannga_pages;
+    Camera camera;
+    
     int page_count = 0;
 
 	ExMessage msg;
 
-    int revolve = 0;
 	bool is_one_page = false;
 	int page_A = 0;
     int page_B = 1;
 
-	float size = 1.0f;
-
-	const int WINDOW_WIDE = GetSystemMetrics(SM_CXSCREEN);
-	const int WINDOW_HIGH = GetSystemMetrics(SM_CYSCREEN);
-
-	HWND graph_HWND;
-
 	inline bool
 	init()
 	{
-		graph_HWND = initgraph(WINDOW_WIDE, WINDOW_HIGH);
-		setbkcolor(0x333333);
+        HWND graph_HWND = initgraph(WINDOW_WIDE, WINDOW_HIGH);
+		setbkcolor(KH_BK_COLOR);
 		clearcliprgn();
 
 		HDC mainDC = GetImageHDC(NULL);					// 获取主窗口的 DC
@@ -176,140 +160,6 @@ private:
         page_count = mannga_pages.Get_Page_Count();
 
 		return f;
-	}
-
-	/*inline bool
-	load_manga_pages()
-	{
-		if (std::filesystem::exists(file_path))
-		{
-			std::vector<std::filesystem::path> jpg_files;
-
-			for (const auto& entry : std::filesystem::directory_iterator(file_path))
-			{
-				if (entry.path().extension() == ".jpg")
-				{ 
-                    jpg_files.push_back(entry.path());
-                }
-			}
-			std::sort(jpg_files.begin(), jpg_files.end());
-
-            for(int i = 0; i < jpg_files.size(); i++)
-			{
-				IMAGE img;
-                loadimage(&img, jpg_files[i].string().c_str(), 0, 0, true);
-                manga_pages.push_back(img);
-			}
-            page_count = manga_pages.size();
-
-			return true;
-		}
-		else
-		{
-			std::cout << "目录不存在: " << file_path << std::endl;
-			return false;
-		}
-	}*/
-
-	void 
-	print_page_R(int n)
-	{
-        if(0 > n || page_count <= n) { return; }
-
-        IMAGE* img = mannga_pages.Get_Page(n);
-        int wide = img->getwidth() * size;
-		int high = img->getheight() * size;
-
-		StretchBlt
-		(
-			  GetImageHDC()
-			, WINDOW_WIDE / 2 - wide
-			, (WINDOW_HIGH - high) / 2
-			, wide
-			, high
-			, GetImageHDC(img)
-			, 0
-			, 0	
-			, img->getwidth()
-			, img->getheight()
-			, SRCCOPY
-		);		
-	}
-
-    void
-    print_page_L(int n)
-    {
-        if(0 > n || page_count <= n) { return; }
-
-        IMAGE* img = mannga_pages.Get_Page(n);
-        int wide = img->getwidth() * size;
-        int high = img->getheight() * size;
-
-        StretchBlt
-        (
-            GetImageHDC()
-            , WINDOW_WIDE / 2
-            , (WINDOW_HIGH - high) / 2
-            , wide
-            , high
-            , GetImageHDC(img)
-            , 0
-            , 0
-            , img->getwidth()
-            , img->getheight()
-            , SRCCOPY
-        );
-    }
-
-    void
-    print_page_M(int n)
-	{
-        if(0 > n || page_count <= n) { return; }
-
-        IMAGE img;
-        switch(revolve)
-        {
-        case -2:
-        case +2:
-            rotateimage(&img, mannga_pages.Get_Page(n), PI, 0x333333, true, false);
-            break;
-
-        case +1:
-            rotateimage(&img, mannga_pages.Get_Page(n), PI/2, 0x333333, true, false);
-            break;
-
-        case -1:
-            rotateimage(&img, mannga_pages.Get_Page(n), -PI/2, 0x333333, true, false);
-            break;
-
-        default:
-            img = *mannga_pages.Get_Page(n);
-            break;
-        }
-       
-		int wide = img.getwidth() * size;
-		int high = img.getheight() * size;
-
-		StretchBlt
-		(
-			GetImageHDC()
-			, (WINDOW_WIDE - wide) / 2
-			, (WINDOW_HIGH - high) / 2
-			, wide
-			, high
-			, GetImageHDC(&img)
-			, 0
-			, 0
-			, img.getwidth()
-			, img.getheight()
-			, SRCCOPY
-		);
-	}
-
-	void
-	close_book()
-	{
-		closegraph();
 	}
 };
 
