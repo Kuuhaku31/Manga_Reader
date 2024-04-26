@@ -9,11 +9,12 @@
 
 #include <graphics.h>
 
+#include "ManngaPages.h"
+
 #define PI 3.14159265358979323846264338
 
 class ManngaBook
-{
-public:
+{   public:
 
 	void 
 	READ()
@@ -118,8 +119,10 @@ public:
 
 private:
 
+    ManngaPages mannga_pages;
+
     std::string file_path;
-    std::vector<IMAGE> manga_pages;
+    //std::vector<IMAGE> manga_pages;
     int page_count = 0;
 
 	ExMessage msg;
@@ -169,10 +172,13 @@ private:
 			return false;
 		}
 
-		return load_manga_pages();
+        bool f = mannga_pages.Init_Pages(file_path);
+        page_count = mannga_pages.Get_Page_Count();
+
+		return f;
 	}
 
-	inline bool
+	/*inline bool
 	load_manga_pages()
 	{
 		if (std::filesystem::exists(file_path))
@@ -203,14 +209,14 @@ private:
 			std::cout << "目录不存在: " << file_path << std::endl;
 			return false;
 		}
-	}
+	}*/
 
 	void 
 	print_page_R(int n)
 	{
         if(0 > n || page_count <= n) { return; }
 
-        IMAGE* img = &manga_pages[n];
+        IMAGE* img = mannga_pages.Get_Page(n);
         int wide = img->getwidth() * size;
 		int high = img->getheight() * size;
 
@@ -235,7 +241,7 @@ private:
     {
         if(0 > n || page_count <= n) { return; }
 
-        IMAGE* img = &manga_pages[n];
+        IMAGE* img = mannga_pages.Get_Page(n);
         int wide = img->getwidth() * size;
         int high = img->getheight() * size;
 
@@ -263,24 +269,21 @@ private:
         IMAGE img;
         switch(revolve)
         {
-        case 0:
-            img = manga_pages[n];
-            break;
-
         case -2:
         case +2:
-            rotateimage(&img, &manga_pages[n], PI, 0x333333, true, false);
+            rotateimage(&img, mannga_pages.Get_Page(n), PI, 0x333333, true, false);
             break;
 
         case +1:
-            rotateimage(&img, &manga_pages[n], PI/2, 0x333333, true, false);
+            rotateimage(&img, mannga_pages.Get_Page(n), PI/2, 0x333333, true, false);
             break;
 
         case -1:
-            rotateimage(&img, &manga_pages[n], -PI/2, 0x333333, true, false);
+            rotateimage(&img, mannga_pages.Get_Page(n), -PI/2, 0x333333, true, false);
             break;
 
         default:
+            img = *mannga_pages.Get_Page(n);
             break;
         }
        
