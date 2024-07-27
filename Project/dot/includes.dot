@@ -1,0 +1,20 @@
+digraph G {
+    "base.hpp" -> "include_base.hpp";
+    "base.hpp" -> "ring.hpp";
+    "include_base.hpp" -> "math.h";
+    "include_base.hpp" -> "string";
+    "include_base.hpp" -> "iostream";
+    "include_base.hpp" -> "ctime";
+    "ring.hpp" -> "include_base.hpp";
+    "GameObjects.hpp" -> "MessageSystem.hpp";
+    "Game.hpp" -> "GameObjectFactory.hpp";
+    "Game.hpp" -> "GraphInterface.hpp";
+    "GameManager.hpp" -> "Game.hpp";
+    "GameObjectFactory.hpp" -> "Library.hpp";
+    "GameObjectFactory.hpp" -> "GameObjects.hpp";
+    "GraphInterface.hpp" -> "MessageSystem.hpp";
+    "Library.hpp" -> "MessageSystem.hpp";
+    "MessageSystem.hpp" -> "base.hpp";
+    "MessageSystem.hpp" -> "graphics.h";
+    "Input.hpp" -> "graphics.h";
+}

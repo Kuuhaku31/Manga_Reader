@@ -1,0 +1,8 @@
+[
+{
+  "directory": "D:/Project/VS Code/Manga_Reader/Project/build",
+  "command": "\"E:\\Microsoft VS Code\\TDM-GCC-64\\bin\\g++.exe\"  @CMakeFiles/run.dir/includes_CXX.rsp -g -std=gnu++17 -Wno-conversion-null -o CMakeFiles\\run.dir\\src\\main.cpp.obj -c \"D:\\Project\\VS Code\\Manga_Reader\\Project\\src\\main.cpp\"",
+  "file": "D:/Project/VS Code/Manga_Reader/Project/src/main.cpp",
+  "output": "CMakeFiles/run.dir/src/main.cpp.obj"
+}
+]
