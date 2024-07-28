@@ -68,11 +68,86 @@ include CMakeFiles/run.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/run.dir/flags.make
 
+CMakeFiles/run.dir/src/IO.cpp.obj: CMakeFiles/run.dir/flags.make
+CMakeFiles/run.dir/src/IO.cpp.obj: CMakeFiles/run.dir/includes_CXX.rsp
+CMakeFiles/run.dir/src/IO.cpp.obj: D:/Project/VS\ Code/Manga_Reader/Project/src/IO.cpp
+CMakeFiles/run.dir/src/IO.cpp.obj: CMakeFiles/run.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="D:\Project\VS Code\Manga_Reader\Project\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/run.dir/src/IO.cpp.obj"
+	"E:\Microsoft VS Code\TDM-GCC-64\bin\g++.exe" $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/run.dir/src/IO.cpp.obj -MF CMakeFiles\run.dir\src\IO.cpp.obj.d -o CMakeFiles\run.dir\src\IO.cpp.obj -c "D:\Project\VS Code\Manga_Reader\Project\src\IO.cpp"
+
+CMakeFiles/run.dir/src/IO.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/run.dir/src/IO.cpp.i"
+	"E:\Microsoft VS Code\TDM-GCC-64\bin\g++.exe" $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "D:\Project\VS Code\Manga_Reader\Project\src\IO.cpp" > CMakeFiles\run.dir\src\IO.cpp.i
+
+CMakeFiles/run.dir/src/IO.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/run.dir/src/IO.cpp.s"
+	"E:\Microsoft VS Code\TDM-GCC-64\bin\g++.exe" $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "D:\Project\VS Code\Manga_Reader\Project\src\IO.cpp" -o CMakeFiles\run.dir\src\IO.cpp.s
+
+CMakeFiles/run.dir/src/Input.cpp.obj: CMakeFiles/run.dir/flags.make
+CMakeFiles/run.dir/src/Input.cpp.obj: CMakeFiles/run.dir/includes_CXX.rsp
+CMakeFiles/run.dir/src/Input.cpp.obj: D:/Project/VS\ Code/Manga_Reader/Project/src/Input.cpp
+CMakeFiles/run.dir/src/Input.cpp.obj: CMakeFiles/run.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="D:\Project\VS Code\Manga_Reader\Project\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/run.dir/src/Input.cpp.obj"
+	"E:\Microsoft VS Code\TDM-GCC-64\bin\g++.exe" $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/run.dir/src/Input.cpp.obj -MF CMakeFiles\run.dir\src\Input.cpp.obj.d -o CMakeFiles\run.dir\src\Input.cpp.obj -c "D:\Project\VS Code\Manga_Reader\Project\src\Input.cpp"
+
+CMakeFiles/run.dir/src/Input.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/run.dir/src/Input.cpp.i"
+	"E:\Microsoft VS Code\TDM-GCC-64\bin\g++.exe" $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "D:\Project\VS Code\Manga_Reader\Project\src\Input.cpp" > CMakeFiles\run.dir\src\Input.cpp.i
+
+CMakeFiles/run.dir/src/Input.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/run.dir/src/Input.cpp.s"
+	"E:\Microsoft VS Code\TDM-GCC-64\bin\g++.exe" $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "D:\Project\VS Code\Manga_Reader\Project\src\Input.cpp" -o CMakeFiles\run.dir\src\Input.cpp.s
+
+CMakeFiles/run.dir/src/MangaBook.cpp.obj: CMakeFiles/run.dir/flags.make
+CMakeFiles/run.dir/src/MangaBook.cpp.obj: CMakeFiles/run.dir/includes_CXX.rsp
+CMakeFiles/run.dir/src/MangaBook.cpp.obj: D:/Project/VS\ Code/Manga_Reader/Project/src/MangaBook.cpp
+CMakeFiles/run.dir/src/MangaBook.cpp.obj: CMakeFiles/run.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="D:\Project\VS Code\Manga_Reader\Project\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/run.dir/src/MangaBook.cpp.obj"
+	"E:\Microsoft VS Code\TDM-GCC-64\bin\g++.exe" $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/run.dir/src/MangaBook.cpp.obj -MF CMakeFiles\run.dir\src\MangaBook.cpp.obj.d -o CMakeFiles\run.dir\src\MangaBook.cpp.obj -c "D:\Project\VS Code\Manga_Reader\Project\src\MangaBook.cpp"
+
+CMakeFiles/run.dir/src/MangaBook.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/run.dir/src/MangaBook.cpp.i"
+	"E:\Microsoft VS Code\TDM-GCC-64\bin\g++.exe" $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "D:\Project\VS Code\Manga_Reader\Project\src\MangaBook.cpp" > CMakeFiles\run.dir\src\MangaBook.cpp.i
+
+CMakeFiles/run.dir/src/MangaBook.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/run.dir/src/MangaBook.cpp.s"
+	"E:\Microsoft VS Code\TDM-GCC-64\bin\g++.exe" $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "D:\Project\VS Code\Manga_Reader\Project\src\MangaBook.cpp" -o CMakeFiles\run.dir\src\MangaBook.cpp.s
+
+CMakeFiles/run.dir/src/Reader.cpp.obj: CMakeFiles/run.dir/flags.make
+CMakeFiles/run.dir/src/Reader.cpp.obj: CMakeFiles/run.dir/includes_CXX.rsp
+CMakeFiles/run.dir/src/Reader.cpp.obj: D:/Project/VS\ Code/Manga_Reader/Project/src/Reader.cpp
+CMakeFiles/run.dir/src/Reader.cpp.obj: CMakeFiles/run.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="D:\Project\VS Code\Manga_Reader\Project\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/run.dir/src/Reader.cpp.obj"
+	"E:\Microsoft VS Code\TDM-GCC-64\bin\g++.exe" $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/run.dir/src/Reader.cpp.obj -MF CMakeFiles\run.dir\src\Reader.cpp.obj.d -o CMakeFiles\run.dir\src\Reader.cpp.obj -c "D:\Project\VS Code\Manga_Reader\Project\src\Reader.cpp"
+
+CMakeFiles/run.dir/src/Reader.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/run.dir/src/Reader.cpp.i"
+	"E:\Microsoft VS Code\TDM-GCC-64\bin\g++.exe" $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "D:\Project\VS Code\Manga_Reader\Project\src\Reader.cpp" > CMakeFiles\run.dir\src\Reader.cpp.i
+
+CMakeFiles/run.dir/src/Reader.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/run.dir/src/Reader.cpp.s"
+	"E:\Microsoft VS Code\TDM-GCC-64\bin\g++.exe" $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "D:\Project\VS Code\Manga_Reader\Project\src\Reader.cpp" -o CMakeFiles\run.dir\src\Reader.cpp.s
+
+CMakeFiles/run.dir/src/Volume.cpp.obj: CMakeFiles/run.dir/flags.make
+CMakeFiles/run.dir/src/Volume.cpp.obj: CMakeFiles/run.dir/includes_CXX.rsp
+CMakeFiles/run.dir/src/Volume.cpp.obj: D:/Project/VS\ Code/Manga_Reader/Project/src/Volume.cpp
+CMakeFiles/run.dir/src/Volume.cpp.obj: CMakeFiles/run.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="D:\Project\VS Code\Manga_Reader\Project\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/run.dir/src/Volume.cpp.obj"
+	"E:\Microsoft VS Code\TDM-GCC-64\bin\g++.exe" $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/run.dir/src/Volume.cpp.obj -MF CMakeFiles\run.dir\src\Volume.cpp.obj.d -o CMakeFiles\run.dir\src\Volume.cpp.obj -c "D:\Project\VS Code\Manga_Reader\Project\src\Volume.cpp"
+
+CMakeFiles/run.dir/src/Volume.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/run.dir/src/Volume.cpp.i"
+	"E:\Microsoft VS Code\TDM-GCC-64\bin\g++.exe" $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "D:\Project\VS Code\Manga_Reader\Project\src\Volume.cpp" > CMakeFiles\run.dir\src\Volume.cpp.i
+
+CMakeFiles/run.dir/src/Volume.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/run.dir/src/Volume.cpp.s"
+	"E:\Microsoft VS Code\TDM-GCC-64\bin\g++.exe" $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "D:\Project\VS Code\Manga_Reader\Project\src\Volume.cpp" -o CMakeFiles\run.dir\src\Volume.cpp.s
+
 CMakeFiles/run.dir/src/main.cpp.obj: CMakeFiles/run.dir/flags.make
 CMakeFiles/run.dir/src/main.cpp.obj: CMakeFiles/run.dir/includes_CXX.rsp
 CMakeFiles/run.dir/src/main.cpp.obj: D:/Project/VS\ Code/Manga_Reader/Project/src/main.cpp
 CMakeFiles/run.dir/src/main.cpp.obj: CMakeFiles/run.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="D:\Project\VS Code\Manga_Reader\Project\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/run.dir/src/main.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="D:\Project\VS Code\Manga_Reader\Project\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/run.dir/src/main.cpp.obj"
 	"E:\Microsoft VS Code\TDM-GCC-64\bin\g++.exe" $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/run.dir/src/main.cpp.obj -MF CMakeFiles\run.dir\src\main.cpp.obj.d -o CMakeFiles\run.dir\src\main.cpp.obj -c "D:\Project\VS Code\Manga_Reader\Project\src\main.cpp"
 
 CMakeFiles/run.dir/src/main.cpp.i: cmake_force
@@ -85,22 +160,32 @@ CMakeFiles/run.dir/src/main.cpp.s: cmake_force
 
 # Object files for target run
 run_OBJECTS = \
+"CMakeFiles/run.dir/src/IO.cpp.obj" \
+"CMakeFiles/run.dir/src/Input.cpp.obj" \
+"CMakeFiles/run.dir/src/MangaBook.cpp.obj" \
+"CMakeFiles/run.dir/src/Reader.cpp.obj" \
+"CMakeFiles/run.dir/src/Volume.cpp.obj" \
 "CMakeFiles/run.dir/src/main.cpp.obj"
 
 # External object files for target run
 run_EXTERNAL_OBJECTS =
 
-run.exe: CMakeFiles/run.dir/src/main.cpp.obj
-run.exe: CMakeFiles/run.dir/build.make
-run.exe: D:/Project/VS\ Code/Manga_Reader/Project/easyx/libeasyx.a
-run.exe: CMakeFiles/run.dir/linkLibs.rsp
-run.exe: CMakeFiles/run.dir/objects1.rsp
-run.exe: CMakeFiles/run.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir="D:\Project\VS Code\Manga_Reader\Project\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable run.exe"
+D:/Project/VS\ Code/Manga_Reader/Project/bin/run.exe: CMakeFiles/run.dir/src/IO.cpp.obj
+D:/Project/VS\ Code/Manga_Reader/Project/bin/run.exe: CMakeFiles/run.dir/src/Input.cpp.obj
+D:/Project/VS\ Code/Manga_Reader/Project/bin/run.exe: CMakeFiles/run.dir/src/MangaBook.cpp.obj
+D:/Project/VS\ Code/Manga_Reader/Project/bin/run.exe: CMakeFiles/run.dir/src/Reader.cpp.obj
+D:/Project/VS\ Code/Manga_Reader/Project/bin/run.exe: CMakeFiles/run.dir/src/Volume.cpp.obj
+D:/Project/VS\ Code/Manga_Reader/Project/bin/run.exe: CMakeFiles/run.dir/src/main.cpp.obj
+D:/Project/VS\ Code/Manga_Reader/Project/bin/run.exe: CMakeFiles/run.dir/build.make
+D:/Project/VS\ Code/Manga_Reader/Project/bin/run.exe: D:/Project/VS\ Code/Manga_Reader/Project/easyx/libeasyx.a
+D:/Project/VS\ Code/Manga_Reader/Project/bin/run.exe: CMakeFiles/run.dir/linkLibs.rsp
+D:/Project/VS\ Code/Manga_Reader/Project/bin/run.exe: CMakeFiles/run.dir/objects1.rsp
+D:/Project/VS\ Code/Manga_Reader/Project/bin/run.exe: CMakeFiles/run.dir/link.txt
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir="D:\Project\VS Code\Manga_Reader\Project\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX executable \"D:\Project\VS Code\Manga_Reader\Project\bin\run.exe\""
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles\run.dir\link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
-CMakeFiles/run.dir/build: run.exe
+CMakeFiles/run.dir/build: D:/Project/VS\ Code/Manga_Reader/Project/bin/run.exe
 .PHONY : CMakeFiles/run.dir/build
 
 CMakeFiles/run.dir/clean:

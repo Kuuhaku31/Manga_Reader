@@ -8,6 +8,11 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "D:/Project/VS Code/Manga_Reader/Project/src/IO.cpp" "CMakeFiles/run.dir/src/IO.cpp.obj" "gcc" "CMakeFiles/run.dir/src/IO.cpp.obj.d"
+  "D:/Project/VS Code/Manga_Reader/Project/src/Input.cpp" "CMakeFiles/run.dir/src/Input.cpp.obj" "gcc" "CMakeFiles/run.dir/src/Input.cpp.obj.d"
+  "D:/Project/VS Code/Manga_Reader/Project/src/MangaBook.cpp" "CMakeFiles/run.dir/src/MangaBook.cpp.obj" "gcc" "CMakeFiles/run.dir/src/MangaBook.cpp.obj.d"
+  "D:/Project/VS Code/Manga_Reader/Project/src/Reader.cpp" "CMakeFiles/run.dir/src/Reader.cpp.obj" "gcc" "CMakeFiles/run.dir/src/Reader.cpp.obj.d"
+  "D:/Project/VS Code/Manga_Reader/Project/src/Volume.cpp" "CMakeFiles/run.dir/src/Volume.cpp.obj" "gcc" "CMakeFiles/run.dir/src/Volume.cpp.obj.d"
   "D:/Project/VS Code/Manga_Reader/Project/src/main.cpp" "CMakeFiles/run.dir/src/main.cpp.obj" "gcc" "CMakeFiles/run.dir/src/main.cpp.obj.d"
   )
 

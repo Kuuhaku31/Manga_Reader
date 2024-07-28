@@ -236,7 +236,7 @@ CMakeFiles/run.dir/src/main.cpp.obj: \
  E:/Microsoft\ VS\ Code/TDM-GCC-64/x86_64-w64-mingw32/include/winsvc.h \
  E:/Microsoft\ VS\ Code/TDM-GCC-64/x86_64-w64-mingw32/include/mcx.h \
  E:/Microsoft\ VS\ Code/TDM-GCC-64/x86_64-w64-mingw32/include/imm.h \
- D:/Project/VS\ Code/Manga_Reader/Project/include/ManngaBook.hpp \
+ D:/Project/VS\ Code/Manga_Reader/Project/include/MangaReader.hpp \
  E:/Microsoft\ VS\ Code/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/c++/iostream \
  E:/Microsoft\ VS\ Code/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/c++/ostream \
  E:/Microsoft\ VS\ Code/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/c++/ios \
@@ -423,10 +423,8 @@ CMakeFiles/run.dir/src/main.cpp.obj: \
  E:/Microsoft\ VS\ Code/TDM-GCC-64/x86_64-w64-mingw32/include/propkeydef.h \
  E:/Microsoft\ VS\ Code/TDM-GCC-64/x86_64-w64-mingw32/include/objectarray.h \
  E:/Microsoft\ VS\ Code/TDM-GCC-64/x86_64-w64-mingw32/include/sherrors.h \
+ D:/Project/VS\ Code/Manga_Reader/Project/include/Input.hpp \
  D:/Project/VS\ Code/Manga_Reader/Project/easyx/graphics.h \
  D:/Project/VS\ Code/Manga_Reader/Project/easyx/easyx.h \
  E:/Microsoft\ VS\ Code/TDM-GCC-64/x86_64-w64-mingw32/include/tchar.h \
- E:/Microsoft\ VS\ Code/TDM-GCC-64/x86_64-w64-mingw32/include/sec_api/tchar_s.h \
- D:/Project/VS\ Code/Manga_Reader/Project/include/DATA.hpp \
- D:/Project/VS\ Code/Manga_Reader/Project/include/ManngaPages.hpp \
- D:/Project/VS\ Code/Manga_Reader/Project/include/Camera.hpp
+ E:/Microsoft\ VS\ Code/TDM-GCC-64/x86_64-w64-mingw32/include/sec_api/tchar_s.h

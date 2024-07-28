@@ -21,6 +21,9 @@ include_directories(./include)
 # 打印找到的源文件列表（可选）
 message(STATUS "Source files: ${SRC_FILES}")
 
+# 设置生成的可执行文件的输出路径为bin目录
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
+
 # 生成可执行文件
 add_executable(run ${SRC_FILES})
 

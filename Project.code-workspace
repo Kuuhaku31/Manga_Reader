@@ -2,6 +2,9 @@
 	"folders": [
 		{
 			"path": "Project"
+		},
+		{
+			"path": "Note"
 		}
 	],
 	"settings": {

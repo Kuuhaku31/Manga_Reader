@@ -128,6 +128,126 @@ run/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\run.dir\build.make CMakeFiles/run.dir/build
 .PHONY : run/fast
 
+src/IO.obj: src/IO.cpp.obj
+.PHONY : src/IO.obj
+
+# target to build an object file
+src/IO.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\run.dir\build.make CMakeFiles/run.dir/src/IO.cpp.obj
+.PHONY : src/IO.cpp.obj
+
+src/IO.i: src/IO.cpp.i
+.PHONY : src/IO.i
+
+# target to preprocess a source file
+src/IO.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\run.dir\build.make CMakeFiles/run.dir/src/IO.cpp.i
+.PHONY : src/IO.cpp.i
+
+src/IO.s: src/IO.cpp.s
+.PHONY : src/IO.s
+
+# target to generate assembly for a file
+src/IO.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\run.dir\build.make CMakeFiles/run.dir/src/IO.cpp.s
+.PHONY : src/IO.cpp.s
+
+src/Input.obj: src/Input.cpp.obj
+.PHONY : src/Input.obj
+
+# target to build an object file
+src/Input.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\run.dir\build.make CMakeFiles/run.dir/src/Input.cpp.obj
+.PHONY : src/Input.cpp.obj
+
+src/Input.i: src/Input.cpp.i
+.PHONY : src/Input.i
+
+# target to preprocess a source file
+src/Input.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\run.dir\build.make CMakeFiles/run.dir/src/Input.cpp.i
+.PHONY : src/Input.cpp.i
+
+src/Input.s: src/Input.cpp.s
+.PHONY : src/Input.s
+
+# target to generate assembly for a file
+src/Input.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\run.dir\build.make CMakeFiles/run.dir/src/Input.cpp.s
+.PHONY : src/Input.cpp.s
+
+src/MangaBook.obj: src/MangaBook.cpp.obj
+.PHONY : src/MangaBook.obj
+
+# target to build an object file
+src/MangaBook.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\run.dir\build.make CMakeFiles/run.dir/src/MangaBook.cpp.obj
+.PHONY : src/MangaBook.cpp.obj
+
+src/MangaBook.i: src/MangaBook.cpp.i
+.PHONY : src/MangaBook.i
+
+# target to preprocess a source file
+src/MangaBook.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\run.dir\build.make CMakeFiles/run.dir/src/MangaBook.cpp.i
+.PHONY : src/MangaBook.cpp.i
+
+src/MangaBook.s: src/MangaBook.cpp.s
+.PHONY : src/MangaBook.s
+
+# target to generate assembly for a file
+src/MangaBook.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\run.dir\build.make CMakeFiles/run.dir/src/MangaBook.cpp.s
+.PHONY : src/MangaBook.cpp.s
+
+src/Reader.obj: src/Reader.cpp.obj
+.PHONY : src/Reader.obj
+
+# target to build an object file
+src/Reader.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\run.dir\build.make CMakeFiles/run.dir/src/Reader.cpp.obj
+.PHONY : src/Reader.cpp.obj
+
+src/Reader.i: src/Reader.cpp.i
+.PHONY : src/Reader.i
+
+# target to preprocess a source file
+src/Reader.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\run.dir\build.make CMakeFiles/run.dir/src/Reader.cpp.i
+.PHONY : src/Reader.cpp.i
+
+src/Reader.s: src/Reader.cpp.s
+.PHONY : src/Reader.s
+
+# target to generate assembly for a file
+src/Reader.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\run.dir\build.make CMakeFiles/run.dir/src/Reader.cpp.s
+.PHONY : src/Reader.cpp.s
+
+src/Volume.obj: src/Volume.cpp.obj
+.PHONY : src/Volume.obj
+
+# target to build an object file
+src/Volume.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\run.dir\build.make CMakeFiles/run.dir/src/Volume.cpp.obj
+.PHONY : src/Volume.cpp.obj
+
+src/Volume.i: src/Volume.cpp.i
+.PHONY : src/Volume.i
+
+# target to preprocess a source file
+src/Volume.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\run.dir\build.make CMakeFiles/run.dir/src/Volume.cpp.i
+.PHONY : src/Volume.cpp.i
+
+src/Volume.s: src/Volume.cpp.s
+.PHONY : src/Volume.s
+
+# target to generate assembly for a file
+src/Volume.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\run.dir\build.make CMakeFiles/run.dir/src/Volume.cpp.s
+.PHONY : src/Volume.cpp.s
+
 src/main.obj: src/main.cpp.obj
 .PHONY : src/main.obj
 
@@ -161,6 +281,21 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... run
+	@echo ... src/IO.obj
+	@echo ... src/IO.i
+	@echo ... src/IO.s
+	@echo ... src/Input.obj
+	@echo ... src/Input.i
+	@echo ... src/Input.s
+	@echo ... src/MangaBook.obj
+	@echo ... src/MangaBook.i
+	@echo ... src/MangaBook.s
+	@echo ... src/Reader.obj
+	@echo ... src/Reader.i
+	@echo ... src/Reader.s
+	@echo ... src/Volume.obj
+	@echo ... src/Volume.i
+	@echo ... src/Volume.s
 	@echo ... src/main.obj
 	@echo ... src/main.i
 	@echo ... src/main.s
