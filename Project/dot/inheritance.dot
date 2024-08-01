@@ -1,6 +1,0 @@
-digraph G {
-    "Position" -> "Area";
-    "Position" -> "Collision";
-    "Object" -> "Camera";
-    "Position" -> "Object";
-}

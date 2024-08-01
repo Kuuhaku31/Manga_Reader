@@ -4,6 +4,7 @@
 #include <iostream>
 #include <filesystem>
 #include <ShlObj.h>
+#include <algorithm>
 #include <string>
 #include <vector>
 
@@ -19,8 +20,8 @@
 // 卷
 struct Volume
 {
-    std::string                volume_path;
-    std::vector< std::string > volume_pages;
+    std::string              volume_path;
+    std::vector<std::string> volume_pages;
 
     // 当前页
     int page_index = 0;
@@ -87,8 +88,8 @@ public:
 
 private:
     // 储存卷
-    std::vector< Volume > volumes;
-    int                   volume_index;
+    std::vector<Volume> volumes;
+    int                 volume_index;
 
     bool is_combine;
 };

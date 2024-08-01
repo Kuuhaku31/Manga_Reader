@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "D:/Project/VS Code/Manga_Reader/Note/src/main.cpp" "CMakeFiles/run.dir/src/main.cpp.obj" "gcc" "CMakeFiles/run.dir/src/main.cpp.obj.d"
+  "D:/Project/VS Code/Manga_Reader/note/src/main.cpp" "CMakeFiles/run.dir/src/main.cpp.obj" "gcc" "CMakeFiles/run.dir/src/main.cpp.obj.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

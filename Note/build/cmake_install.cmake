@@ -1,4 +1,4 @@
-# Install script for directory: D:/Project/VS Code/Manga_Reader/Note
+# Install script for directory: D:/Project/VS Code/Manga_Reader/note
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -52,6 +52,6 @@ endif()
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-  file(WRITE "D:/Project/VS Code/Manga_Reader/Note/build/${CMAKE_INSTALL_MANIFEST}"
+  file(WRITE "D:/Project/VS Code/Manga_Reader/note/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
 endif()
