@@ -1,4 +1,7 @@
-.vs/
-x64/
-pictures/
-Mannga/
+
+note/
+
+Project/build/
+Project/.vscode/
+Project/bin/
+Project/test/
