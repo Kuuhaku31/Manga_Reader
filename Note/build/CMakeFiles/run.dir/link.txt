@@ -1,3 +1,0 @@
-"E:\Microsoft VS Code\cmake\bin\cmake.exe" -E rm -f CMakeFiles\run.dir/objects.a
-"E:\Microsoft VS Code\mingw64\bin\ar.exe" qc CMakeFiles\run.dir/objects.a @CMakeFiles\run.dir\objects1.rsp
-"E:\Microsoft VS Code\TDM-GCC-64\bin\g++.exe" -g -Wl,--whole-archive CMakeFiles\run.dir/objects.a -Wl,--no-whole-archive -o run.exe -Wl,--out-implib,librun.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\run.dir\linkLibs.rsp

@@ -1,3 +1,0 @@
-D:/Project/VS Code/Manga_Reader/note/build/CMakeFiles/run.dir
-D:/Project/VS Code/Manga_Reader/note/build/CMakeFiles/edit_cache.dir
-D:/Project/VS Code/Manga_Reader/note/build/CMakeFiles/rebuild_cache.dir
