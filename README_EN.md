@@ -12,7 +12,7 @@ A manga reader that solves the problem of viewing single-page manga images conve
 ## Usage
 
 1. Select a folder.
-The program will automatically recognize and add all image files (supporting ".jpg", ".png", ".jpeg", ".bmp.gif") in the folder and its subfolders, and package them as volumes by folder.
+The program will automatically recognize and add all image files (supporting ".jpg", ".png", ".jpeg", ".bmp", ".gif") in the folder and its subfolders, and package them as volumes by folder.
 
 2. Select the layout mode.
 The layout mode will determine the reading direction of the manga. You need to decide whether to read from right to left or vice versa based on the manga layout.
