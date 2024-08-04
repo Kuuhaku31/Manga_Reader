@@ -61,6 +61,8 @@ askUserYesNo(const std::string& message, const std::string& title)
 void
 dfs(std::string path, std::vector<std::string>& folders)
 {
+    std::cout << "dfs at: " << path << std::endl;
+
     WIN32_FIND_DATAA FindFileData;                                                  // 用于存储文件查找结果的结构体
     HANDLE           hFind = FindFirstFileA((path + "\\*").c_str(), &FindFileData); // 查找第一个文件或目录
 
@@ -75,9 +77,12 @@ dfs(std::string path, std::vector<std::string>& folders)
             if(strcmp(FindFileData.cFileName, ".") != 0 && strcmp(FindFileData.cFileName, "..") != 0)
             {
                 // 将子目录路径添加到 folders 向量中
-                folders.push_back(path + "\\" + FindFileData.cFileName);
+                std::string subpath = path + "\\" + FindFileData.cFileName;
+                std::cout << "dfs add: " << subpath << std::endl;
+                folders.push_back(subpath);
+
                 // 递归调用 dfs 以遍历子目录
-                dfs(path + "\\" + FindFileData.cFileName, folders);
+                dfs(subpath, folders);
             }
         }
     } while(FindNextFileA(hFind, &FindFileData)); // 查找下一个文件或目录
@@ -88,6 +93,8 @@ dfs(std::string path, std::vector<std::string>& folders)
 void
 Reader::initBook()
 {
+    std::cout << "init book" << std::endl;
+
     // 储存root_path下的所有文件夹路径
     std::vector<std::string> folders;
 
@@ -103,11 +110,16 @@ Reader::initBook()
             book.Add_Volume(volume);
         }
     }
+
+    std::cout << "init book done" << std::endl;
+    std::cout << "book has " << book.Get_Volumes()->size() << " volumes" << std::endl;
 }
 
 void
 Reader::initGraph()
 {
+    std::cout << "init graph" << std::endl;
+
     // 初始化图形窗口
     graph_HWND = initgraph(WINDOW_WIDE, WINDOW_HIGH);
     BeginBatchDraw(); // 开始批量绘图
@@ -120,11 +132,15 @@ Reader::initGraph()
     // 全屏
     SetWindowLong(graph_HWND, GWL_STYLE, GetWindowLong(graph_HWND, GWL_STYLE) - WS_CAPTION);
     SetWindowPos(graph_HWND, HWND_TOP, 0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), SWP_SHOWWINDOW);
+
+    std::cout << "init graph done" << std::endl;
 }
 
 void
 Reader::updateGraph()
 {
+    is_update_graph = false;
+
     // 清屏
     cleardevice();
 
@@ -160,7 +176,7 @@ Reader::exitGraph()
 }
 
 void
-Reader::processInputs(Volume* v)
+Reader::processInputs()
 {
     // 处理键盘消息
     switch(msg.vkcode)
@@ -199,8 +215,8 @@ Reader::update()
         flushmessage();
 
         Volume* v = nullptr;
-        if(book.Get_Volume(&v)) processInputs(v); // 处理输入消息
-        if(is_update_graph) updateGraph();        // 如果需要更新图像
+        if(book.Get_Volume(&v)) processInputs(); // 处理输入消息
+        if(is_update_graph) updateGraph();       // 如果需要更新图像
     }
 }
 
@@ -213,6 +229,7 @@ Reader::READ()
         is_read_right_to_left = askUserYesNo("Read from right to left?", "Read Right to Left");
         initBook();                  // 初始化书本
         initGraph();                 // 初始化图形界面
+        updateGraph();               // 更新一次图像
         while(is_continue) update(); // 主循环
         exitGraph();                 // 关闭图形界面
     }

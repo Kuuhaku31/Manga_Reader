@@ -74,7 +74,8 @@ public:
     void Volume_Set(int);
 
     // 获取当前卷
-    bool Get_Volume(Volume**);
+    bool                 Get_Volume(Volume**);
+    std::vector<Volume>* Get_Volumes();
 
     // 返回当前卷和书页
     std::string Get_Volume_Page_Index();
@@ -121,18 +122,18 @@ public:
 private:
     MangaBook   book;
     ImgPrinter  imgPrinter;
-    IMAGE       output_img;                    // 输出图像
-    std::string root_path;                     // 路径
-    HWND        graph_HWND;                    // 图像窗口句柄
-    HDC         graph_HDC;                     // 图像窗口HDC
-    ExMessage   msg;                           // 消息
-    bool        is_read_right_to_left = true;  // 是否为日式排版
-    bool        is_print_index        = true;  // 是否打印页码
-    bool        is_update_graph       = false; // 是否更新图像
-    bool        is_continue           = true;  // 是否继续循环
+    IMAGE       output_img;                   // 输出图像
+    std::string root_path;                    // 路径
+    HWND        graph_HWND;                   // 图像窗口句柄
+    HDC         graph_HDC;                    // 图像窗口HDC
+    ExMessage   msg;                          // 消息
+    bool        is_read_right_to_left = true; // 是否为日式排版
+    bool        is_print_index        = true; // 是否打印页码
+    bool        is_update_graph       = true; // 是否更新图像
+    bool        is_continue           = true; // 是否继续循环
 
     void initBook();             // 初始化书
-    void processInputs(Volume*); // 处理输入
+    void processInputs(); // 处理输入
     void initGraph();            // 初始化图像窗口
     void updateGraph();          // 更新图像
     void update();               // 主更新函数false则退出循环

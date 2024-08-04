@@ -66,6 +66,12 @@ MangaBook::Get_Volume(Volume** v)
     }
 }
 
+std::vector<Volume>*
+MangaBook::Get_Volumes()
+{
+    return &volumes;
+}
+
 std::string
 MangaBook::Get_Volume_Page_Index()
 {

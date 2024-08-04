@@ -30,6 +30,13 @@ Volume::Load(std::string p, bool reading_directions)
 {
     namespace fs = std::filesystem;
 
+    // 如果路径不存在
+    if(!fs::exists(p))
+    {
+        std::cout << "Volume path not exists: " << p << std::endl;
+        return false;
+    }
+
     volume_path = p;
 
     // 清空 volume_pages 容器
@@ -57,6 +64,7 @@ Volume::Load(std::string p, bool reading_directions)
     // 如果 volume_pages 为空，表示加载失败
     if(volume_pages.empty())
     {
+        std::cout << "Volume pages empty: " << volume_path << std::endl;
         return false;
     }
     else
@@ -76,6 +84,8 @@ Volume::Load(std::string p, bool reading_directions)
             page_index = 0;
         }
 
+        // 输出成功加载该路径
+        std::cout << "Volume loaded: " << volume_path << std::endl;
         return true;
     }
 }
