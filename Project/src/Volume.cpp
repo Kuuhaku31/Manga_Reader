@@ -26,14 +26,20 @@ Volume::operator>(const Volume& v)
 }
 
 bool
-Volume::Load(std::string p, bool reading_directions)
+Volume::Load(std::wstring p, bool reading_directions)
 {
     namespace fs = std::filesystem;
+
+    std::cout << "Volume loading: ";
+    std::wcout << p;
+    std::cout << std::endl;
 
     // 如果路径不存在
     if(!fs::exists(p))
     {
-        std::cout << "Volume path not exists: " << p << std::endl;
+        std::cout << "Volume path not exists: ";
+        std::wcout << p;
+        std::cout << std::endl;
         return false;
     }
 
@@ -64,7 +70,9 @@ Volume::Load(std::string p, bool reading_directions)
     // 如果 volume_pages 为空，表示加载失败
     if(volume_pages.empty())
     {
-        std::cout << "Volume pages empty: " << volume_path << std::endl;
+        std::cout << "Volume pages empty: ";
+        std::wcout << volume_path;
+        std::cout << std::endl;
         return false;
     }
     else
@@ -85,7 +93,9 @@ Volume::Load(std::string p, bool reading_directions)
         }
 
         // 输出成功加载该路径
-        std::cout << "Volume loaded: " << volume_path << std::endl;
+        std::cout << "Volume loaded: ";
+        std::wcout << volume_path;
+        std::cout << std::endl;
         return true;
     }
 }
@@ -102,7 +112,7 @@ Volume::Get_Page()
     return volume_pages[page_index];
 }
 
-std::string
+std::wstring
 Volume::Get_Path()
 {
     return volume_path;

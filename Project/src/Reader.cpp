@@ -14,11 +14,11 @@ BrowseCallbackProc(HWND hwnd, UINT uMsg, LPARAM lParam, LPARAM lpData)
 
 // 选择文件夹
 bool
-getPath(std::string* p)
+getPath(std::wstring* p)
 {
     std::string defaultPath = "D:\\manga";
 
-    char path_ch[4096];
+    wchar_t path_ch[4096];
 
     BROWSEINFO bInfo = { 0 };
     bInfo.hwndOwner  = GetForegroundWindow();      // 父窗口
@@ -33,14 +33,47 @@ getPath(std::string* p)
 
     if(lpDlist != NULL)
     {
-        SHGetPathFromIDList(lpDlist, path_ch);
-        *p = std::string(path_ch);
+        SHGetPathFromIDListW(lpDlist, path_ch);
+        *p = std::wstring(path_ch);
         return true;
     }
     else
     {
         return false;
     }
+}
+
+// 递归地遍历目录，将所有子目录的路径存储在 folders 向量中
+void
+dfs(std::wstring path, std::vector<std::wstring>& folders)
+{
+    // std::wcout << L"dfs at: " << path << std::endl;
+
+    WIN32_FIND_DATAW FindFileData;                                                   // 用于存储文件查找结果的结构体
+    HANDLE           hFind = FindFirstFileW((path + L"\\*").c_str(), &FindFileData); // 查找第一个文件或目录
+
+    // 如果查找失败，返回
+    if(hFind == INVALID_HANDLE_VALUE) return;
+    do
+    {
+        // 如果找到的是目录
+        if(FindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+        {
+            // 排除当前目录 "." 和父目录 ".."
+            if(wcscmp(FindFileData.cFileName, L".") != 0 && wcscmp(FindFileData.cFileName, L"..") != 0)
+            {
+                // 将子目录路径添加到 folders 向量中
+                std::wstring subpath = path + L"\\" + FindFileData.cFileName;
+                // std::wcout << L"dfs add: " << subpath << std::endl;
+                folders.push_back(subpath);
+
+                // 递归调用 dfs 以遍历子目录
+                dfs(subpath, folders);
+            }
+        }
+    } while(FindNextFileW(hFind, &FindFileData)); // 查找下一个文件或目录
+
+    FindClose(hFind); // 关闭查找句柄
 }
 
 // 弹出一个消息框让用户选择是或否，并返回相应的 bool 值
@@ -57,46 +90,13 @@ askUserYesNo(const std::string& message, const std::string& title)
     return (result == IDYES);
 }
 
-// 递归地遍历目录，将所有子目录的路径存储在 folders 向量中
-void
-dfs(std::string path, std::vector<std::string>& folders)
-{
-    std::cout << "dfs at: " << path << std::endl;
-
-    WIN32_FIND_DATAA FindFileData;                                                  // 用于存储文件查找结果的结构体
-    HANDLE           hFind = FindFirstFileA((path + "\\*").c_str(), &FindFileData); // 查找第一个文件或目录
-
-    // 如果查找失败，返回
-    if(hFind == INVALID_HANDLE_VALUE) return;
-    do
-    {
-        // 如果找到的是目录
-        if(FindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
-        {
-            // 排除当前目录 "." 和父目录 ".."
-            if(strcmp(FindFileData.cFileName, ".") != 0 && strcmp(FindFileData.cFileName, "..") != 0)
-            {
-                // 将子目录路径添加到 folders 向量中
-                std::string subpath = path + "\\" + FindFileData.cFileName;
-                std::cout << "dfs add: " << subpath << std::endl;
-                folders.push_back(subpath);
-
-                // 递归调用 dfs 以遍历子目录
-                dfs(subpath, folders);
-            }
-        }
-    } while(FindNextFileA(hFind, &FindFileData)); // 查找下一个文件或目录
-
-    FindClose(hFind); // 关闭查找句柄
-}
-
 void
 Reader::initBook()
 {
     std::cout << "init book" << std::endl;
 
     // 储存root_path下的所有文件夹路径
-    std::vector<std::string> folders;
+    std::vector<std::wstring> folders;
 
     // 递归遍历root_path下的所有文件夹
     dfs(root_path, folders);

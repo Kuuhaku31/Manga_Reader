@@ -75,9 +75,10 @@ MangaBook::Get_Volumes()
 std::string
 MangaBook::Get_Volume_Page_Index()
 {
-    std::string v_path  = volumes[volume_index].Get_Path();                  // 获取卷路径
+    // std::wstring v_path  = volumes[volume_index].Get_Path();                  // 获取卷路径
     std::string p_index = std::to_string(volumes[volume_index].Get_Index()); // 获取当前页书签
     std::string v_index = std::to_string(volume_index);                      // 获取当前卷书签
 
-    return "Volume: " + v_index + " Page: " + p_index + "  Volume Path: " + v_path;
+    return "Volume: " + v_index + " Page: " + p_index + "  Volume Path: ";
+    //+v_path;
 }

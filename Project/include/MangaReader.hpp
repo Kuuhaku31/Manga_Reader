@@ -21,12 +21,12 @@ class Volume
 public:
     // 加载路径下的所有图片路径，存储到 volume_pages
     // 加载成功返回 true
-    bool Load(std::string, bool = true);
+    bool Load(std::wstring, bool = true);
 
 
     int         Get_Index(); // 获取当前书签
     std::string Get_Page();  // 获取当前页路径
-    std::string Get_Path();  // 获取卷路径
+    std::wstring Get_Path();  // 获取卷路径
 
     // 当前卷翻页
     void Page_Turn_Left();
@@ -51,7 +51,7 @@ public:
     bool is_combine = false;
 
 private:
-    std::string              volume_path;
+    std::wstring              volume_path;
     std::vector<std::string> volume_pages;
     bool                     is_read_right_to_left = true;
 
@@ -123,7 +123,7 @@ private:
     MangaBook   book;
     ImgPrinter  imgPrinter;
     IMAGE       output_img;                   // 输出图像
-    std::string root_path;                    // 路径
+    std::wstring root_path;                    // 路径
     HWND        graph_HWND;                   // 图像窗口句柄
     HDC         graph_HDC;                    // 图像窗口HDC
     ExMessage   msg;                          // 消息
