@@ -1,6 +1,4 @@
 # 漫画阅读器
- 
-[English](README_EN.md) | [简体中文](README_CN.md) | [日本語](README_JP.md)
 
 一个翻页漫画阅读器，解决了单页漫画图片无法方便地观看跨页的问题。采用了 CMake 和 EasyX 图形库。
 
