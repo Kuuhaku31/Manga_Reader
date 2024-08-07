@@ -97,6 +97,8 @@ Reader::initBook()
 
     // 储存root_path下的所有文件夹路径
     std::vector<std::string> folders;
+    // 添加root_path到folders中
+    folders.push_back(root_path);
 
     // 递归遍历root_path下的所有文件夹
     dfs(root_path, folders);
@@ -227,11 +229,15 @@ Reader::READ()
     if(getPath(&root_path))
     {
         is_read_right_to_left = askUserYesNo("Read from right to left?", "Read Right to Left");
-        initBook();                  // 初始化书本
-        initGraph();                 // 初始化图形界面
-        updateGraph();               // 更新一次图像
-        while(is_continue) update(); // 主循环
-        exitGraph();                 // 关闭图形界面
+        initBook();        // 初始化书本
+        initGraph();       // 初始化图形界面
+        updateGraph();     // 更新一次图像
+        while(is_continue) // 主循环
+        {
+            update();  // 更新
+            Sleep(10); // 降低CPU占用
+        }
+        exitGraph(); // 关闭图形界面
     }
 }
 
