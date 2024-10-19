@@ -8,6 +8,10 @@ project(Manga_Reader
 
 # 项目信息↑
 
+# 指定编译器
+set(CMAKE_C_COMPILER "E:/software/TDM-GCC/bin/gcc.exe")
+set(CMAKE_CXX_COMPILER "E:/software/TDM-GCC/bin/g++.exe")
+
 # 设置C++标准
 set(CMAKE_CXX_STANDARD 17)
 
