@@ -3,7 +3,6 @@
 
 #include <ShlObj.h>
 #include <algorithm>
-#include <filesystem>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -132,12 +131,12 @@ private:
     bool        is_update_graph       = true; // 是否更新图像
     bool        is_continue           = true; // 是否继续循环
 
-    void initBook();             // 初始化书
+    void initBook();      // 初始化书
     void processInputs(); // 处理输入
-    void initGraph();            // 初始化图像窗口
-    void updateGraph();          // 更新图像
-    void update();               // 主更新函数false则退出循环
-    void exitGraph();            // 关闭图像窗口
+    void initGraph();     // 初始化图像窗口
+    void updateGraph();   // 更新图像
+    void update();        // 主更新函数false则退出循环
+    void exitGraph();     // 关闭图像窗口
 
     // 指令
     void magnify();    // 放大
