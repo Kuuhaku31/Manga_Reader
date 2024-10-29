@@ -106,7 +106,7 @@ CodePngByEasyX(const char* binPath, int imageW, int imageH, const char* outputIm
 
 // 利用easyx库编码png
 void
-saveimage(std::vector<unsigned int>& buffer, int imageW, int imageH, const char* outputImagePath)
+saveimgbyEasyx(std::vector<unsigned int>& buffer, int imageW, int imageH, const char* outputImagePath)
 {
     // 保存解码后的图像数据为png文件
     IMAGE img;

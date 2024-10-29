@@ -1,7 +1,8 @@
+
 cmake_minimum_required(VERSION 3.10)
 
 # 设置项目名称
-project(AvifExample)
+project(aviftopng)
 
 # 设置 C++ 标准
 set(CMAKE_CXX_STANDARD 20)

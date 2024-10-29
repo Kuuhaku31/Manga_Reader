@@ -1,12 +1,9 @@
 
 #include "header.h"
 
-char inputImagePath[]  = "D:\\Project\\FishTank\\Manga_Reader\\avifto\\images\\input.avif";
-char outputBinPath[]   = "D:\\Project\\FishTank\\Manga_Reader\\avifto\\images\\bin";
-char outputImagePath[] = "D:\\Project\\FishTank\\Manga_Reader\\avifto\\images\\output.png";
-
-int imageW = 1354;
-int imageH = 1920;
+char inputImagePath[]  = "D:\\Project\\FishTank\\Manga_Reader\\decodeavif\\images\\input.avif";
+char outputBinPath[]   = "D:\\Project\\FishTank\\Manga_Reader\\decodeavif\\images\\bin";
+char outputImagePath[] = "D:\\Project\\FishTank\\Manga_Reader\\decodeavif\\images\\output.png";
 
 int
 main()
