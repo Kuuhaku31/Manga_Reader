@@ -1,9 +1,10 @@
 
 #include "header.h"
 
-char inputImagePath[]  = "D:\\Project\\FishTank\\Manga_Reader\\decodeavif\\images\\input.avif";
-char outputBinPath[]   = "D:\\Project\\FishTank\\Manga_Reader\\decodeavif\\images\\bin";
-char outputImagePath[] = "D:\\Project\\FishTank\\Manga_Reader\\decodeavif\\images\\output.png";
+char inputImagePathA[] = "D:\\Project\\FishTank\\Manga_Reader\\decodeavif\\images\\input1.avif";
+char inputImagePathB[] = "D:\\Project\\FishTank\\Manga_Reader\\decodeavif\\images\\input2.avif";
+char outputPath[]      = "D:\\Project\\FishTank\\Manga_Reader\\decodeavif\\images\\";
+char outputImageName[] = "output";
 
 int
 main()
@@ -13,7 +14,8 @@ main()
     // DecodeAvif(inputImagePath, outputImagePath);
     // CodePngByEasyX(outputBinPath, imageW, imageH, outputImagePath);
 
-    DecodeAvifToPng(inputImagePath, outputImagePath);
+    // DecodeAvifToPng(inputImagePath, outputImagePath);
+    CombineAvifToPng(inputImagePathA, inputImagePathB, outputPath, outputImageName);
 
     return 0;
 }
