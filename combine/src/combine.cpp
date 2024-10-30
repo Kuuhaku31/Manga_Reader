@@ -7,27 +7,8 @@ using std::vector;
 using std::cout;
 using std::endl;
 
-// 一组漫画图片的结构体
-struct couple
-{
-    int    id        = 0;
-    string imgA_path = "";
-    string imgB_path = "";
-
-    void
-    swap()
-    {
-        string temp = imgA_path;
-        imgA_path   = imgB_path;
-        imgB_path   = temp;
-    }
-};
-
 // 储存文件路径
 vector<string> files;
-
-// 储存所有的图片组
-vector<couple> couples;
 
 // 检测string是否属于Extension
 inline bool
@@ -50,14 +31,14 @@ isExtension(string str)
 }
 
 // 传入文件夹路径，加载文件夹下的所有文件路径（不包括子文件夹）
-void
+int
 LoadPath(string path)
 {
     // 如果路径不存在
     if(!fs::exists(path))
     {
         cout << "路径无法打开: " << path << ::endl;
-        return;
+        return 1;
     }
     // 遍历目录中的所有文件
     for(const auto& entry : fs::directory_iterator(path))
@@ -77,6 +58,8 @@ LoadPath(string path)
             }
         }
     }
+
+    return 0;
 }
 
 // 处理图像合并的函数，返回是否合并成功
@@ -212,8 +195,11 @@ isSingle(int count, string pathA, string pathB, int* ignore_pages, int ignore_pa
 }
 
 void
-Set_couple(int* ignore_pages, int ignore_pages_size)
+Set_couple(std::vector<couple>* couples, int* ignore_pages, int ignore_pages_size)
 {
+    // 清空容器
+    couples->clear();
+
     for(int i = 0, count = 0; i < files.size(); count++)
     {
         couple cop;
@@ -231,7 +217,7 @@ Set_couple(int* ignore_pages, int ignore_pages_size)
         {
             cout << "将" << imageA_path << "判断为一组" << endl;
             cop.imgA_path = imageA_path;
-            couples.push_back(cop);
+            couples->push_back(cop);
             i++;
         }
         else
@@ -241,7 +227,7 @@ Set_couple(int* ignore_pages, int ignore_pages_size)
             cop.imgB_path = imageB_path;
             cop.swap();
 
-            couples.push_back(cop);
+            couples->push_back(cop);
             i += 2;
         }
     }
@@ -266,8 +252,10 @@ Combine(string root_path, int* ignore_pages, int ignore_pages_size)
     }
     cout << endl;
 
+    std::vector<couple> couples;
+
     // 每两张图片合并为一组
-    Set_couple(ignore_pages, ignore_pages_size);
+    Set_couple(&couples, ignore_pages, ignore_pages_size);
 
     // 输出所有图片组
     // 创建输出文件夹
