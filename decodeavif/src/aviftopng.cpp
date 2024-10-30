@@ -106,6 +106,11 @@ DecodeAvifToPng(const char* inputImagePath, const char* outputImagePath)
     // 初始化
     avifset set = init(inputImagePath);
 
+    if(set.result != 0)
+    {
+        return 1;
+    }
+
     // 获取图像信息
     printAvifInfo(set);
 
