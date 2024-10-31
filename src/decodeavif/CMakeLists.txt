@@ -40,7 +40,7 @@ message(STATUS "SOURCES: ${SOURCES}")
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 
 # 生成可执行文件
-add_executable(a ${SOURCES})
+add_executable(${PROJECT_NAME} ${SOURCES})
 
 # 链接 AVIF 和 EASYX 库
-target_link_libraries(a ${AVIF_LIBRARIES} ${PNG_LIBRARIES} easyx)
+target_link_libraries(${PROJECT_NAME} ${AVIF_LIBRARIES} ${PNG_LIBRARIES} easyx)

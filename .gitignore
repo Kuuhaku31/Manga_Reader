@@ -1,6 +1,9 @@
 
 .vscode
 
+bin
+build
+
 test
 dot
 

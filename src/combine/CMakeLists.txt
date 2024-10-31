@@ -30,7 +30,7 @@ include_directories("E:\\software\\lib")
 link_directories("E:\\software\\lib")
 
 # 生成可执行文件
-add_executable(a ${SRC_FILES})
+add_executable(${PROJECT_NAME} ${SRC_FILES})
 
 # 添加链接库
-target_link_libraries(a easyx)
+target_link_libraries(${PROJECT_NAME} easyx)
