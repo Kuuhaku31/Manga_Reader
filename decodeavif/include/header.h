@@ -18,3 +18,6 @@ int CodePngByEasyX(const char* binPath, int imageW, int imageH, const char* outp
 // 将png图片保存到outputPath路径
 // fileName为保存的文件名
 int CombineAvifToPng(std::string imgAPath, std::string imgBPath, std::string outputPath, std::string fileName);
+
+// Encode AVIF
+int EncodeAvif(int argc, char* argv[]);

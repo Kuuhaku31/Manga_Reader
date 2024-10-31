@@ -15,6 +15,7 @@ main()
     // CodePngByEasyX(outputBinPath, imageW, imageH, outputImagePath);
 
     // DecodeAvifToPng(inputImagePath, outputImagePath);
+
     CombineAvifToPng(inputImagePathA, inputImagePathB, outputPath, outputImageName);
 
     return 0;
