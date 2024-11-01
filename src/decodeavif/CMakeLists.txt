@@ -10,7 +10,7 @@ pkg_check_modules(AVIF REQUIRED libavif)
 find_package(PNG REQUIRED)
 
 # 添加链接库
-link_directories(${AVIF_LIBRARY_DIRS} ${PNG_LIBRARY_DIRS})
+target_include_directories(${PROJECT_NAME} PUBLIC ${AVIF_INCLUDE_DIRS} ${PNG_INCLUDE_DIRS})
 
 # 添加链接库
 target_link_libraries(${PROJECT_NAME} ${AVIF_LIBRARIES} ${PNG_LIBRARIES})

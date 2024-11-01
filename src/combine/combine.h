@@ -24,6 +24,8 @@ struct couple
     }
 };
 
+std::string getPath();
+
 int Combine(std::string root_path, int* ignore_pages = nullptr, int ignore_pages_size = 0);
 
 // 传入文件夹路径，加载文件夹下的所有文件路径（不包括子文件夹）

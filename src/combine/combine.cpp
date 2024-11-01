@@ -20,7 +20,7 @@ inline bool
 isExtension(string str)
 {
     // 可支持的拓展名的集合
-    const string Extension[] = { ".jpg", ".jpeg", ".png", ".bmp", ".gif", "" };
+    const string Extension[] = { ".jpg", ".jpeg", ".png", ".bmp", ".gif", ".avif", "" };
 
     int i = 0;
     while(Extension[i] != "")
@@ -135,34 +135,39 @@ BrowseCallbackProc(HWND hwnd, UINT uMsg, LPARAM lParam, LPARAM lpData)
 }
 
 // 获取文件夹路径
-string
+std::string
 getPath()
 {
-    std::string defaultPath = "D:\\manga";
+    std::wstring defaultPath = L"D:\\manga";
 
-    char path_ch[4096];
+    wchar_t path_ch[MAX_PATH];
 
-    BROWSEINFO bInfo = { 0 };
-    bInfo.hwndOwner  = GetForegroundWindow();      // 父窗口
-    bInfo.lpszTitle  = TEXT("Choose a folder..."); // 标题
-    bInfo.ulFlags    = BIF_RETURNONLYFSDIRS | BIF_USENEWUI /*包含一个编辑框 用户可以手动填写路径 对话框可以调整大小之类的..*/ | BIF_UAHINT /*带TIPS提示*/;
+    BROWSEINFOW bInfo = { 0 };
+    bInfo.hwndOwner   = GetForegroundWindow(); // 父窗口
+    bInfo.lpszTitle   = L"Choose a folder..."; // 标题
+    bInfo.ulFlags     = BIF_RETURNONLYFSDIRS | BIF_USENEWUI /*包含一个编辑框 用户可以手动填写路径 对话框可以调整大小之类的..*/ | BIF_UAHINT /*带TIPS提示*/;
 
     bInfo.lpfn   = BrowseCallbackProc;
     bInfo.lParam = reinterpret_cast<LPARAM>(defaultPath.c_str());
 
     LPITEMIDLIST lpDlist;
-    lpDlist = SHBrowseForFolder(&bInfo); // 显示文件夹浏览对话框
+    lpDlist = SHBrowseForFolderW(&bInfo); // 显示文件夹浏览对话框
 
     if(lpDlist != NULL)
     {
-        SHGetPathFromIDList(lpDlist, path_ch);
-        return std::string(path_ch);
+        SHGetPathFromIDListW(lpDlist, path_ch);
+
+        std::wstring wpath(path_ch);
+        std::string  path(wpath.begin(), wpath.end());
+
+        return path;
     }
     else
     {
         return "";
     }
 }
+
 
 // 将所有的图片路径各自分组
 // 判断一张图片的情况
