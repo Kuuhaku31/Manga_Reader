@@ -1,6 +1,13 @@
 
 #include "combine.h"
 
+#include <conio.h>
+#include <filesystem>
+#include <graphics.h>
+#include <iostream>
+#include <shlobj.h>
+#include <vector>
+
 using namespace std;
 namespace fs = std::filesystem;
 

@@ -1,11 +1,16 @@
 
 #include "combine.h"
 
+#include <conio.h>
+#include <filesystem>
+#include <graphics.h>
+#include <iostream>
+#include <shlobj.h>
+#include <vector>
+
+
+using namespace std;
 namespace fs = std::filesystem;
-using std::string;
-using std::vector;
-using std::cout;
-using std::endl;
 
 // 储存文件路径
 vector<string> files;
@@ -77,8 +82,8 @@ CombineImage(string imageA_path, string imageB_path, string output_path, bool is
     // 读取两张图片
     IMAGE imageA;
     IMAGE imageB;
-    loadimage(&imageA, imageA_path.c_str());
-    loadimage(&imageB, imageB_path.c_str());
+    loadimage(&imageA, (LPCTSTR)imageA_path.c_str());
+    loadimage(&imageB, (LPCTSTR)imageB_path.c_str());
 
     // 获取两张图片的宽高
     int wA = imageA.getwidth();

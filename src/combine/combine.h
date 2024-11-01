@@ -1,12 +1,9 @@
 
 #pragma once
 
-#include <conio.h>
-#include <filesystem>
-#include <graphics.h>
-#include <iostream>
-#include <shlobj.h>
+#include <string>
 #include <vector>
+
 
 // 一组漫画图片的结构体
 struct couple

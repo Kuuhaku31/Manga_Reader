@@ -1,5 +1,5 @@
 
-#include "header.h"
+#include "decodeavif.h"
 #include <avif/avif.h>
 #include <iostream>
 #include <png.h>
