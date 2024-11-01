@@ -1,5 +1,5 @@
 
-#include "header.h"
+#include "decodeavif.h"
 
 #include <avif/avif.h>
 #include <filesystem>
@@ -7,7 +7,6 @@
 #include <memory.h>
 #include <png.h>
 #include <vector>
-
 
 using namespace std;
 namespace fs = std::filesystem;

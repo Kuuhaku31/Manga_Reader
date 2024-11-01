@@ -1,7 +1,11 @@
 
 .vscode
 
-test
+bin
+build
+
+images
+
 dot
 
 Manga_Reader.code-workspace

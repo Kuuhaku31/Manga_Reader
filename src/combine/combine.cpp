@@ -1,11 +1,16 @@
 
 #include "combine.h"
 
+#include <conio.h>
+#include <filesystem>
+#include <graphics.h>
+#include <iostream>
+#include <shlobj.h>
+#include <vector>
+
+
+using namespace std;
 namespace fs = std::filesystem;
-using std::string;
-using std::vector;
-using std::cout;
-using std::endl;
 
 // 储存文件路径
 vector<string> files;
@@ -15,7 +20,7 @@ inline bool
 isExtension(string str)
 {
     // 可支持的拓展名的集合
-    const string Extension[] = { ".jpg", ".jpeg", ".png", ".bmp", ".gif", "" };
+    const string Extension[] = { ".jpg", ".jpeg", ".png", ".bmp", ".gif", ".avif", "" };
 
     int i = 0;
     while(Extension[i] != "")
@@ -77,8 +82,8 @@ CombineImage(string imageA_path, string imageB_path, string output_path, bool is
     // 读取两张图片
     IMAGE imageA;
     IMAGE imageB;
-    loadimage(&imageA, imageA_path.c_str());
-    loadimage(&imageB, imageB_path.c_str());
+    loadimage(&imageA, (LPCTSTR)imageA_path.c_str());
+    loadimage(&imageB, (LPCTSTR)imageB_path.c_str());
 
     // 获取两张图片的宽高
     int wA = imageA.getwidth();
@@ -130,34 +135,39 @@ BrowseCallbackProc(HWND hwnd, UINT uMsg, LPARAM lParam, LPARAM lpData)
 }
 
 // 获取文件夹路径
-string
+std::string
 getPath()
 {
-    std::string defaultPath = "D:\\manga";
+    std::wstring defaultPath = L"D:\\manga";
 
-    char path_ch[4096];
+    wchar_t path_ch[MAX_PATH];
 
-    BROWSEINFO bInfo = { 0 };
-    bInfo.hwndOwner  = GetForegroundWindow();      // 父窗口
-    bInfo.lpszTitle  = TEXT("Choose a folder..."); // 标题
-    bInfo.ulFlags    = BIF_RETURNONLYFSDIRS | BIF_USENEWUI /*包含一个编辑框 用户可以手动填写路径 对话框可以调整大小之类的..*/ | BIF_UAHINT /*带TIPS提示*/;
+    BROWSEINFOW bInfo = { 0 };
+    bInfo.hwndOwner   = GetForegroundWindow(); // 父窗口
+    bInfo.lpszTitle   = L"Choose a folder..."; // 标题
+    bInfo.ulFlags     = BIF_RETURNONLYFSDIRS | BIF_USENEWUI /*包含一个编辑框 用户可以手动填写路径 对话框可以调整大小之类的..*/ | BIF_UAHINT /*带TIPS提示*/;
 
     bInfo.lpfn   = BrowseCallbackProc;
     bInfo.lParam = reinterpret_cast<LPARAM>(defaultPath.c_str());
 
     LPITEMIDLIST lpDlist;
-    lpDlist = SHBrowseForFolder(&bInfo); // 显示文件夹浏览对话框
+    lpDlist = SHBrowseForFolderW(&bInfo); // 显示文件夹浏览对话框
 
     if(lpDlist != NULL)
     {
-        SHGetPathFromIDList(lpDlist, path_ch);
-        return std::string(path_ch);
+        SHGetPathFromIDListW(lpDlist, path_ch);
+
+        std::wstring wpath(path_ch);
+        std::string  path(wpath.begin(), wpath.end());
+
+        return path;
     }
     else
     {
         return "";
     }
 }
+
 
 // 将所有的图片路径各自分组
 // 判断一张图片的情况

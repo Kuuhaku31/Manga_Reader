@@ -1,12 +1,15 @@
-cmake_minimum_required(VERSION 3.10)
+# 项目信息
+cmake_minimum_required(VERSION 3.20.0)
+project(Manga_Reader)
 
-# 设置项目名称
-project(MangaReader)
-
-# 设置 C++ 标准
+# cpp版本
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# 添加子模块
-add_subdirectory(combine)
-add_subdirectory(decodeavif)
+# 变量设置
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
+
+set(Combine_Dir ${PROJECT_SOURCE_DIR}/src/combine)
+set(DecodeAvif_Dir ${PROJECT_SOURCE_DIR}/src/decodeavif)
+
+# 子目录
+add_subdirectory(src)

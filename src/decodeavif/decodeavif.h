@@ -3,6 +3,12 @@
 
 #include <string>
 
+struct test
+{
+    int a;
+    int b;
+};
+
 // 测试函数
 int AvifTest();
 int EasyXTest();
