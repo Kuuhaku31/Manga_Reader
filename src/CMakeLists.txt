@@ -17,3 +17,17 @@ include_directories(./)
 
 # 添加链接库
 target_link_libraries(${PROJECT_NAME} easyx)
+
+# 查找cJSON
+find_package(cJSON REQUIRED)
+
+if(cJSON_FOUND)
+    message(STATUS "==cJSON FOUND==")
+    message(STATUS "CJSON_INCLUDE_DIRS: ${CJSON_INCLUDE_DIRS}")
+    message(STATUS "CJSON_LIBRARIES: ${CJSON_LIBRARIES}")
+
+    include_directories(${CJSON_INCLUDE_DIRS}/cjson)
+    target_link_libraries(${PROJECT_NAME} ${CJSON_LIBRARIES})
+else()
+    message(FATAL_ERROR "cJSON not found!")
+endif()

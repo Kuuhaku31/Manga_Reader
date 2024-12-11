@@ -1,15 +1,27 @@
 ﻿
+// main.cpp
+
 #include <windows.h>
 
-#include "MangaReader.hpp"
+#include "config.h"
 
-#pragma comment( linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"" ) // 设置入口地址
+std::string path = "D:\\manga\\Bocchi The Rock\\DLRAW.TO_Bocchi The Rock vol 01-06\\DLRAW.TO_Bocchi The Rock v01";
 
-int 
+int
 main()
 {
-	Reader r;
-	r.READ();
+    // 设置控制台输出编码为 UTF-8
+    SetConsoleOutputCP(CP_UTF8);
 
-	return 0;
+    Config& c = Config::Instance();
+    c.Load();
+    // c.Print();
+
+    c.Load_manga_volume(0, 2, path);
+
+    // c.Print_manga(0);
+
+    c.Save();
+
+    return 0;
 }
