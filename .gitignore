@@ -1,10 +1,6 @@
 
-note01/
-
-dot/
-
-Project/build/
-Project/.vscode/
-Project/bin/
-Project/test/
-Project/dot/
+.vscode
+bin
+build
+misc
+lib
