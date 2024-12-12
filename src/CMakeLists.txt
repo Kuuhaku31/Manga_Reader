@@ -17,8 +17,6 @@ add_executable(${PROJECT_NAME} ${SRC_FILES})
 include_directories(./)
 
 # 添加链接库
-target_link_libraries(${PROJECT_NAME} easyx)
-
 # 查找cJSON
 find_package(cJSON REQUIRED)
 
