@@ -3,6 +3,8 @@
 
 #include "config.h"
 
+#include "imgui_setup.h"
+
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -13,6 +15,7 @@
 #include <sstream>
 #include <vector>
 
+static ImGui_setup& imgui = ImGui_setup::Instance();
 
 Config* Config::instance = nullptr;
 
@@ -21,6 +24,59 @@ Config::Instance()
 {
     if(instance == nullptr) instance = new Config();
     return *instance;
+}
+
+void
+Config::Init()
+{
+    Load();
+
+    cJSON* window_config = cJSON_GetObjectItem(json_root, "window_config");
+
+    std::string window_title = cJSON_GetObjectItem(window_config, "window_title")->valuestring;
+
+    Rect window_rect = {
+        cJSON_GetObjectItem(window_config, "window_x")->valueint,
+        cJSON_GetObjectItem(window_config, "window_y")->valueint,
+        cJSON_GetObjectItem(window_config, "window_width")->valueint,
+        cJSON_GetObjectItem(window_config, "window_height")->valueint
+    };
+
+    imgui.clear_color.r = cJSON_GetObjectItem(window_config, "clear_color_r")->valueint;
+    imgui.clear_color.g = cJSON_GetObjectItem(window_config, "clear_color_g")->valueint;
+    imgui.clear_color.b = cJSON_GetObjectItem(window_config, "clear_color_b")->valueint;
+    imgui.clear_color.a = cJSON_GetObjectItem(window_config, "clear_color_a")->valueint;
+
+    imgui.Init(window_title, window_rect);
+
+    printf("Config init.\n");
+}
+
+void
+Config::Quit()
+{
+    // 修改窗口配置
+    cJSON* window_config = cJSON_GetObjectItem(json_root, "window_config");
+
+    std::string window_title = SDL_GetWindowTitle(imgui.window);
+
+    Rect window_rect;
+    SDL_GetWindowPosition(imgui.window, &window_rect.x, &window_rect.y);
+    SDL_GetWindowSize(imgui.window, &window_rect.w, &window_rect.h);
+
+    cJSON_ReplaceItemInObject(window_config, "window_title", cJSON_CreateString(window_title.c_str()));
+    cJSON_ReplaceItemInObject(window_config, "window_x", cJSON_CreateNumber(window_rect.x));
+    cJSON_ReplaceItemInObject(window_config, "window_y", cJSON_CreateNumber(window_rect.y));
+    cJSON_ReplaceItemInObject(window_config, "window_width", cJSON_CreateNumber(window_rect.w));
+    cJSON_ReplaceItemInObject(window_config, "window_height", cJSON_CreateNumber(window_rect.h));
+
+    imgui.Quit();
+
+    Save();
+
+    cJSON_Delete(json_root);
+
+    printf("Config quit.\n");
 }
 
 void
@@ -86,6 +142,57 @@ Config::Init_config()
     cJSON_AddNumberToObject(json_root, "mute", 0);
 
     printf("Config initialized.\n");
+}
+
+bool
+Config::Get_manga_page(std::string* page_path, int manga_index, int volume_index, int page_index) const
+{
+    cJSON* mangas  = cJSON_GetObjectItem(json_root, "mangas");
+    cJSON* manga   = cJSON_GetArrayItem(mangas, manga_index);
+    cJSON* volumes = cJSON_GetObjectItem(manga, "volumes");
+
+    // 如果volumes不是数组
+    if(!cJSON_IsArray(volumes))
+    {
+        printf("Volumes not found.\n");
+        return false;
+    }
+
+    // 遍历volumes数组
+    for(int i = 0; i < cJSON_GetArraySize(volumes); i++)
+    {
+        // 获取 "volume" 的值
+        int volume = cJSON_GetObjectItem(cJSON_GetArrayItem(volumes, i), "volume")->valueint;
+
+        // 如果卷号相同
+        if(volume == volume_index)
+        {
+            cJSON* pages = cJSON_GetObjectItem(cJSON_GetArrayItem(volumes, i), "pages");
+
+            // 如果pages不是数组
+            if(!cJSON_IsArray(pages))
+            {
+                printf("Pages not found.\n");
+                return false;
+            }
+
+            // 遍历pages数组
+            for(int j = 0; j < cJSON_GetArraySize(pages); j++)
+            {
+                // 获取 "page" 的值
+                int page = cJSON_GetObjectItem(cJSON_GetArrayItem(pages, j), "page")->valueint;
+
+                // 如果页号相同
+                if(page == page_index)
+                {
+                    *page_path = cJSON_GetObjectItem(cJSON_GetArrayItem(pages, j), "path")->valuestring;
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
 }
 
 void
@@ -205,16 +312,4 @@ Config::Print_manga(int index)
         printf("%s\n", s);
         free(s);
     }
-}
-
-Config::Config()
-{
-    printf("Config created.\n");
-}
-
-Config::~Config()
-{
-    cJSON_Delete(json_root);
-    instance = nullptr;
-    printf("Config deleted.\n");
 }
