@@ -32,6 +32,16 @@ main()
         {
             ImGui_ImplSDL2_ProcessEvent(&e);
             if(e.type == SDL_QUIT) is_running = false;
+
+            if(e.type == SDL_KEYDOWN)
+            {
+                switch(e.key.keysym.sym)
+                {
+                    case SDLK_ESCAPE: imgui.Exit_fullscreen(); break;
+                    case SDLK_F11: imgui.Enter_fullscreen(); break;
+                    default: break;
+                };
+            }
         }
 
         ImGui::Begin("Manga Book");
@@ -72,14 +82,15 @@ main()
 
         // 显示帧率
         ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+        is_running = !ImGui::Button("Quit", ImVec2(75, 25));
         ImGui::End();
 
         imgui.On_frame_end();
-    }
 
-    // 释放资源
-    SDL_FreeSurface(surface);
-    SDL_DestroyTexture(texture);
+        // 释放资源
+        SDL_FreeSurface(surface);
+        SDL_DestroyTexture(texture);
+    }
 
     config.Quit();
 

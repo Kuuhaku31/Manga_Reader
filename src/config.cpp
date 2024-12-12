@@ -47,7 +47,9 @@ Config::Init()
     imgui.clear_color.b = cJSON_GetObjectItem(window_config, "clear_color_b")->valueint;
     imgui.clear_color.a = cJSON_GetObjectItem(window_config, "clear_color_a")->valueint;
 
-    imgui.Init(window_title, window_rect);
+    bool is_fullscreen = cJSON_IsTrue(cJSON_GetObjectItem(window_config, "window_fullscreen"));
+
+    imgui.Init(window_title, window_rect, is_fullscreen);
 
     printf("Config init.\n");
 }
@@ -59,12 +61,24 @@ Config::Quit()
     cJSON* window_config = cJSON_GetObjectItem(json_root, "window_config");
 
     std::string window_title = SDL_GetWindowTitle(imgui.window);
+    cJSON_ReplaceItemInObject(window_config, "window_title", cJSON_CreateString(window_title.c_str()));
 
     Rect window_rect;
-    SDL_GetWindowPosition(imgui.window, &window_rect.x, &window_rect.y);
-    SDL_GetWindowSize(imgui.window, &window_rect.w, &window_rect.h);
+    // 如果当前是全屏状态
+    if(SDL_GetWindowFlags(imgui.window) & SDL_WINDOW_FULLSCREEN_DESKTOP)
+    {
+        window_rect = imgui.window_rect_before_fullscreen;
 
-    cJSON_ReplaceItemInObject(window_config, "window_title", cJSON_CreateString(window_title.c_str()));
+        cJSON_ReplaceItemInObject(window_config, "window_fullscreen", cJSON_CreateTrue());
+    }
+    else
+    {
+        SDL_GetWindowPosition(imgui.window, &window_rect.x, &window_rect.y);
+        SDL_GetWindowSize(imgui.window, &window_rect.w, &window_rect.h);
+
+        cJSON_ReplaceItemInObject(window_config, "window_fullscreen", cJSON_CreateFalse());
+    }
+
     cJSON_ReplaceItemInObject(window_config, "window_x", cJSON_CreateNumber(window_rect.x));
     cJSON_ReplaceItemInObject(window_config, "window_y", cJSON_CreateNumber(window_rect.y));
     cJSON_ReplaceItemInObject(window_config, "window_width", cJSON_CreateNumber(window_rect.w));
