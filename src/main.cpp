@@ -7,6 +7,9 @@
 
 #include "console.h"
 
+#define D_MOVE 10
+#define D_ZOOM 0.01f
+
 std::string path = "D:\\manga\\Bocchi The Rock\\DLRAW.TO_Bocchi The Rock vol 01-06\\DLRAW.TO_Bocchi The Rock v01";
 
 static ImGui_setup& imgui = ImGui_setup::Instance();
@@ -14,6 +17,19 @@ static ImGui_setup& imgui = ImGui_setup::Instance();
 static Config& config = Config::Instance();
 
 bool is_show_console = true;
+
+float  zoom = 0.75f; // 缩放比例
+ImVec2 tex_page_pos; // 纹理位置
+
+bool is_arrow_up_pressed    = false;
+bool is_arrow_down_pressed  = false;
+bool is_arrow_left_pressed  = false;
+bool is_arrow_right_pressed = false;
+
+bool is_comma_pressed  = false;
+bool is_period_pressed = false;
+
+SDL_Texture* tex_page = nullptr;
 
 struct Page_pair
 {
@@ -83,26 +99,32 @@ Load_page(const Page_pair& pair, SDL_Texture*& texture) // 加载图片
 }
 
 void
-ImGui_Window_Book(SDL_Texture* texture, const ImVec2& size) // 显示图片
+ImGui_Window_Book(SDL_Texture* texture) // 显示图片
 {
-    ImGui::SetNextWindowSize(imgui.io->DisplaySize);
-    ImGui::SetNextWindowPos(ImVec2(0, 0));
-    uint32_t flag = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBringToFrontOnFocus;
+    uint32_t flag = 0;
+    flag |= ImGuiWindowFlags_NoTitleBar;            // 隐藏标题栏
+    flag |= ImGuiWindowFlags_NoResize;              // 禁用调整大小
+    flag |= ImGuiWindowFlags_NoMove;                // 禁用移动
+    flag |= ImGuiWindowFlags_NoCollapse;            // 禁用折叠
+    flag |= ImGuiWindowFlags_NoBringToFrontOnFocus; // 禁用焦点
+    flag |= ImGuiWindowFlags_NoScrollbar;           // 隐藏滚动条
+    flag |= ImGuiWindowFlags_NoScrollWithMouse;     // 禁止滚动
+    flag |= ImGuiWindowFlags_NoDocking;             // 禁用Docking
+
+    int w, h = 0;
+    SDL_QueryTexture(texture, NULL, NULL, &w, &h); // 获取纹理大小
+
+    ImVec2 window_size = ImVec2(w * zoom, h * zoom); // 窗口大小
+
+    ImGui::SetNextWindowSize(window_size); // 设置窗口大小
+    ImGui::SetNextWindowPos(tex_page_pos); // 设置窗口位置
+
     ImGui::Begin("Fullscreen Window", NULL, flag);
 
-    if(ImGui::Button("Scroll to Bottom"))
-    {
-        ImGui::SetScrollY(ImGui::GetScrollMaxY());
-        ImGui::SetScrollX(ImGui::GetScrollMaxX());
-    }
-
-    ImGui::Image((ImTextureID)texture, size);
-
-    // 添加按钮来调整滚动条位置
-    if(ImGui::Button("Scroll to Top"))
-    {
-        ImGui::SetScrollY(0.0f);
-    }
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0)); // 禁用边距
+    ImGui::SetCursorPos(ImVec2(0, 0));                              // 设置光标位置
+    ImGui::Image((ImTextureID)texture, ImGui::GetWindowSize());     // 显示图片
+    ImGui::PopStyleVar();                                           // 恢复边距
 
     ImGui::End();
 }
@@ -128,11 +150,6 @@ ImGui_Window_config(bool& is_running, float& zoom) // 显示配置窗口
     ImGui::End();
 }
 
-void
-ImGui_Window_show_input()
-{
-}
-
 int
 main()
 {
@@ -141,16 +158,12 @@ main()
 
     config.Init();
 
-    SDL_Texture* texture = nullptr;
-
     Page_pair pair;
     int       n = 4;
     config.Get_manga_page(&pair.path_A, 0, 1, n);
     config.Get_manga_page(&pair.path_B, 0, 1, n + 1);
     pair.is_swap = true;
-    Load_page(pair, texture);
-
-    float zoom = 1.0f;
+    Load_page(pair, tex_page);
 
     Console console;
     console.AddLog("Welcome to ImGui Console!");
@@ -164,29 +177,149 @@ main()
 
         while(SDL_PollEvent(&e))
         {
-            // 添加log
-            console.AddLog("Event type: %d", e.type);
-
             ImGui_ImplSDL2_ProcessEvent(&e);
-            if(e.type == SDL_QUIT) is_running = false;
 
-            if(e.type == SDL_KEYDOWN)
+            switch(e.type)
+            {
+            case SDL_QUIT:
+            {
+                is_running = false;
+                break;
+            }
+            case SDL_WINDOWEVENT:
+            {
+                if(e.window.event == SDL_WINDOWEVENT_CLOSE && e.window.windowID == imgui.Get_window_id())
+                {
+                    is_running = false;
+                }
+                break;
+            }
+            case SDL_KEYDOWN:
             {
                 switch(e.key.keysym.sym)
                 {
-                    case SDLK_ESCAPE: imgui.Exit_fullscreen(); break;
-                    case SDLK_F11: imgui.Enter_fullscreen(); break;
-                    default: break;
+                case SDLK_ESCAPE: imgui.Exit_fullscreen(); break;
+                case SDLK_F11: imgui.Enter_fullscreen(); break;
+                case SDLK_MINUS: // "-"
+                {
+                    zoom -= 0.1f;
+                    break;
+                }
+                case SDLK_EQUALS: // "="
+                {
+                    zoom += 0.1f;
+                    break;
+                }
+                case SDLK_UP: // 向上
+                {
+                    is_arrow_up_pressed = true;
+                    break;
+                }
+                case SDLK_DOWN: // 向下
+                {
+                    is_arrow_down_pressed = true;
+                    break;
+                }
+                case SDLK_LEFT: // 向左
+                {
+                    is_arrow_left_pressed = true;
+                    break;
+                }
+                case SDLK_RIGHT: // 向右
+                {
+                    is_arrow_right_pressed = true;
+                    break;
+                }
+                case SDLK_COMMA: // ","
+                {
+                    is_comma_pressed = true;
+                    break;
+                }
+                case SDLK_PERIOD: //"."
+                {
+                    is_period_pressed = true;
+                    break;
+                }
+                default: break;
                 };
+                break;
+            }
+            case SDL_KEYUP:
+            {
+                switch(e.key.keysym.sym)
+                {
+                case SDLK_UP: // 向上
+                {
+                    is_arrow_up_pressed = false;
+                    break;
+                }
+                case SDLK_DOWN: // 向下
+                {
+                    is_arrow_down_pressed = false;
+                    break;
+                }
+                case SDLK_LEFT: // 向左
+                {
+                    is_arrow_left_pressed = false;
+                    break;
+                }
+                case SDLK_RIGHT: // 向右
+                {
+                    is_arrow_right_pressed = false;
+                    break;
+                }
+                case SDLK_COMMA: // ","
+                {
+                    is_comma_pressed = false;
+                    break;
+                }
+                case SDLK_PERIOD: //"."
+                {
+                    is_period_pressed = false;
+                    break;
+                }
+                default: break;
+                };
+                break;
+            }
+            case SDL_MOUSEWHEEL:
+            {
+                break;
+            }
+            default:
+            {
+                break;
+            }
             }
         }
 
-        int size_x, size_y = 0;
-        SDL_QueryTexture(texture, nullptr, nullptr, &size_x, &size_y);
+        if(is_arrow_up_pressed) tex_page_pos.y += D_MOVE;
+        if(is_arrow_down_pressed) tex_page_pos.y -= D_MOVE;
+        if(is_arrow_left_pressed) tex_page_pos.x += D_MOVE;
+        if(is_arrow_right_pressed) tex_page_pos.x -= D_MOVE;
 
-        ImVec2 size = { (float)size_x * zoom, (float)size_y * zoom };
+        float d_zoom = 1.0f;
+        if(is_comma_pressed) d_zoom = (1 - D_ZOOM);
+        if(is_period_pressed) d_zoom = (1 + D_ZOOM);
 
-        ImGui_Window_Book(texture, size);
+        if(d_zoom != 1.0f)
+        {
+            zoom *= d_zoom;
+
+            ImVec2 center = ImVec2(imgui.io->DisplaySize.x / 2, imgui.io->DisplaySize.y / 2);
+
+            ImVec2 dv;
+            dv.x = center.x - tex_page_pos.x;
+            dv.y = center.y - tex_page_pos.y;
+
+            dv.x = -dv.x * d_zoom;
+            dv.y = -dv.y * d_zoom;
+
+            tex_page_pos.x = center.x + dv.x;
+            tex_page_pos.y = center.y + dv.y;
+        }
+
+        ImGui_Window_Book(tex_page);
         ImGui_Window_config(is_running, zoom);
 
         if(is_show_console) console.Draw("Console", &is_show_console);
@@ -196,7 +329,7 @@ main()
         imgui.On_frame_end();
     }
 
-    SDL_DestroyTexture(texture);
+    SDL_DestroyTexture(tex_page);
 
     config.Quit();
 
