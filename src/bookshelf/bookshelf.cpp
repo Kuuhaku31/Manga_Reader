@@ -156,18 +156,11 @@ Bookshelf::Add_manga(const char* manga_title)
     printf("Adding manga: %s\n", manga_title);
 
     // 检查漫画是否已存在
-    cJSON* new_manga = nullptr;
-    cJSON_ArrayForEach(new_manga, mangas)
+    cJSON* new_manga = find_manga(manga_title);
+    if(new_manga)
     {
-        // 获取 "title" 的值
-        const char* t = cJSON_GetObjectItem(new_manga, "title")->valuestring;
-
-        // 如果标题相同
-        if(strcmp(t, manga_title) == 0)
-        {
-            printf("Manga already exists: %s\n", manga_title);
-            return;
-        }
+        printf("Manga already exists: %s\n", manga_title);
+        return;
     }
 
     // 创建新漫画
@@ -188,13 +181,18 @@ Bookshelf::ReLoad_manga(const char* manga_title)
     printf("Reloading manga: %s\n", manga_title);
 
     cJSON* manga = find_manga(manga_title); // 查找漫画
-    if(!manga) return;                      // 如果漫画不存在
+    if(!manga)
+    {
+        printf("Manga not found: %s\n", manga_title);
+        return;
+    }
 
-    cJSON* volumes = cJSON_GetObjectItem(manga, "volumes"); // 获取卷数组
-    for(int i = 0; i < cJSON_GetArraySize(volumes); i++)
+    for(int i = 0; i < cJSON_GetArraySize(cJSON_GetObjectItem(manga, "volumes")); i++)
     {
         ReLoad_manga_volume(manga_title, i); // 重新加载卷
     }
+
+    printf("Manga reloaded: %s\n", manga_title);
 }
 
 void
@@ -202,47 +200,28 @@ Bookshelf::Del_manga(const char* manga_title)
 {
     printf("Deleting manga: %s\n", manga_title);
 
-    // 遍历mangas数组
-    for(int i = 0; i < cJSON_GetArraySize(mangas); i++)
-    {
-        // 获取当前漫画的对象
-        cJSON* manga = cJSON_GetArrayItem(mangas, i);
-        cJSON* title = cJSON_GetObjectItem(manga, "title");
+    int idx = find_manga_idx(manga_title); // 查找漫画索引
 
-        // 如果标题相同
-        if(strcmp(title->valuestring, manga_title) == 0)
-        {
-            cJSON_DeleteItemFromArray(mangas, i);
-            printf("Manga deleted: %s\n", manga_title);
-            return;
-        }
+    if(idx == -1)
+    {
+        printf("Manga not found: %s\n", manga_title);
+        return;
     }
 
-    printf("Manga not found: %s\n", manga_title);
+    cJSON_DeleteItemFromArray(mangas, idx); // 删除漫画
+
+    printf("Manga deleted: %s\n", manga_title);
 }
 
 void
 Bookshelf::Add_manga_volume(const char* manga_title, int volume_index, const char* reading_direction, const char* volume_path)
 {
-    cJSON* manga = nullptr;
+    printf("Adding volume %d to manga: %s\n", volume_index, manga_title);
 
-    // 遍历mangas数组
-    bool manga_not_found = true;
-    cJSON_ArrayForEach(manga, mangas)
-    {
-        // 获取 "title" 的值
-        const char* title = cJSON_GetObjectItem(manga, "title")->valuestring;
-
-        // 如果标题相同
-        if(strcmp(title, manga_title) == 0)
-        {
-            manga_not_found = false;
-            break;
-        }
-    }
+    cJSON* manga = find_manga(manga_title); // 查找漫画
 
     // 如果漫画不存在
-    if(manga_not_found)
+    if(!manga)
     {
         printf("Manga not found: %s\n", manga_title);
         return;
@@ -397,72 +376,55 @@ Bookshelf::Del_manga_volume(const char* manga_title, int volume_index)
     }
 }
 
+int
+Bookshelf::find_manga_idx(const char* manga_title) const
+{
+    // 遍历mangas数组
+    for(int i = 0; i < cJSON_GetArraySize(mangas); i++)
+    {
+        // 获取当前漫画的对象
+        cJSON* title = cJSON_GetObjectItem(cJSON_GetArrayItem(mangas, i), "title");
+
+        // 如果标题不是字符串
+        if(!cJSON_IsString(title)) return -1;
+
+        // 如果标题相同
+        if(strcmp(title->valuestring, manga_title) == 0) return i;
+    }
+
+    return -1;
+}
+
+int
+Bookshelf::find_volume_idx(cJSON* manga, int target_volume_index) const
+{
+    // 遍历volumes数组
+    cJSON* volumes = cJSON_GetObjectItem(manga, "volumes");
+    for(int i = 0; i < cJSON_GetArraySize(volumes); i++)
+    {
+        // 获取当前卷的对象
+        cJSON* volume_num_item = cJSON_GetObjectItem(cJSON_GetArrayItem(volumes, i), "volume");
+
+        // 如果 "volume" 字段不是数字
+        if(!cJSON_IsNumber(volume_num_item)) return -1;
+
+        // 如果卷号相同
+        if(volume_num_item->valueint == target_volume_index) return i;
+    }
+
+    return -1;
+}
+
 cJSON*
 Bookshelf::find_manga(const char* manga_title) const
 {
-    printf("Finding manga: %s\n", manga_title);
-
-    // 遍历mangas数组
-    bool   manga_not_found = true;
-    cJSON* manga           = nullptr;
-    cJSON_ArrayForEach(manga, mangas)
-    {
-        // 获取 "title" 的值
-        const char* title = cJSON_GetObjectItem(manga, "title")->valuestring;
-
-        // 如果标题相同
-        if(strcmp(title, title) == 0)
-        {
-            manga_not_found = false;
-            break;
-        }
-    }
-
-    if(manga_not_found) // 如果漫画不存在
-    {
-        printf("Manga not found: %s\n", manga_title);
-        return nullptr;
-    }
-    else
-    {
-        printf("Manga found: %s\n", manga_title);
-        return manga;
-    }
+    return cJSON_GetArrayItem(mangas, find_manga_idx(manga_title));
 }
 
 cJSON*
 Bookshelf::find_volume(cJSON* manga, int target_volume_index) const
 {
-    printf("Finding volume: %d in manga: %s\n", target_volume_index, cJSON_GetObjectItem(manga, "title")->valuestring);
-
-    // 遍历volumes数组
-    bool   volume_not_found = true;
-    cJSON* volumes          = cJSON_GetObjectItem(manga, "volumes");
-    cJSON* volume           = nullptr;
-    cJSON_ArrayForEach(volume, volumes)
-    {
-        // 获取 "volume" 的值
-        int volume_num = cJSON_GetObjectItem(volume, "volume")->valueint;
-
-        // 如果卷号相同
-        if(volume_num == target_volume_index)
-        {
-            volume_not_found = false;
-            break;
-        }
-    }
-
-    // 如果卷号不存在
-    if(volume_not_found)
-    {
-        printf("Volume not found: %d\n", target_volume_index);
-        return nullptr;
-    }
-    else
-    {
-        printf("Volume found: %d\n", target_volume_index);
-        return volume;
-    }
+    return cJSON_GetArrayItem(cJSON_GetObjectItem(manga, "volumes"), find_volume_idx(manga, target_volume_index));
 }
 
 const char*

@@ -29,6 +29,9 @@ public:
     void Del_manga_volume(const char* manga_title, int volume_index);                                                         // 删除漫画卷
 
 private:
+    int find_manga_idx(const char* manga_title) const;                // 查找漫画索引
+    int find_volume_idx(cJSON* manga, int target_volume_index) const; // 查找卷索引
+
     cJSON*      find_manga(const char* manga_title) const;                // 查找漫画
     cJSON*      find_volume(cJSON* manga, int target_volume_index) const; // 查找卷
     const char* find_page(cJSON* volume, int target_page_index) const;    // 查找页
