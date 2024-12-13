@@ -3,6 +3,8 @@
 
 #include "config.h"
 
+#include "bookshelf.h"
+
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -14,7 +16,8 @@
 #include <vector>
 
 
-static ImGui_setup& imgui = ImGui_setup::Instance();
+static ImGui_setup& imgui     = ImGui_setup::Instance();
+static Bookshelf&   bookshelf = Bookshelf::Instance();
 
 Config* Config::instance = nullptr;
 
@@ -30,6 +33,7 @@ Config::Init()
 {
     // 加载配置文件
     LoadConfig();
+    bookshelf.LoadMangas();
 
     cJSON* window_config = cJSON_GetObjectItem(json_root, "window_config");
 
@@ -101,6 +105,7 @@ Config::Quit()
 
     // 保存配置文件
     SaveConfig();
+    bookshelf.SaveMangas();
 
     cJSON_Delete(json_root);
     json_root = nullptr;

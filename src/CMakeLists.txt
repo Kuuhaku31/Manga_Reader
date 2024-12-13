@@ -6,6 +6,7 @@ project(reader)
 # 添加源文件
 aux_source_directory(./ SRC_FILES)
 aux_source_directory(./config SRC_FILES)
+aux_source_directory(./bookshelf SRC_FILES)
 aux_source_directory(../lib SRC_FILES)
 
 # 打印找到的源文件列表
@@ -17,6 +18,7 @@ add_executable(${PROJECT_NAME} ${SRC_FILES})
 # 添加头文件
 include_directories(./)
 include_directories(./config)
+include_directories(./bookshelf)
 
 # 添加链接库
 # 查找cJSON

@@ -1,6 +1,7 @@
 ﻿
 // main.cpp
 
+#include "bookshelf.h"
 #include "config.h"
 #include "console.h"
 #include "input.h"
@@ -8,11 +9,13 @@
 #define D_MOVE 10
 #define D_ZOOM 0.01f
 
-std::string path = "D:\\manga\\Bocchi The Rock\\DLRAW.TO_Bocchi The Rock vol 01-06\\DLRAW.TO_Bocchi The Rock v01";
+const char  manga_title[] = "ぼっち・ざ・ろっく！";
+std::string path          = "D:\\manga\\Bocchi The Rock\\DLRAW.TO_Bocchi The Rock vol 01-06\\DLRAW.TO_Bocchi The Rock v01";
 
-static ImGui_setup& imgui  = ImGui_setup::Instance();
-static Config&      config = Config::Instance();
-static Input&       input  = Input::Instance();
+static ImGui_setup& imgui     = ImGui_setup::Instance();
+static Config&      config    = Config::Instance();
+static Input&       input     = Input::Instance();
+static Bookshelf&   bookshelf = Bookshelf::Instance();
 
 bool is_show_console = false;
 
@@ -123,8 +126,8 @@ Change_page(int d_page = 0)
     static int page_index = 0;
 
     Page_pair   pair;
-    std::string reading_direction = config.Get_reading_direction(0, 1);
-    int         page_count        = config.Get_volume_page_count(0, 1);
+    std::string reading_direction = bookshelf.Get_reading_direction(manga_title, 0);
+    int         page_count        = bookshelf.Get_volume_page_count(manga_title, 0);
 
     if(reading_direction == "right-to-left")
     {
@@ -132,8 +135,8 @@ Change_page(int d_page = 0)
 
         if(page_index < 0) page_index = 0;
 
-        config.Get_manga_page(&pair.path_B, 0, 1, page_index);
-        config.Get_manga_page(&pair.path_A, 0, 1, page_index + 1);
+        pair.path_B = bookshelf.Get_manga_page(manga_title, 0, page_index);
+        pair.path_A = bookshelf.Get_manga_page(manga_title, 0, page_index + 1);
     }
     else
     {
@@ -141,8 +144,8 @@ Change_page(int d_page = 0)
 
         if(page_index >= page_count) page_index = page_count - 1;
 
-        config.Get_manga_page(&pair.path_A, 0, 1, page_index);
-        config.Get_manga_page(&pair.path_B, 0, 1, page_index + 1);
+        pair.path_A = bookshelf.Get_manga_page(manga_title, 0, page_index);
+        pair.path_B = bookshelf.Get_manga_page(manga_title, 0, page_index + 1);
     }
 
     Load_page(pair, tex_page);
@@ -267,8 +270,8 @@ main()
 
         if(input.is_arrow_right_clicked) Change_page(2);
         if(input.is_arrow_left_clicked) Change_page(-2);
-        if(input.is_arrow_up_clicked) Change_page(1);
-        if(input.is_arrow_down_clicked) Change_page(-1);
+        if(input.is_arrow_up_clicked) Change_page(-1);
+        if(input.is_arrow_down_clicked) Change_page(1);
 
         page_outpt_flag = PageOutputFlag::None;
         if(input.is_key_1_clicked) page_outpt_flag = PageOutputFlag::Center;
