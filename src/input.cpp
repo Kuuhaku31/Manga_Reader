@@ -3,9 +3,8 @@
 
 #include "input.h"
 
-#include "imgui_setup.h"
-
 #include "config.h"
+#include "imgui_setup.h"
 
 ImGui_setup& imgui  = ImGui_setup::Instance();
 Config&      config = Config::Instance();
@@ -21,25 +20,36 @@ Input::Instance()
 void
 Input::Process_input()
 {
+    is_minus_clicked  = false;
+    is_equals_clicked = false;
+
+    is_comma_clicked  = false;
+    is_period_clicked = false;
+
+    is_key_w_clicked = false;
+    is_key_s_clicked = false;
+    is_key_a_clicked = false;
+    is_key_d_clicked = false;
+
+    is_arrow_up_clicked    = false;
+    is_arrow_down_clicked  = false;
+    is_arrow_left_clicked  = false;
+    is_arrow_right_clicked = false;
+
+    is_key_1_clicked = false;
+    is_key_2_clicked = false;
+    is_key_3_clicked = false;
+    is_key_4_clicked = false;
+    is_key_5_clicked = false;
+    is_key_6_clicked = false;
+    is_key_7_clicked = false;
+    is_key_8_clicked = false;
+    is_key_9_clicked = false;
+    is_key_0_clicked = false;
+
     SDL_Event e;
     while(SDL_PollEvent(&e))
     {
-        is_minus_clicked  = false;
-        is_equals_clicked = false;
-
-        is_comma_clicked  = false;
-        is_period_clicked = false;
-
-        is_key_w_clicked = false;
-        is_key_s_clicked = false;
-        is_key_a_clicked = false;
-        is_key_d_clicked = false;
-
-        is_arrow_up_clicked    = false;
-        is_arrow_down_clicked  = false;
-        is_arrow_left_clicked  = false;
-        is_arrow_right_clicked = false;
-
         ImGui_ImplSDL2_ProcessEvent(&e);
 
         switch(e.type)
@@ -135,6 +145,66 @@ Input::Process_input()
                 is_period_pressed = true;
                 break;
             }
+            case SDLK_1: //"1"
+            {
+                is_key_1_clicked = true;
+                is_key_1_pressed = true;
+                break;
+            }
+            case SDLK_2: //"2"
+            {
+                is_key_2_clicked = true;
+                is_key_2_pressed = true;
+                break;
+            }
+            case SDLK_3: //"3"
+            {
+                is_key_3_clicked = true;
+                is_key_3_pressed = true;
+                break;
+            }
+            case SDLK_4: //"4"
+            {
+                is_key_4_clicked = true;
+                is_key_4_pressed = true;
+                break;
+            }
+            case SDLK_5: //"5"
+            {
+                is_key_5_clicked = true;
+                is_key_5_pressed = true;
+                break;
+            }
+            case SDLK_6: //"6"
+            {
+                is_key_6_clicked = true;
+                is_key_6_pressed = true;
+                break;
+            }
+            case SDLK_7: //"7"
+            {
+                is_key_7_clicked = true;
+                is_key_7_pressed = true;
+                break;
+            }
+            case SDLK_8: //"8"
+            {
+                is_key_8_clicked = true;
+                is_key_8_pressed = true;
+                break;
+            }
+            case SDLK_9: //"9"
+            {
+                is_key_9_clicked = true;
+                is_key_9_pressed = true;
+                break;
+            }
+            case SDLK_0: //"0"
+            {
+                is_key_0_clicked = true;
+                is_key_0_pressed = true;
+                break;
+            }
             default: break;
             };
             break;
@@ -193,6 +263,57 @@ Input::Process_input()
                 is_period_pressed = false;
                 break;
             }
+            case SDLK_1: //"1"
+            {
+                is_key_1_pressed = false;
+                break;
+            }
+            case SDLK_2: //"2"
+            {
+                is_key_2_pressed = false;
+                break;
+            }
+            case SDLK_3: //"3"
+            {
+                is_key_3_pressed = false;
+                break;
+            }
+            case SDLK_4: //"4"
+            {
+                is_key_4_pressed = false;
+                break;
+            }
+            case SDLK_5: //"5"
+            {
+                is_key_5_pressed = false;
+                break;
+            }
+            case SDLK_6: //"6"
+            {
+                is_key_6_pressed = false;
+                break;
+            }
+            case SDLK_7: //"7"
+            {
+                is_key_7_pressed = false;
+                break;
+            }
+            case SDLK_8: //"8"
+            {
+                is_key_8_pressed = false;
+                break;
+            }
+            case SDLK_9: //"9"
+            {
+                is_key_9_pressed = false;
+                break;
+            }
+            case SDLK_0: //"0"
+            {
+                is_key_0_pressed = false;
+                break;
+            }
+
             default: break;
             };
             break;

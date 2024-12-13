@@ -159,6 +159,35 @@ Config::Init_config()
 }
 
 bool
+Config::Get_manga_page_in_volume(std::string* page_path, cJSON* volume, int page_index) const
+{
+    cJSON* pages = cJSON_GetObjectItem(volume, "pages");
+
+    // 如果pages不是数组
+    if(!cJSON_IsArray(pages))
+    {
+        printf("Pages not found.\n");
+        return false;
+    }
+
+    // 遍历pages数组
+    for(int j = 0; j < cJSON_GetArraySize(pages); j++)
+    {
+        // 获取 "page" 的值
+        int page = cJSON_GetObjectItem(cJSON_GetArrayItem(pages, j), "page")->valueint;
+
+        // 如果页号相同
+        if(page == page_index)
+        {
+            *page_path = cJSON_GetObjectItem(cJSON_GetArrayItem(pages, j), "path")->valuestring;
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool
 Config::Get_manga_page(std::string* page_path, int manga_index, int volume_index, int page_index) const
 {
     cJSON* mangas  = cJSON_GetObjectItem(json_root, "mangas");
@@ -207,6 +236,66 @@ Config::Get_manga_page(std::string* page_path, int manga_index, int volume_index
     }
 
     return false;
+}
+
+std::string
+Config::Get_reading_direction(int manga_index, int volume_index) const
+{
+    cJSON* mangas  = cJSON_GetObjectItem(json_root, "mangas");
+    cJSON* manga   = cJSON_GetArrayItem(mangas, manga_index);
+    cJSON* volumes = cJSON_GetObjectItem(manga, "volumes");
+
+    // 如果volumes不是数组
+    if(!cJSON_IsArray(volumes))
+    {
+        printf("Volumes not found.\n");
+        return "";
+    }
+
+    // 遍历volumes数组
+    for(int i = 0; i < cJSON_GetArraySize(volumes); i++)
+    {
+        // 获取 "volume" 的值
+        int volume = cJSON_GetObjectItem(cJSON_GetArrayItem(volumes, i), "volume")->valueint;
+
+        // 如果卷号相同
+        if(volume == volume_index)
+        {
+            return cJSON_GetObjectItem(cJSON_GetArrayItem(volumes, i), "reading_direction")->valuestring;
+        }
+    }
+
+    return "";
+}
+
+int
+Config::Get_volume_page_count(int manga_index, int volume_index) const
+{
+    cJSON* mangas  = cJSON_GetObjectItem(json_root, "mangas");
+    cJSON* manga   = cJSON_GetArrayItem(mangas, manga_index);
+    cJSON* volumes = cJSON_GetObjectItem(manga, "volumes");
+
+    // 如果volumes不是数组
+    if(!cJSON_IsArray(volumes))
+    {
+        printf("Volumes not found.\n");
+        return 0;
+    }
+
+    // 遍历volumes数组
+    for(int i = 0; i < cJSON_GetArraySize(volumes); i++)
+    {
+        // 获取 "volume" 的值
+        int volume = cJSON_GetObjectItem(cJSON_GetArrayItem(volumes, i), "volume")->valueint;
+
+        // 如果卷号相同
+        if(volume == volume_index)
+        {
+            return cJSON_GetObjectItem(cJSON_GetArrayItem(volumes, i), "page_count")->valueint;
+        }
+    }
+
+    return 0;
 }
 
 void

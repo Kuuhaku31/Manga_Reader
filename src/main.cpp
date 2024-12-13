@@ -24,7 +24,8 @@ enum class PageOutputFlag
     None,
     Center,
     LeftTop,
-    NormalSize
+    NormalSize,
+    CenterInWindow
 };
 
 PageOutputFlag page_outpt_flag = PageOutputFlag::None;
@@ -35,8 +36,6 @@ struct Page_pair
 {
     std::string path_A;
     std::string path_B;
-
-    bool is_swap = false;
 };
 
 void
@@ -44,48 +43,70 @@ Load_page(const Page_pair& pair, SDL_Texture*& texture) // 加载图片
 {
     SDL_DestroyTexture(texture); // 释放纹理
 
-    SDL_Surface* surface_A = nullptr;
-    SDL_Surface* surface_B = nullptr;
-
     // 加载图片
-    surface_A = IMG_Load(pair.is_swap ? pair.path_B.c_str() : pair.path_A.c_str());
-    surface_B = IMG_Load(pair.is_swap ? pair.path_A.c_str() : pair.path_B.c_str());
+    SDL_Surface* surface_A = IMG_Load(pair.path_A.c_str());
+    SDL_Surface* surface_B = IMG_Load(pair.path_B.c_str());
 
-    if(surface_A == nullptr || surface_B == nullptr)
+    int texture_width, texture_height = 0;
+
+    if(surface_A && surface_B)
     {
-        printf("Error: %s\n", IMG_GetError());
-        SDL_FreeSurface(surface_A);
-        SDL_FreeSurface(surface_B);
-        return;
-    }
+        // 创建一个合并后的表面
+        texture_width  = surface_A->w + surface_B->w;
+        texture_height = surface_A->h > surface_B->h ? surface_A->h : surface_B->h;
 
-    // 创建一个合并后的表面
-    int mergedWidth  = surface_A->w + surface_B->w;
-    int mergedHeight = surface_A->h > surface_B->h ? surface_A->h : surface_B->h;
+        SDL_Surface* mergedImage = SDL_CreateRGBSurface(
+            0,
+            texture_width,
+            texture_height,
+            32,
+            0x00FF0000,
+            0x0000FF00,
+            0x000000FF,
+            0xFF000000);
+        if(!mergedImage)
+        {
+            printf("Error: %s\n", SDL_GetError());
+            SDL_FreeSurface(surface_A);
+            SDL_FreeSurface(surface_B);
+            return;
+        }
 
-    SDL_Surface* mergedImage = SDL_CreateRGBSurface(0, mergedWidth, mergedHeight, 32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
-    if(!mergedImage)
-    {
-        printf("Error: %s\n", SDL_GetError());
-        SDL_FreeSurface(surface_A);
-        SDL_FreeSurface(surface_B);
-        return;
-    }
+        // 将两张图片合并到一个表面上
+        SDL_Rect destRect1 = { 0, 0, surface_A->w, surface_A->h };
+        SDL_Rect destRect2 = { surface_A->w, 0, surface_B->w, surface_B->h };
+        SDL_BlitSurface(surface_A, NULL, mergedImage, &destRect1);
+        SDL_BlitSurface(surface_B, NULL, mergedImage, &destRect2);
 
-    // 将两张图片合并到一个表面上
-    SDL_Rect destRect1 = { 0, 0, surface_A->w, surface_A->h };
-    SDL_Rect destRect2 = { surface_A->w, 0, surface_B->w, surface_B->h };
-    SDL_BlitSurface(surface_A, NULL, mergedImage, &destRect1);
-    SDL_BlitSurface(surface_B, NULL, mergedImage, &destRect2);
+        // 将合并后的表面转换为纹理
+        texture = SDL_CreateTextureFromSurface(imgui.renderer, mergedImage);
+        if(!texture)
+        {
+            printf("Error: %s\n", SDL_GetError());
+            SDL_FreeSurface(surface_A);
+            SDL_FreeSurface(surface_B);
+            SDL_FreeSurface(mergedImage);
+            return;
+        }
 
-    // 将合并后的表面转换为纹理
-    texture = SDL_CreateTextureFromSurface(imgui.renderer, mergedImage);
-    if(!texture)
-    {
-        printf("Error: %s\n", SDL_GetError());
-        SDL_FreeSurface(surface_A);
-        SDL_FreeSurface(surface_B);
         SDL_FreeSurface(mergedImage);
+    }
+    else if(surface_A)
+    {
+        texture_width  = surface_A->w;
+        texture_height = surface_A->h;
+
+        texture = SDL_CreateTextureFromSurface(imgui.renderer, surface_A);
+    }
+    else if(surface_B)
+    {
+        texture_width  = surface_B->w;
+        texture_height = surface_B->h;
+
+        texture = SDL_CreateTextureFromSurface(imgui.renderer, surface_B);
+    }
+    else
+    {
         return;
     }
 
@@ -95,7 +116,37 @@ Load_page(const Page_pair& pair, SDL_Texture*& texture) // 加载图片
     // 释放表面
     SDL_FreeSurface(surface_A);
     SDL_FreeSurface(surface_B);
-    SDL_FreeSurface(mergedImage);
+}
+
+void
+Change_page(int d_page = 0)
+{
+    static int page_index = 0;
+
+    Page_pair   pair;
+    std::string reading_direction = config.Get_reading_direction(0, 1);
+    int         page_count        = config.Get_volume_page_count(0, 1);
+
+    if(reading_direction == "right-to-left")
+    {
+        page_index -= d_page;
+
+        if(page_index < 0) page_index = 0;
+
+        config.Get_manga_page(&pair.path_B, 0, 1, page_index);
+        config.Get_manga_page(&pair.path_A, 0, 1, page_index + 1);
+    }
+    else
+    {
+        page_index += d_page;
+
+        if(page_index >= page_count) page_index = page_count - 1;
+
+        config.Get_manga_page(&pair.path_A, 0, 1, page_index);
+        config.Get_manga_page(&pair.path_B, 0, 1, page_index + 1);
+    }
+
+    Load_page(pair, tex_page);
 }
 
 void
@@ -125,9 +176,48 @@ ImGui_Window_Book(SDL_Texture* texture, PageOutputFlag flag = PageOutputFlag::No
     }
     case PageOutputFlag::NormalSize:
     {
+        float d_zoom = 1 / config.page_zoom;
+
+        ImVec2 center = ImVec2(imgui.io->DisplaySize.x / 2, imgui.io->DisplaySize.y / 2);
+
+        ImVec2 dv;
+        dv.x = center.x - tex_page_pos.x;
+        dv.y = center.y - tex_page_pos.y;
+
+        dv.x = -dv.x * d_zoom;
+        dv.y = -dv.y * d_zoom;
+
+        tex_page_pos.x = center.x + dv.x;
+        tex_page_pos.y = center.y + dv.y;
+
+
         config.page_zoom = 1.0f;
 
         output_size = ImVec2(w, h);
+        break;
+    }
+    case PageOutputFlag::CenterInWindow:
+    {
+        float ratio_page = (float)w / h;
+        int   display_w  = imgui.io->DisplaySize.x - 20;
+        int   display_h  = imgui.io->DisplaySize.y - 20;
+        float ratio_win  = (float)display_w / display_h;
+
+        if(ratio_page > ratio_win)
+        {
+            config.page_zoom = (float)display_w / w;
+            output_size      = ImVec2(display_w, h * config.page_zoom);
+            tex_page_pos.x   = 10;
+            tex_page_pos.y   = (imgui.io->DisplaySize.y - output_size.y) / 2;
+        }
+        else
+        {
+            config.page_zoom = (float)display_h / h;
+            output_size      = ImVec2(w * config.page_zoom, display_h);
+            tex_page_pos.x   = (imgui.io->DisplaySize.x - output_size.x) / 2;
+            tex_page_pos.y   = 10;
+        }
+
         break;
     }
     default: break;
@@ -167,12 +257,7 @@ main()
 
     config.Init();
 
-    Page_pair pair;
-    int       n = 4;
-    config.Get_manga_page(&pair.path_A, 0, 1, n);
-    config.Get_manga_page(&pair.path_B, 0, 1, n + 1);
-    pair.is_swap = true;
-    Load_page(pair, tex_page);
+    Change_page(0);
 
     Console console;
     console.AddLog("Welcome to ImGui Console!");
@@ -181,7 +266,16 @@ main()
     {
         imgui.On_frame_begin();
 
+        if(input.is_arrow_right_clicked) Change_page(2);
+        if(input.is_arrow_left_clicked) Change_page(-2);
+        if(input.is_arrow_up_clicked) Change_page(1);
+        if(input.is_arrow_down_clicked) Change_page(-1);
+
         page_outpt_flag = PageOutputFlag::None;
+        if(input.is_key_1_clicked) page_outpt_flag = PageOutputFlag::Center;
+        if(input.is_key_2_clicked) page_outpt_flag = PageOutputFlag::LeftTop;
+        if(input.is_key_3_clicked) page_outpt_flag = PageOutputFlag::NormalSize;
+        if(input.is_key_4_clicked) page_outpt_flag = PageOutputFlag::CenterInWindow;
 
         input.Process_input();
 

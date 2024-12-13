@@ -49,6 +49,29 @@ public:
     bool is_arrow_left_clicked  = false;
     bool is_arrow_right_clicked = false;
 
+    // '1' '2' '3' '4' '5' '6' '7' '8' '9' '0'
+    bool is_key_1_pressed = false;
+    bool is_key_2_pressed = false;
+    bool is_key_3_pressed = false;
+    bool is_key_4_pressed = false;
+    bool is_key_5_pressed = false;
+    bool is_key_6_pressed = false;
+    bool is_key_7_pressed = false;
+    bool is_key_8_pressed = false;
+    bool is_key_9_pressed = false;
+    bool is_key_0_pressed = false;
+
+    bool is_key_1_clicked = false;
+    bool is_key_2_clicked = false;
+    bool is_key_3_clicked = false;
+    bool is_key_4_clicked = false;
+    bool is_key_5_clicked = false;
+    bool is_key_6_clicked = false;
+    bool is_key_7_clicked = false;
+    bool is_key_8_clicked = false;
+    bool is_key_9_clicked = false;
+    bool is_key_0_clicked = false;
+
 
 private:
     Input()                        = default;

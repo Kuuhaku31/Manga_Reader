@@ -24,7 +24,11 @@ public:
     void Init_config(); // 初始化配置文件
 
 public:
+    bool Get_manga_page_in_volume(std::string* page_path, cJSON* volume, int page_index) const;           // 获取卷内漫画页
     bool Get_manga_page(std::string* page_path, int manga_index, int volume_index, int page_index) const; // 获取漫画页
+
+    std::string Get_reading_direction(int manga_index, int volume_index) const; // 获取阅读方向
+    int         Get_volume_page_count(int manga_index, int volume_index) const; // 获取卷页数
 
     void Load_manga_volume(int manga_index, int volume_index, std::string& volume_path); // 加载漫画卷
     void Print_manga(int index);                                                         // 打印漫画信息
