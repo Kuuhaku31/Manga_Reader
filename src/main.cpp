@@ -3,7 +3,6 @@
 
 #include "config.h"
 #include "console.h"
-#include "imgui_setup.h"
 #include "input.h"
 
 #define D_MOVE 10
@@ -232,12 +231,12 @@ void
 ImGui_Window_config(bool& is_running, float& zoom) // 显示配置窗口
 {
     ImGui::Begin("window data");
-    float color[4] = { imgui.clear_color.r / 255.0f, imgui.clear_color.g / 255.0f, imgui.clear_color.b / 255.0f, imgui.clear_color.a / 255.0f };
+    float color[4] = { config.clear_color.r / 255.0f, config.clear_color.g / 255.0f, config.clear_color.b / 255.0f, config.clear_color.a / 255.0f };
     ImGui::ColorEdit4("Clear Color", color);
-    imgui.clear_color.r = color[0] * 255;
-    imgui.clear_color.g = color[1] * 255;
-    imgui.clear_color.b = color[2] * 255;
-    imgui.clear_color.a = color[3] * 255;
+    config.clear_color.r = color[0] * 255;
+    config.clear_color.g = color[1] * 255;
+    config.clear_color.b = color[2] * 255;
+    config.clear_color.a = color[3] * 255;
 
     ImGui::DragFloat("Zoom", &zoom, 0.01f, 0.1f, 10.0f);
 
@@ -310,7 +309,7 @@ main()
 
         if(is_show_console) console.Draw("Console", &is_show_console);
 
-        ImGui::ShowDemoWindow();
+        // ImGui::ShowDemoWindow();
 
         imgui.On_frame_end();
     }

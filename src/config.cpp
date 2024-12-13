@@ -3,8 +3,6 @@
 
 #include "config.h"
 
-#include "imgui_setup.h"
-
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -42,10 +40,10 @@ Config::Init()
         cJSON_GetObjectItem(window_config, "window_height")->valueint
     };
 
-    imgui.clear_color.r = cJSON_GetObjectItem(window_config, "clear_color_r")->valueint;
-    imgui.clear_color.g = cJSON_GetObjectItem(window_config, "clear_color_g")->valueint;
-    imgui.clear_color.b = cJSON_GetObjectItem(window_config, "clear_color_b")->valueint;
-    imgui.clear_color.a = cJSON_GetObjectItem(window_config, "clear_color_a")->valueint;
+    clear_color.r = cJSON_GetObjectItem(window_config, "clear_color_r")->valueint;
+    clear_color.g = cJSON_GetObjectItem(window_config, "clear_color_g")->valueint;
+    clear_color.b = cJSON_GetObjectItem(window_config, "clear_color_b")->valueint;
+    clear_color.a = cJSON_GetObjectItem(window_config, "clear_color_a")->valueint;
 
     bool is_fullscreen = cJSON_IsTrue(cJSON_GetObjectItem(window_config, "window_fullscreen"));
 
@@ -85,6 +83,12 @@ Config::Quit()
     cJSON_ReplaceItemInObject(window_config, "window_height", cJSON_CreateNumber(window_rect.h));
 
     imgui.Quit();
+
+    // 保存颜色参数
+    cJSON_ReplaceItemInObject(window_config, "clear_color_r", cJSON_CreateNumber(clear_color.r));
+    cJSON_ReplaceItemInObject(window_config, "clear_color_g", cJSON_CreateNumber(clear_color.g));
+    cJSON_ReplaceItemInObject(window_config, "clear_color_b", cJSON_CreateNumber(clear_color.b));
+    cJSON_ReplaceItemInObject(window_config, "clear_color_a", cJSON_CreateNumber(clear_color.a));
 
     Save();
 

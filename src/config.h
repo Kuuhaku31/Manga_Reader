@@ -3,8 +3,9 @@
 
 #pragma once
 
+#include "imgui_setup.h"
+
 #include <cJSON.h>
-#include <string>
 
 // 单例模式
 class Config
@@ -36,6 +37,8 @@ public:
 public:
     bool  is_running = true;
     float page_zoom  = 1.0f;
+
+    Color clear_color = { 0xcc, 0xcc, 0xcc, 0xff };
 
 private:
     cJSON* json_root = nullptr; // JSON根节点
