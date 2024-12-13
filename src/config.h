@@ -29,6 +29,10 @@ public:
     void Load_manga_volume(int manga_index, int volume_index, std::string& volume_path); // 加载漫画卷
     void Print_manga(int index);                                                         // 打印漫画信息
 
+public:
+    bool  is_running = true;
+    float page_zoom  = 1.0f;
+
 private:
     cJSON* json_root = nullptr; // JSON根节点
 
