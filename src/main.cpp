@@ -1,4 +1,4 @@
-﻿
+
 // main.cpp
 
 #include "bookshelf.h"
@@ -9,17 +9,10 @@
 #define D_MOVE 10
 #define D_ZOOM 0.01f
 
-const char  manga_title[] = "ぼっち・ざ・ろっく！";
-std::string path          = "D:\\manga\\Bocchi The Rock\\DLRAW.TO_Bocchi The Rock vol 01-06\\DLRAW.TO_Bocchi The Rock v01";
-
 static ImGui_setup& imgui     = ImGui_setup::Instance();
 static Config&      config    = Config::Instance();
 static Input&       input     = Input::Instance();
 static Bookshelf&   bookshelf = Bookshelf::Instance();
-
-bool is_show_console = false;
-
-ImVec2 tex_page_pos; // 纹理位置
 
 enum class PageOutputFlag
 {
@@ -36,8 +29,8 @@ SDL_Texture* tex_page = nullptr;
 
 struct Page_pair
 {
-    std::string path_A;
-    std::string path_B;
+    const char* path_A = nullptr;
+    const char* path_B = nullptr;
 };
 
 void
@@ -45,14 +38,22 @@ Load_page(const Page_pair& pair, SDL_Texture*& texture) // 加载图片
 {
     SDL_DestroyTexture(texture); // 释放纹理
 
-    // 加载图片
-    SDL_Surface* surface_A = IMG_Load(pair.path_A.c_str());
-    SDL_Surface* surface_B = IMG_Load(pair.path_B.c_str());
-
     int texture_width, texture_height = 0;
 
-    if(surface_A && surface_B)
+    if(pair.path_A && pair.path_B)
     {
+        // 加载图片
+        SDL_Surface* surface_A = IMG_Load(pair.path_A);
+        SDL_Surface* surface_B = IMG_Load(pair.path_B);
+
+        if(!surface_A || !surface_B)
+        {
+            printf("Error: %s\n", SDL_GetError());
+            SDL_FreeSurface(surface_A);
+            SDL_FreeSurface(surface_B);
+            return;
+        }
+
         // 创建一个合并后的表面
         texture_width  = surface_A->w + surface_B->w;
         texture_height = surface_A->h > surface_B->h ? surface_A->h : surface_B->h;
@@ -92,20 +93,42 @@ Load_page(const Page_pair& pair, SDL_Texture*& texture) // 加载图片
         }
 
         SDL_FreeSurface(mergedImage);
+        SDL_FreeSurface(surface_A);
+        SDL_FreeSurface(surface_B);
     }
-    else if(surface_A)
+    else if(pair.path_A)
     {
+        SDL_Surface* surface_A = IMG_Load(pair.path_A);
+        if(!surface_A)
+        {
+            printf("Error: %s\n", SDL_GetError());
+            SDL_FreeSurface(surface_A);
+            return;
+        }
+
         texture_width  = surface_A->w;
         texture_height = surface_A->h;
 
         texture = SDL_CreateTextureFromSurface(imgui.renderer, surface_A);
+
+        SDL_FreeSurface(surface_A);
     }
-    else if(surface_B)
+    else if(pair.path_B)
     {
+        SDL_Surface* surface_B = IMG_Load(pair.path_B);
+        if(!surface_B)
+        {
+            printf("Error: %s\n", SDL_GetError());
+            SDL_FreeSurface(surface_B);
+            return;
+        }
+
         texture_width  = surface_B->w;
         texture_height = surface_B->h;
 
         texture = SDL_CreateTextureFromSurface(imgui.renderer, surface_B);
+
+        SDL_FreeSurface(surface_B);
     }
     else
     {
@@ -114,38 +137,38 @@ Load_page(const Page_pair& pair, SDL_Texture*& texture) // 加载图片
 
     // 设置纹理过滤模式为线性过滤（抗锯齿）
     SDL_SetTextureScaleMode(texture, SDL_ScaleModeLinear);
-
-    // 释放表面
-    SDL_FreeSurface(surface_A);
-    SDL_FreeSurface(surface_B);
 }
 
 void
 Change_page(int d_page = 0)
 {
-    static int page_index = 0;
-
     Page_pair   pair;
-    std::string reading_direction = bookshelf.Get_reading_direction(manga_title, 0);
-    int         page_count        = bookshelf.Get_volume_page_count(manga_title, 0);
+    const char* reading_direction = bookshelf.Get_reading_direction(config.manga_title.c_str(), config.manga_volume_idx);
 
-    if(reading_direction == "right-to-left")
+    // 如果没有阅读方向
+    if(!reading_direction) return;
+
+    int page_count = bookshelf.Get_volume_page_count(config.manga_title.c_str(), config.manga_volume_idx);
+
+    if(strcmp(reading_direction, "right-to-left") == 0)
     {
-        page_index -= d_page;
+        config.manga_page_idx -= d_page;
 
-        if(page_index < 0) page_index = 0;
+        if(config.manga_page_idx < 0) config.manga_page_idx = 0;
+        if(config.manga_page_idx >= page_count) config.manga_page_idx = page_count - 1;
 
-        pair.path_B = bookshelf.Get_manga_page(manga_title, 0, page_index);
-        pair.path_A = bookshelf.Get_manga_page(manga_title, 0, page_index + 1);
+        pair.path_B = bookshelf.Get_manga_page(config.manga_title.c_str(), config.manga_volume_idx, config.manga_page_idx);
+        pair.path_A = bookshelf.Get_manga_page(config.manga_title.c_str(), config.manga_volume_idx, config.manga_page_idx + 1);
     }
     else
     {
-        page_index += d_page;
+        config.manga_page_idx += d_page;
 
-        if(page_index >= page_count) page_index = page_count - 1;
+        if(config.manga_page_idx < 0) config.manga_page_idx = 0;
+        if(config.manga_page_idx >= page_count) config.manga_page_idx = page_count - 1;
 
-        pair.path_A = bookshelf.Get_manga_page(manga_title, 0, page_index);
-        pair.path_B = bookshelf.Get_manga_page(manga_title, 0, page_index + 1);
+        pair.path_A = bookshelf.Get_manga_page(config.manga_title.c_str(), config.manga_volume_idx, config.manga_page_idx);
+        pair.path_B = bookshelf.Get_manga_page(config.manga_title.c_str(), config.manga_volume_idx, config.manga_page_idx + 1);
     }
 
     Load_page(pair, tex_page);
@@ -157,7 +180,7 @@ ImGui_Window_Book(SDL_Texture* texture, PageOutputFlag flag = PageOutputFlag::No
     int w, h = 0;
     SDL_QueryTexture(texture, NULL, NULL, &w, &h); // 获取纹理大小
 
-    ImVec2 output_size(w * config.page_zoom, h * config.page_zoom);
+    ImVec2 output_size(w * config.manga_page_zoom, h * config.manga_page_zoom);
 
     switch(flag)
     {
@@ -167,33 +190,33 @@ ImGui_Window_Book(SDL_Texture* texture, PageOutputFlag flag = PageOutputFlag::No
     }
     case PageOutputFlag::Center:
     {
-        tex_page_pos.x = (imgui.io->DisplaySize.x - output_size.x) / 2;
-        tex_page_pos.y = (imgui.io->DisplaySize.y - output_size.y) / 2;
+        config.manga_page_pos.x = (imgui.io->DisplaySize.x - output_size.x) / 2;
+        config.manga_page_pos.y = (imgui.io->DisplaySize.y - output_size.y) / 2;
         break;
     }
     case PageOutputFlag::LeftTop:
     {
-        tex_page_pos = ImVec2(0, 0);
+        config.manga_page_pos = ImVec2(0, 0);
         break;
     }
     case PageOutputFlag::NormalSize:
     {
-        float d_zoom = 1 / config.page_zoom;
+        float d_zoom = 1 / config.manga_page_zoom;
 
         ImVec2 center = ImVec2(imgui.io->DisplaySize.x / 2, imgui.io->DisplaySize.y / 2);
 
         ImVec2 dv;
-        dv.x = center.x - tex_page_pos.x;
-        dv.y = center.y - tex_page_pos.y;
+        dv.x = center.x - config.manga_page_pos.x;
+        dv.y = center.y - config.manga_page_pos.y;
 
         dv.x = -dv.x * d_zoom;
         dv.y = -dv.y * d_zoom;
 
-        tex_page_pos.x = center.x + dv.x;
-        tex_page_pos.y = center.y + dv.y;
+        config.manga_page_pos.x = center.x + dv.x;
+        config.manga_page_pos.y = center.y + dv.y;
 
 
-        config.page_zoom = 1.0f;
+        config.manga_page_zoom = 1.0f;
 
         output_size = ImVec2(w, h);
         break;
@@ -207,17 +230,17 @@ ImGui_Window_Book(SDL_Texture* texture, PageOutputFlag flag = PageOutputFlag::No
 
         if(ratio_page > ratio_win)
         {
-            config.page_zoom = (float)display_w / w;
-            output_size      = ImVec2(display_w, h * config.page_zoom);
-            tex_page_pos.x   = 10;
-            tex_page_pos.y   = (imgui.io->DisplaySize.y - output_size.y) / 2;
+            config.manga_page_zoom  = (float)display_w / w;
+            output_size             = ImVec2(display_w, h * config.manga_page_zoom);
+            config.manga_page_pos.x = 10;
+            config.manga_page_pos.y = (imgui.io->DisplaySize.y - output_size.y) / 2;
         }
         else
         {
-            config.page_zoom = (float)display_h / h;
-            output_size      = ImVec2(w * config.page_zoom, display_h);
-            tex_page_pos.x   = (imgui.io->DisplaySize.x - output_size.x) / 2;
-            tex_page_pos.y   = 10;
+            config.manga_page_zoom  = (float)display_h / h;
+            output_size             = ImVec2(w * config.manga_page_zoom, display_h);
+            config.manga_page_pos.x = (imgui.io->DisplaySize.x - output_size.x) / 2;
+            config.manga_page_pos.y = 10;
         }
 
         break;
@@ -225,9 +248,9 @@ ImGui_Window_Book(SDL_Texture* texture, PageOutputFlag flag = PageOutputFlag::No
     default: break;
     }
 
-    ImVec2 p_max(tex_page_pos.x + output_size.x, tex_page_pos.y + output_size.y);
+    ImVec2 p_max(config.manga_page_pos.x + output_size.x, config.manga_page_pos.y + output_size.y);
 
-    ImGui::GetBackgroundDrawList()->AddImage((ImTextureID)texture, tex_page_pos, p_max);
+    ImGui::GetBackgroundDrawList()->AddImage((ImTextureID)texture, config.manga_page_pos, p_max);
 }
 
 void
@@ -243,7 +266,9 @@ ImGui_Window_config(bool& is_running, float& zoom) // 显示配置窗口
 
     ImGui::DragFloat("Zoom", &zoom, 0.01f, 0.1f, 10.0f);
 
-    ImGui::Checkbox("Show Console", &is_show_console);
+    ImGui::Checkbox("Show Console", &config.is_show_console);
+    ImGui::SameLine();
+    ImGui::Text("page_index: %d", config.manga_page_idx);
 
     // 显示帧率
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
@@ -281,10 +306,10 @@ main()
 
         input.Process_input();
 
-        if(input.is_key_w_pressed) tex_page_pos.y += D_MOVE;
-        if(input.is_key_s_pressed) tex_page_pos.y -= D_MOVE;
-        if(input.is_key_a_pressed) tex_page_pos.x += D_MOVE;
-        if(input.is_key_d_pressed) tex_page_pos.x -= D_MOVE;
+        if(input.is_key_w_pressed) config.manga_page_pos.y += D_MOVE;
+        if(input.is_key_s_pressed) config.manga_page_pos.y -= D_MOVE;
+        if(input.is_key_a_pressed) config.manga_page_pos.x += D_MOVE;
+        if(input.is_key_d_pressed) config.manga_page_pos.x -= D_MOVE;
 
         float d_zoom = 1.0f;
         if(input.is_comma_pressed) d_zoom = (1 - D_ZOOM);
@@ -292,25 +317,25 @@ main()
 
         if(d_zoom != 1.0f)
         {
-            config.page_zoom *= d_zoom;
+            config.manga_page_zoom *= d_zoom;
 
             ImVec2 center = ImVec2(imgui.io->DisplaySize.x / 2, imgui.io->DisplaySize.y / 2);
 
             ImVec2 dv;
-            dv.x = center.x - tex_page_pos.x;
-            dv.y = center.y - tex_page_pos.y;
+            dv.x = center.x - config.manga_page_pos.x;
+            dv.y = center.y - config.manga_page_pos.y;
 
             dv.x = -dv.x * d_zoom;
             dv.y = -dv.y * d_zoom;
 
-            tex_page_pos.x = center.x + dv.x;
-            tex_page_pos.y = center.y + dv.y;
+            config.manga_page_pos.x = center.x + dv.x;
+            config.manga_page_pos.y = center.y + dv.y;
         }
 
         ImGui_Window_Book(tex_page, page_outpt_flag);
-        ImGui_Window_config(config.is_running, config.page_zoom);
+        ImGui_Window_config(config.is_running, config.manga_page_zoom);
 
-        if(is_show_console) console.Draw("Console", &is_show_console);
+        if(config.is_show_console) console.Draw("Console", &config.is_show_console);
 
         // ImGui::ShowDemoWindow();
 

@@ -25,13 +25,12 @@ main()
 
     bookshelf.LoadMangas();
 
-    // for(int i = 0; i < 6; i++)
-    // {
-    //     bookshelf.Add_manga(manga_title);
-    //     bookshelf.Add_manga_volume(manga_title, i, "right-to-left", paths[i]);
-    // }
+    bookshelf.Add_manga(manga_title);
 
-    bookshelf.ReLoad_manga(manga_title);
+    for(int i = 0; i < sizeof(paths) / sizeof(paths[0]); i++)
+    {
+        bookshelf.Add_manga_volume(manga_title, i, "right-to-left", paths[i]);
+    }
 
     bookshelf.SaveMangas();
 

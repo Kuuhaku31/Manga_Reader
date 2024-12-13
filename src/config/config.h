@@ -25,8 +25,17 @@ public:
     void Init_config(); // 初始化配置文件
 
 public:
-    bool  is_running = true;
-    float page_zoom  = 1.0f;
+    cJSON* Get_json_root() const { return json_root; }
+
+public:
+    bool is_running      = true;
+    bool is_show_console = false;
+
+    std::string manga_title      = "ぼっち・ざ・ろっく！";
+    int         manga_volume_idx = 0;
+    int         manga_page_idx   = 0;
+    ImVec2      manga_page_pos;         // 纹理位置
+    float       manga_page_zoom = 1.0f; // 纹理缩放
 
     Color clear_color = { 0xcc, 0xcc, 0xcc, 0xff };
 

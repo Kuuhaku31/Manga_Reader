@@ -60,6 +60,18 @@ Config::Init()
     // 初始化窗口
     imgui.Init(window_title, window_rect, is_fullscreen);
 
+    // 加载漫画配置
+    cJSON* manga_config = cJSON_GetObjectItem(json_root, "manga_config");
+    // 漫画标题、卷、页
+    manga_title      = cJSON_GetObjectItem(manga_config, "manga_title")->valuestring;
+    manga_volume_idx = cJSON_GetObjectItem(manga_config, "manga_volume_idx")->valueint;
+    manga_page_idx   = cJSON_GetObjectItem(manga_config, "manga_page_idx")->valueint;
+    // 漫画位置
+    cJSON* page_pos = cJSON_GetObjectItem(manga_config, "manga_page_pos");
+    manga_page_pos  = ImVec2(cJSON_GetObjectItem(page_pos, "x")->valuedouble, cJSON_GetObjectItem(page_pos, "y")->valuedouble);
+    // 漫画缩放
+    manga_page_zoom = cJSON_GetObjectItem(manga_config, "manga_page_zoom")->valuedouble;
+
     printf("Config init.\n");
 }
 
@@ -99,6 +111,19 @@ Config::Quit()
     cJSON_ReplaceItemInObject(window_config, "clear_color_g", cJSON_CreateNumber(clear_color.g));
     cJSON_ReplaceItemInObject(window_config, "clear_color_b", cJSON_CreateNumber(clear_color.b));
     cJSON_ReplaceItemInObject(window_config, "clear_color_a", cJSON_CreateNumber(clear_color.a));
+
+    // 保存漫画配置
+    cJSON* manga_config = cJSON_GetObjectItem(json_root, "manga_config");
+    // 保存漫画标题、卷、页
+    cJSON_ReplaceItemInObject(manga_config, "manga_title", cJSON_CreateString(manga_title.c_str()));
+    cJSON_ReplaceItemInObject(manga_config, "manga_volume_idx", cJSON_CreateNumber(manga_volume_idx));
+    cJSON_ReplaceItemInObject(manga_config, "manga_page_idx", cJSON_CreateNumber(manga_page_idx));
+    // 保存漫画位置
+    cJSON* page_pos = cJSON_GetObjectItem(manga_config, "manga_page_pos");
+    cJSON_ReplaceItemInObject(page_pos, "x", cJSON_CreateNumber(manga_page_pos.x));
+    cJSON_ReplaceItemInObject(page_pos, "y", cJSON_CreateNumber(manga_page_pos.y));
+    // 保存漫画缩放
+    cJSON_ReplaceItemInObject(manga_config, "manga_page_zoom", cJSON_CreateNumber(manga_page_zoom));
 
     // 退出窗口
     imgui.Quit();
@@ -185,6 +210,20 @@ Config::Init_config()
     cJSON_AddNumberToObject(window_config, "clear_color_b", 0xcc);
     cJSON_AddNumberToObject(window_config, "clear_color_a", 0xff);
     cJSON_AddFalseToObject(window_config, "window_fullscreen");
+
+    // 添加 manga_config 对象
+    cJSON* manga_config = cJSON_CreateObject();
+    cJSON_AddItemToObject(json_root, "manga_config", manga_config);
+
+    // 添加基本配置
+    cJSON_AddStringToObject(manga_config, "manga_title", "漫画标题");
+    cJSON_AddNumberToObject(manga_config, "manga_volume_idx", 0);
+    cJSON_AddNumberToObject(manga_config, "manga_page_idx", 0);
+    cJSON* page_pos = cJSON_CreateObject();
+    cJSON_AddItemToObject(manga_config, "manga_page_pos", page_pos);
+    cJSON_AddNumberToObject(page_pos, "x", 0);
+    cJSON_AddNumberToObject(page_pos, "y", 0);
+    cJSON_AddNumberToObject(manga_config, "manga_page_zoom", 1.0);
 
     printf("Config initialized.\n");
 }
