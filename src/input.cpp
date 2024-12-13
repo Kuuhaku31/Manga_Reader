@@ -5,8 +5,6 @@
 
 #include "config.h"
 
-ImGui_setup& imgui = ImGui_setup::Instance();
-
 Input* Input::instance = nullptr;
 Input&
 Input::Instance()
@@ -18,7 +16,8 @@ Input::Instance()
 void
 Input::Process_input()
 {
-    static Config& config = Config::Instance();
+    static Config&      config = Config::Instance();
+    static ImGui_setup& imgui  = ImGui_setup::Instance();
 
     is_minus_clicked  = false;
     is_equals_clicked = false;

@@ -1,71 +1,37 @@
-#include <SDL2/SDL.h>
-#include <stdio.h>
+
+#include "bookshelf.h"
+#include "config.h"
+
+const char  manga_title[] = "ぼっち・ざ・ろっく！";
+const char* paths[]       = {
+    "D:\\manga\\Bocchi The Rock\\DLRAW.TO_Bocchi The Rock vol 01-06\\DLRAW.TO_Bocchi The Rock v01",
+    "D:\\manga\\Bocchi The Rock\\DLRAW.TO_Bocchi The Rock vol 01-06\\DLRAW.TO_Bocchi The Rock v02",
+    "D:\\manga\\Bocchi The Rock\\DLRAW.TO_Bocchi The Rock vol 01-06\\DLRAW.TO_Bocchi The Rock v03",
+    "D:\\manga\\Bocchi The Rock\\DLRAW.TO_Bocchi The Rock vol 01-06\\DLRAW.TO_Bocchi The Rock v04",
+    "D:\\manga\\Bocchi The Rock\\DLRAW.TO_Bocchi The Rock vol 01-06\\DLRAW.TO_Bocchi The Rock v05",
+    "D:\\manga\\Bocchi The Rock\\DLRAW.TO_Bocchi The Rock vol 01-06\\DLRAW.TO_Bocchi The Rock v06"
+};
 
 int
-main(int argc, char* argv[])
+main()
 {
-    SDL_Init(SDL_INIT_VIDEO); // 初始化 SDL2 视频子系统
-    SDL_SetHint(SDL_HINT_MOUSE_TOUCH_EVENTS, "1");
+    // utf-8
+    SetConsoleOutputCP(CP_UTF8);
 
-    SDL_Window*   window   = SDL_CreateWindow("SDL Touch Event", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 600, SDL_WINDOW_SHOWN);
-    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    printf("Hello, Test_1!\n");
 
-    SDL_Event e;
-    SDL_bool  quit = SDL_FALSE;
+    Config&    config    = Config::Instance();
+    Bookshelf& bookshelf = Bookshelf::Instance();
 
-    while(!quit)
+    bookshelf.LoadMangas();
+
+    for(int i = 0; i < 6; i++)
     {
-        while(SDL_PollEvent(&e))
-        {
-            switch(e.type)
-            {
-            case SDL_QUIT:
-                quit = SDL_TRUE;
-                break;
-
-            case SDL_FINGERDOWN:
-                printf("Finger down at (%.2f, %.2f) with finger id %d\n",
-                    e.tfinger.x,
-                    e.tfinger.y,
-                    e.tfinger.fingerId);
-                break;
-
-            case SDL_FINGERUP:
-                printf("Finger up at (%.2f, %.2f) with finger id %d\n",
-                    e.tfinger.x,
-                    e.tfinger.y,
-                    e.tfinger.fingerId);
-                break;
-
-            case SDL_FINGERMOTION:
-                printf("Finger moved to (%.2f, %.2f) with finger id %d\n",
-                    e.tfinger.x,
-                    e.tfinger.y,
-                    e.tfinger.fingerId);
-                break;
-
-            // 处理鼠标滚轮事件
-            case SDL_MOUSEWHEEL:
-                printf("Mouse wheel event: x = %d, y = %d\n", e.wheel.x, e.wheel.y);
-                break;
-
-            // 处理鼠标点击事件
-            case SDL_MOUSEBUTTONDOWN:
-                printf("Mouse button down at (%d, %d) button %d\n", e.button.x, e.button.y, e.button.button);
-                break;
-
-            default:
-                break;
-            }
-        }
-
-        SDL_RenderClear(renderer);
-        SDL_RenderPresent(renderer);
+        bookshelf.Add_manga(manga_title);
+        bookshelf.Add_manga_volume(manga_title, i, "right-to-left", paths[i]);
     }
 
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
-    SDL_Quit();
+    bookshelf.SaveMangas();
 
     return 0;
 }

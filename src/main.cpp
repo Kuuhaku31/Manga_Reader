@@ -311,7 +311,7 @@ main()
 
         // ImGui::ShowDemoWindow();
 
-        imgui.On_frame_end();
+        imgui.On_frame_end(&config.clear_color);
     }
 
     SDL_DestroyTexture(tex_page);
