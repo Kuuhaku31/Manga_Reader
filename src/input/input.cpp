@@ -96,6 +96,13 @@ Input::Process_input()
                 is_key_c_pressed = true;
                 break;
             }
+            case SDLK_v: //"v"
+            {
+                clicked_keys.push_back(&is_key_v_clicked);
+                is_key_v_clicked = true;
+                is_key_v_pressed = true;
+                break;
+            }
             case SDLK_UP: // 向上
             {
                 clicked_keys.push_back(&is_arrow_up_clicked);
@@ -239,6 +246,11 @@ Input::Process_input()
             case SDLK_c: //"c"
             {
                 is_key_c_pressed = false;
+                break;
+            }
+            case SDLK_v: //"v"
+            {
+                is_key_v_pressed = false;
                 break;
             }
             case SDLK_UP: // 向上

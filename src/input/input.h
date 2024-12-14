@@ -43,6 +43,9 @@ public:
     bool is_key_c_pressed = false;
     bool is_key_c_clicked = false;
 
+    bool is_key_v_pressed = false;
+    bool is_key_v_clicked = false;
+
     // 'UP' 'DOWN' 'LEFT' 'RIGHT'
     bool is_arrow_up_pressed    = false;
     bool is_arrow_down_pressed  = false;

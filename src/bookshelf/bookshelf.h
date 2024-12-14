@@ -20,6 +20,8 @@ public:
     const char* Get_reading_direction(const char* manga_title, int target_volume_index) const;                 // 获取阅读方向
     int         Get_volume_page_count(const char* manga_title, int target_volume_index) const;                 // 获取卷页数
 
+    cJSON* Get_json_root() const { return mangas; }
+
 public:
     void Add_manga(const char* manga_title);
     void ReLoad_manga(const char* manga_title);

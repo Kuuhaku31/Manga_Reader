@@ -280,6 +280,90 @@ ImGui_Window_config(bool& is_running, float& zoom) // 显示配置窗口
     if(config.is_show_demo_window) ImGui::ShowDemoWindow(&config.is_show_demo_window);
 }
 
+// 递归展示 JSON 节点
+void
+DisplayJSONNode(cJSON* node, const char* name = nullptr)
+{
+    if(node == nullptr) return;
+
+    // 根据节点类型显示不同的内容
+    if(cJSON_IsObject(node))
+    {
+        // 对象节点
+        if(ImGui::TreeNode(name ? name : "Object"))
+        {
+            cJSON* child = node->child;
+            while(child)
+            {
+                DisplayJSONNode(child, child->string); // 递归显示子节点
+                child = child->next;
+            }
+            ImGui::TreePop();
+        }
+    }
+    else if(cJSON_IsArray(node))
+    {
+        // 数组节点
+        if(ImGui::TreeNode(name ? name : "Array"))
+        {
+            int    index = 0;
+            cJSON* child = node->child;
+            while(child)
+            {
+                char index_label[16];
+                snprintf(index_label, sizeof(index_label), "[%d]", index++);
+                DisplayJSONNode(child, index_label); // 递归显示子节点
+                child = child->next;
+            }
+            ImGui::TreePop();
+        }
+    }
+    else
+    {
+        // 基础类型节点
+        if(name) ImGui::Text("%s: ", name); // 显示键名
+        if(cJSON_IsString(node))
+        {
+            ImGui::SameLine();
+            ImGui::Text("\"%s\"", node->valuestring);
+        }
+        else if(cJSON_IsNumber(node))
+        {
+            ImGui::SameLine();
+            ImGui::Text("%g", node->valuedouble);
+        }
+        else if(cJSON_IsBool(node))
+        {
+            ImGui::SameLine();
+            ImGui::Text("%s", cJSON_IsTrue(node) ? "true" : "false");
+        }
+        else if(cJSON_IsNull(node))
+        {
+            ImGui::SameLine();
+            ImGui::Text("null");
+        }
+    }
+}
+
+
+void
+ImGui_Window_Manga_list(bool* is_show = nullptr) // 显示漫画列表
+{
+    if(is_show && !*is_show) return;
+
+    ImGui::PushFont(config.font_SmileySans_Oblique);
+
+    ImGui::Begin("Manga List", is_show);
+
+    cJSON* manga = bookshelf.Get_json_root();
+
+    DisplayJSONNode(manga);
+
+    ImGui::End();
+
+    ImGui::PopFont();
+}
+
 int
 main()
 {
@@ -298,6 +382,7 @@ main()
         imgui.On_frame_begin();
 
         if(input.is_key_c_clicked) config.is_show_config_window = !config.is_show_config_window;
+        if(input.is_key_v_clicked) config.is_show_manga_list = !config.is_show_manga_list;
 
         if(input.is_arrow_right_clicked) Change_page(2);
         if(input.is_arrow_left_clicked) Change_page(-2);
@@ -339,6 +424,8 @@ main()
         }
 
         ImGui_Window_Book(tex_page, page_outpt_flag);
+
+        ImGui_Window_Manga_list(&config.is_show_manga_list);
 
         if(config.is_show_config_window) ImGui_Window_config(config.is_running, config.manga_page_zoom);
 

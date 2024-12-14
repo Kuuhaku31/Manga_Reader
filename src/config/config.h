@@ -24,10 +24,17 @@ public:
 
     void Init_config(); // 初始化配置文件
 
+    cJSON* Get_json_root() const { return json_root; }
+
+public:
+    ImFont* font_default            = nullptr;
+    ImFont* font_SmileySans_Oblique = nullptr;
+
 public:
     bool is_show_config_window  = false;
     bool is_show_demo_window    = false;
     bool is_show_console_window = false;
+    bool is_show_manga_list     = false;
 
 public:
     bool is_running = true;

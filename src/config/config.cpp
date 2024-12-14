@@ -60,6 +60,12 @@ Config::Init()
     // 初始化窗口
     imgui.Init(window_title, window_rect, is_fullscreen);
 
+    // 加载字体
+    // 默认字体
+    font_default = font_default = ImGui::GetIO().Fonts->AddFontDefault();
+    // 加载支持中文的字体文件
+    font_SmileySans_Oblique = ImGui::GetIO().Fonts->AddFontFromFileTTF("SmileySans-Oblique.ttf", 18.0f, nullptr, ImGui::GetIO().Fonts->GetGlyphRangesChineseFull());
+
     // 加载漫画配置
     cJSON* manga_config = cJSON_GetObjectItem(json_root, "manga_config");
     // 漫画标题、卷、页
