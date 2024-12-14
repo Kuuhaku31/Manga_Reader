@@ -25,11 +25,12 @@ public:
     void Init_config(); // 初始化配置文件
 
 public:
-    cJSON* Get_json_root() const { return json_root; }
+    bool is_show_config_window  = false;
+    bool is_show_demo_window    = false;
+    bool is_show_console_window = false;
 
 public:
-    bool is_running      = true;
-    bool is_show_console = false;
+    bool is_running = true;
 
     std::string manga_title      = "ぼっち・ざ・ろっく！";
     int         manga_volume_idx = 0;

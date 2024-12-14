@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include <vector>
+
 // 输入（单例）
 class Input
 {
@@ -38,6 +40,9 @@ public:
     bool is_key_a_clicked = false;
     bool is_key_d_clicked = false;
 
+    bool is_key_c_pressed = false;
+    bool is_key_c_clicked = false;
+
     // 'UP' 'DOWN' 'LEFT' 'RIGHT'
     bool is_arrow_up_pressed    = false;
     bool is_arrow_down_pressed  = false;
@@ -72,6 +77,8 @@ public:
     bool is_key_9_clicked = false;
     bool is_key_0_clicked = false;
 
+private:
+    std::vector<bool*> clicked_keys;
 
 private:
     Input()                        = default;

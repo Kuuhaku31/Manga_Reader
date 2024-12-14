@@ -256,7 +256,7 @@ ImGui_Window_Book(SDL_Texture* texture, PageOutputFlag flag = PageOutputFlag::No
 void
 ImGui_Window_config(bool& is_running, float& zoom) // 显示配置窗口
 {
-    ImGui::Begin("window data");
+    ImGui::Begin("window data", &config.is_show_config_window);
     float color[4] = { config.clear_color.r / 255.0f, config.clear_color.g / 255.0f, config.clear_color.b / 255.0f, config.clear_color.a / 255.0f };
     ImGui::ColorEdit4("Clear Color", color);
     config.clear_color.r = color[0] * 255;
@@ -266,14 +266,18 @@ ImGui_Window_config(bool& is_running, float& zoom) // 显示配置窗口
 
     ImGui::DragFloat("Zoom", &zoom, 0.01f, 0.1f, 10.0f);
 
-    ImGui::Checkbox("Show Console", &config.is_show_console);
+    ImGui::Checkbox("Show Console", &config.is_show_console_window);
     ImGui::SameLine();
+    ImGui::Checkbox("Show Demo", &config.is_show_demo_window);
+
     ImGui::Text("page_index: %d", config.manga_page_idx);
 
     // 显示帧率
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
     is_running = !ImGui::Button("Quit", ImVec2(75, 25));
     ImGui::End();
+
+    if(config.is_show_demo_window) ImGui::ShowDemoWindow(&config.is_show_demo_window);
 }
 
 int
@@ -292,6 +296,8 @@ main()
     while(config.is_running)
     {
         imgui.On_frame_begin();
+
+        if(input.is_key_c_clicked) config.is_show_config_window = !config.is_show_config_window;
 
         if(input.is_arrow_right_clicked) Change_page(2);
         if(input.is_arrow_left_clicked) Change_page(-2);
@@ -333,11 +339,10 @@ main()
         }
 
         ImGui_Window_Book(tex_page, page_outpt_flag);
-        ImGui_Window_config(config.is_running, config.manga_page_zoom);
 
-        if(config.is_show_console) console.Draw("Console", &config.is_show_console);
+        if(config.is_show_config_window) ImGui_Window_config(config.is_running, config.manga_page_zoom);
 
-        // ImGui::ShowDemoWindow();
+        if(config.is_show_console_window) console.Draw("Console", &config.is_show_console_window);
 
         imgui.On_frame_end(&config.clear_color);
     }
