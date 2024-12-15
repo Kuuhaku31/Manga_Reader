@@ -40,19 +40,18 @@ public:
     ImFont* font_SmileySans_Oblique = nullptr;
 
 public:
+    bool is_show_menu           = false; // 显示菜单
     bool is_show_config_window  = false;
-    bool is_show_demo_window    = false;
     bool is_show_console_window = false;
     bool is_show_manga_list     = false;
-    bool is_show_menu           = false; // 显示菜单
+
+    bool is_show_demo_window = false;
 
 public:
     bool Is_fullscreen() const { return is_fullscreen; }
     void Make_fullscreen(bool fullscreen);
 
 public:
-    bool is_running = true;
-
     std::string manga_title      = "ぼっち・ざ・ろっく！";
     int         manga_volume_idx = 0;
     int         manga_page_idx   = 0;
@@ -71,6 +70,13 @@ private:
 
 private:
     cJSON* json_root = nullptr; // JSON根节点
+
+public:
+    bool Is_running() const { return is_running; }
+    void Stop_running() { is_running = false; }
+
+private:
+    bool is_running = true;
 
 private:
     Config()                         = default;

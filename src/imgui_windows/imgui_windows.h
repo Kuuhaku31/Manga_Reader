@@ -11,7 +11,7 @@ ImGui_Window_Book(SDL_Texture* texture);
 
 // 显示配置窗口
 void
-ImGui_Window_config(bool& is_running, float& zoom);
+ImGui_Window_config(float& zoom);
 
 // 显示漫画列表
 void

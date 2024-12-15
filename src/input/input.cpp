@@ -30,14 +30,14 @@ Input::Process_input()
         {
         case SDL_QUIT:
         {
-            config.is_running = false;
+            config.Stop_running();
             break;
         }
         case SDL_WINDOWEVENT:
         {
             if(e.window.event == SDL_WINDOWEVENT_CLOSE && e.window.windowID == imgui.Get_window_id())
             {
-                config.is_running = false;
+                config.Stop_running();
             }
             break;
         }

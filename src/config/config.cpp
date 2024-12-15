@@ -78,6 +78,14 @@ Config::Init()
     // 漫画缩放
     manga_page_zoom = cJSON_GetObjectItem(manga_config, "manga_page_zoom")->valuedouble;
 
+    // 加载imgui窗口配置
+    cJSON* imgui_config    = cJSON_GetObjectItem(json_root, "imgui_config");
+    is_show_menu           = cJSON_IsTrue(cJSON_GetObjectItem(imgui_config, "is_show_menu"));
+    is_show_config_window  = cJSON_IsTrue(cJSON_GetObjectItem(imgui_config, "is_show_config_window"));
+    is_show_console_window = cJSON_IsTrue(cJSON_GetObjectItem(imgui_config, "is_show_console_window"));
+    is_show_manga_list     = cJSON_IsTrue(cJSON_GetObjectItem(imgui_config, "is_show_manga_list"));
+    is_show_demo_window    = cJSON_IsTrue(cJSON_GetObjectItem(imgui_config, "is_show_demo_window"));
+
     printf("Config init.\n");
 }
 
@@ -130,6 +138,14 @@ Config::Quit()
     cJSON_ReplaceItemInObject(page_pos, "y", cJSON_CreateNumber(manga_page_pos.y));
     // 保存漫画缩放
     cJSON_ReplaceItemInObject(manga_config, "manga_page_zoom", cJSON_CreateNumber(manga_page_zoom));
+
+    // 保存imgui窗口配置
+    cJSON* imgui_config = cJSON_GetObjectItem(json_root, "imgui_config");
+    cJSON_ReplaceItemInObject(imgui_config, "is_show_menu", cJSON_CreateBool(is_show_menu));
+    cJSON_ReplaceItemInObject(imgui_config, "is_show_config_window", cJSON_CreateBool(is_show_config_window));
+    cJSON_ReplaceItemInObject(imgui_config, "is_show_console_window", cJSON_CreateBool(is_show_console_window));
+    cJSON_ReplaceItemInObject(imgui_config, "is_show_manga_list", cJSON_CreateBool(is_show_manga_list));
+    cJSON_ReplaceItemInObject(imgui_config, "is_show_demo_window", cJSON_CreateBool(is_show_demo_window));
 
     // 退出窗口
     imgui.Quit();
@@ -230,6 +246,16 @@ Config::Init_config()
     cJSON_AddNumberToObject(page_pos, "x", 0);
     cJSON_AddNumberToObject(page_pos, "y", 0);
     cJSON_AddNumberToObject(manga_config, "manga_page_zoom", 1.0);
+
+    // 添加 imgui_config 对象
+    cJSON* imgui_config = cJSON_CreateObject();
+    cJSON_AddItemToObject(json_root, "imgui_config", imgui_config);
+    // 添加基本配置
+    cJSON_AddFalseToObject(imgui_config, "is_show_menu");
+    cJSON_AddFalseToObject(imgui_config, "is_show_config_window");
+    cJSON_AddFalseToObject(imgui_config, "is_show_console_window");
+    cJSON_AddFalseToObject(imgui_config, "is_show_manga_list");
+    cJSON_AddFalseToObject(imgui_config, "is_show_demo_window");
 
     printf("Config initialized.\n");
 }

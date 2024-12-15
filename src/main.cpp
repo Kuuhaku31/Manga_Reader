@@ -175,7 +175,7 @@ main()
 
     Change_page();
 
-    while(config.is_running)
+    while(config.Is_running())
     {
         imgui.On_frame_begin();
 
@@ -187,7 +187,7 @@ main()
             }
             else
             {
-                config.is_running = false;
+                config.Stop_running();
             }
         }
         if(input.is_F11_clicked) config.Make_fullscreen(!config.Is_fullscreen());

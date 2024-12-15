@@ -92,7 +92,7 @@ ImGui_Window_Book(SDL_Texture* texture) // 显示图片
 }
 
 void
-ImGui_Window_config(bool& is_running, float& zoom) // 显示配置窗口
+ImGui_Window_config(float& zoom) // 显示配置窗口
 {
     ImGui::Begin("window data", &config.is_show_config_window);
     float color[4] = { config.clear_color.r / 255.0f, config.clear_color.g / 255.0f, config.clear_color.b / 255.0f, config.clear_color.a / 255.0f };
@@ -112,7 +112,8 @@ ImGui_Window_config(bool& is_running, float& zoom) // 显示配置窗口
 
     // 显示帧率
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-    is_running = !ImGui::Button("Quit", ImVec2(75, 25));
+    if(ImGui::Button("Quit", ImVec2(75, 25))) config.Stop_running();
+
     ImGui::End();
 
     if(config.is_show_demo_window) ImGui::ShowDemoWindow(&config.is_show_demo_window);
@@ -212,11 +213,11 @@ ImGui_Window_Menu(bool* is_show)
     ImGui::Checkbox("Show Config", &config.is_show_config_window);
     ImGui::Checkbox("Show Manga List", &config.is_show_manga_list);
     ImGui::Checkbox("Show Console", &config.is_show_console_window);
-    config.is_running = !ImGui::Button("Quit", ImVec2(75, 25));
+    if(ImGui::Button("Quit", ImVec2(75, 25))) config.Stop_running();
 
     ImGui_Window_Manga_list(&config.is_show_manga_list);
 
-    if(config.is_show_config_window) ImGui_Window_config(config.is_running, config.manga_page_zoom);
+    if(config.is_show_config_window) ImGui_Window_config(config.manga_page_zoom);
 
     if(config.is_show_console_window) console.Draw("Console", &config.is_show_console_window);
 
