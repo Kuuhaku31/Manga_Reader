@@ -96,6 +96,10 @@ main(int, char**)
     bool   show_another_window = false;
     ImVec4 clear_color         = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
+    // 状态变量
+    bool showSettingsWindow = false;
+    bool showAboutWindow    = false;
+
     // Main loop
     bool done = false;
     while(!done)
@@ -155,11 +159,69 @@ main(int, char**)
         // 3. Show another simple window.
         if(show_another_window)
         {
-            ImGui::Begin("Another Window", &show_another_window); // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-            ImGui::Text("Hello from another window!");
-            if(ImGui::Button("Close Me"))
-                show_another_window = false;
-            ImGui::End();
+            // 菜单栏
+            if(ImGui::BeginMainMenuBar())
+            {
+                if(ImGui::BeginMenu("File"))
+                {
+                    if(ImGui::MenuItem("Load", "Ctrl+L"))
+                    {
+                        printf("Load\n");
+                    }
+                    if(ImGui::MenuItem("Save", "Ctrl+S"))
+                    {
+                        printf("Save\n");
+                    }
+                    if(ImGui::MenuItem("Exit", "Alt+F4"))
+                    {
+                        done = true;
+                    }
+                    ImGui::EndMenu();
+                }
+
+                if(ImGui::BeginMenu("Settings"))
+                {
+                    if(ImGui::MenuItem("Preferences"))
+                    {
+                        showSettingsWindow = true;
+                    }
+                    ImGui::EndMenu();
+                }
+
+                if(ImGui::BeginMenu("Help"))
+                {
+                    if(ImGui::MenuItem("About"))
+                    {
+                        showAboutWindow = true;
+                    }
+                    ImGui::EndMenu();
+                }
+
+                ImGui::EndMainMenuBar();
+            }
+
+            // 设置窗口
+            if(showSettingsWindow)
+            {
+                ImGui::Begin("Settings", &showSettingsWindow);
+                static float someValue  = 0.5f;
+                static bool  someOption = true;
+                ImGui::Text("Adjust your preferences:");
+                ImGui::SliderFloat("Some Value", &someValue, 0.0f, 1.0f);
+                ImGui::Checkbox("Enable Option", &someOption);
+                ImGui::End();
+            }
+
+            // 关于窗口
+            if(showAboutWindow)
+            {
+                ImGui::Begin("About", &showAboutWindow);
+                ImGui::Text("Simple Application Menu Example");
+                ImGui::Text("Powered by ImGui and SDL2");
+                ImGui::Separator();
+                ImGui::Text("Author: Your Name");
+                ImGui::End();
+            }
         }
 
         // Rendering

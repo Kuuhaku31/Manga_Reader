@@ -206,20 +206,81 @@ ImGui_Window_Manga_list(bool* is_show) // 显示漫画列表
 void
 ImGui_Window_Menu(bool* is_show)
 {
+    static bool showAboutWindow = false;
+
     if(is_show && !*is_show) return;
 
-    ImGui::Begin("Menu", is_show);
+    // 菜单栏
+    if(ImGui::BeginMainMenuBar())
+    {
+        if(ImGui::BeginMenu("File"))
+        {
+            if(ImGui::MenuItem("Load", "Ctrl+L"))
+            {
+                printf("Load\n");
+            }
+            if(ImGui::MenuItem("Save", "Ctrl+S"))
+            {
+                printf("Save\n");
+            }
+            if(ImGui::MenuItem("Exit", "Alt+F4"))
+            {
+                config.Stop_running();
+            }
+            ImGui::EndMenu();
+        }
 
-    ImGui::Checkbox("Show Config", &config.is_show_config_window);
-    ImGui::Checkbox("Show Manga List", &config.is_show_manga_list);
-    ImGui::Checkbox("Show Console", &config.is_show_console_window);
-    if(ImGui::Button("Quit", ImVec2(75, 25))) config.Stop_running();
+        if(ImGui::BeginMenu("Settings"))
+        {
+            if(ImGui::MenuItem("config"))
+            {
+                config.is_show_config_window = true;
+            }
+            if(ImGui::MenuItem("Manga List"))
+            {
+                config.is_show_manga_list = true;
+            }
+            if(ImGui::MenuItem("Console"))
+            {
+                config.is_show_console_window = true;
+            }
+            ImGui::EndMenu();
+        }
 
+        if(ImGui::BeginMenu("Help"))
+        {
+            if(ImGui::MenuItem("About"))
+            {
+                showAboutWindow = true;
+            }
+            ImGui::EndMenu();
+        }
+
+        ImGui::EndMainMenuBar();
+    }
+
+    // 显示漫画列表
     ImGui_Window_Manga_list(&config.is_show_manga_list);
 
+    // 显示配置窗口
     if(config.is_show_config_window) ImGui_Window_config(config.manga_page_zoom);
 
+    // 显示控制台
     if(config.is_show_console_window) console.Draw("Console", &config.is_show_console_window);
 
-    ImGui::End();
+    // 关于窗口
+    if(showAboutWindow)
+    {
+        // 字体
+        ImGui::PushFont(config.font_SmileySans_Oblique);
+
+        ImGui::Begin("About", &showAboutWindow);
+        ImGui::Text("Simple Application Menu Example");
+        ImGui::Text("Powered by ImGui and SDL2");
+        ImGui::Separator();
+        ImGui::Text("Author: Kuuhaku Kazari");
+        ImGui::End();
+
+        ImGui::PopFont();
+    }
 }
