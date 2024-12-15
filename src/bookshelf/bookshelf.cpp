@@ -32,7 +32,7 @@ load_volume_pages_paths(cJSON* pages_paths, const char* volume_path)
             std::string extension = entry.path().extension().string();
 
             // 检查文件扩展名是否为图片格式
-            if(extension == ".jpg" || extension == ".png" || extension == ".jpeg" || extension == ".bmp" || extension == ".gif")
+            if(extension == ".avif" || extension == ".jpg" || extension == ".png" || extension == ".jpeg" || extension == ".bmp" || extension == ".gif")
             {
                 // 将图片路径存储到 volume_pages 容器中
                 volume_pages_paths.push_back(file_path);

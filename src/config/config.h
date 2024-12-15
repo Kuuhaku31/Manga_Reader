@@ -52,9 +52,12 @@ public:
     void Make_fullscreen(bool fullscreen);
 
 public:
+    bool is_flashing = true;
+
+public:
     std::string manga_title      = "ぼっち・ざ・ろっく！";
-    int         manga_volume_idx = 0;
-    int         manga_page_idx   = 0;
+    int         manga_volume_idx = -1;
+    int         manga_page_idx   = -1;
     ImVec2      manga_page_pos;         // 纹理位置
     float       manga_page_zoom = 1.0f; // 纹理缩放
 

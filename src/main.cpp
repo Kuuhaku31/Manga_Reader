@@ -173,10 +173,10 @@ main()
 
     console.AddLog("Welcome to ImGui Console!");
 
-    Change_page();
-
     while(config.Is_running())
     {
+        if(config.is_flashing) config.is_flashing = false, Change_page();
+
         imgui.On_frame_begin();
 
         if(input.is_escape_clicked)
@@ -235,7 +235,7 @@ main()
             config.manga_page_pos.y = center.y + dv.y;
         }
 
-        ImGui_Window_Book(config.tex_page);
+        ImGui_Window_Book();
 
         ImGui_Window_Menu(&config.is_show_menu);
 

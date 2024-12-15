@@ -13,10 +13,10 @@ static Bookshelf&   bookshelf = Bookshelf::Instance();
 static Console&     console   = Console::Instance();
 
 void
-ImGui_Window_Book(SDL_Texture* texture) // 显示图片
+ImGui_Window_Book() // 显示图片
 {
     int w, h = 0;
-    SDL_QueryTexture(texture, NULL, NULL, &w, &h); // 获取纹理大小
+    SDL_QueryTexture(config.tex_page, NULL, NULL, &w, &h); // 获取纹理大小
 
     ImVec2 output_size(w * config.manga_page_zoom, h * config.manga_page_zoom);
 
@@ -88,7 +88,7 @@ ImGui_Window_Book(SDL_Texture* texture) // 显示图片
 
     ImVec2 p_max(config.manga_page_pos.x + output_size.x, config.manga_page_pos.y + output_size.y);
 
-    ImGui::GetBackgroundDrawList()->AddImage((ImTextureID)texture, config.manga_page_pos, p_max);
+    ImGui::GetBackgroundDrawList()->AddImage((ImTextureID)config.tex_page, config.manga_page_pos, p_max);
 }
 
 void
@@ -203,10 +203,86 @@ ImGui_Window_Manga_list(bool* is_show) // 显示漫画列表
     ImGui::PopFont();
 }
 
+// Load Resource
+void
+ImGui_Window_Load_Resource(bool* is_show)
+{
+    static int selected_manga_idx  = -1;
+    static int selected_volume_idx = -1;
+
+    if(is_show && !*is_show) return;
+
+    ImGui::PushFont(config.font_SmileySans_Oblique);
+
+    // 首次出现时居中
+    ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x / 2, ImGui::GetIO().DisplaySize.y / 2), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+    ImGui::Begin("加载资源", is_show);
+
+    // // 下拉框，选择漫画
+    // cJSON* mangas = bookshelf.Get_json_root();
+    // cJSON* manga  = nullptr;
+    // if(ImGui::BeginCombo("Manga", cJSON_GetObjectItem(cJSON_GetArrayItem(mangas, selected_manga_idx), "title")->valuestring))
+    // {
+    //     for(int i = 0; i < cJSON_GetArraySize(mangas); i++)
+    //     {
+    //         cJSON* manga       = cJSON_GetArrayItem(mangas, i);
+    //         bool   is_selected = (selected_manga_idx == i);
+    //         if(ImGui::Selectable(cJSON_GetObjectItem(manga, "title")->valuestring, is_selected))
+    //         {
+    //             selected_manga_idx = i;
+    //         }
+    //         if(is_selected) ImGui::SetItemDefaultFocus();
+    //     }
+    //     ImGui::EndCombo();
+    // }
+
+    ImGui::End();
+
+    ImGui::PopFont();
+}
+
+// showSelectManga
+void
+ImGui_Window_Select_Manga(bool* is_show)
+{
+    if(is_show && !*is_show) return;
+
+    ImGui::PushFont(config.font_SmileySans_Oblique);
+
+    // 首次出现时居中
+    ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x / 2, ImGui::GetIO().DisplaySize.y / 2), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+    ImGui::Begin("Select Manga", is_show);
+
+    cJSON* mangas = bookshelf.Get_json_root();
+    cJSON* manga  = nullptr;
+
+    if(ImGui::BeginCombo("Manga", config.manga_title.c_str()))
+    {
+        for(int i = 0; i < cJSON_GetArraySize(mangas); i++)
+        {
+            cJSON* manga       = cJSON_GetArrayItem(mangas, i);
+            bool   is_selected = (config.manga_title == cJSON_GetObjectItem(manga, "title")->valuestring);
+            if(ImGui::Selectable(cJSON_GetObjectItem(manga, "title")->valuestring, is_selected))
+            {
+                config.manga_title = cJSON_GetObjectItem(manga, "title")->valuestring;
+                config.is_flashing = true;
+            }
+            if(is_selected) ImGui::SetItemDefaultFocus();
+        }
+        ImGui::EndCombo();
+    }
+
+    ImGui::End();
+
+    ImGui::PopFont();
+}
+
 void
 ImGui_Window_Menu(bool* is_show)
 {
-    static bool showAboutWindow = false;
+    static bool showAboutWindow  = false;
+    static bool showLoadResource = false;
+    static bool showSelectManga  = false;
 
     if(is_show && !*is_show) return;
 
@@ -215,9 +291,20 @@ ImGui_Window_Menu(bool* is_show)
     {
         if(ImGui::BeginMenu("File"))
         {
-            if(ImGui::MenuItem("Load", "Ctrl+L"))
+            if(ImGui::BeginMenu("Load", "Ctrl+L"))
             {
-                printf("Load\n");
+                if(ImGui::MenuItem("Load Resource"))
+                {
+                    showLoadResource = true;
+                }
+                if(ImGui::MenuItem("Load Config"))
+                {
+                }
+                if(ImGui::MenuItem("Load Manga List"))
+                {
+                }
+
+                ImGui::EndMenu();
             }
             if(ImGui::MenuItem("Save", "Ctrl+S"))
             {
@@ -227,6 +314,12 @@ ImGui_Window_Menu(bool* is_show)
             {
                 config.Stop_running();
             }
+            ImGui::EndMenu();
+        }
+
+        if(ImGui::BeginMenu("Manga"))
+        {
+            showSelectManga = true;
             ImGui::EndMenu();
         }
 
@@ -283,4 +376,10 @@ ImGui_Window_Menu(bool* is_show)
 
         ImGui::PopFont();
     }
+
+    // 加载资源窗口
+    ImGui_Window_Load_Resource(&showLoadResource);
+
+    // 选择漫画窗口
+    ImGui_Window_Select_Manga(&showSelectManga);
 }
