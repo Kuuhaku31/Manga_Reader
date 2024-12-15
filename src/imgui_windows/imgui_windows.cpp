@@ -5,20 +5,22 @@
 
 #include "bookshelf.h"
 #include "config.h"
+#include "console.h"
 
 static ImGui_setup& imgui     = ImGui_setup::Instance();
 static Config&      config    = Config::Instance();
 static Bookshelf&   bookshelf = Bookshelf::Instance();
+static Console&     console   = Console::Instance();
 
 void
-ImGui_Window_Book(SDL_Texture* texture, PageOutputFlag flag) // 显示图片
+ImGui_Window_Book(SDL_Texture* texture) // 显示图片
 {
     int w, h = 0;
     SDL_QueryTexture(texture, NULL, NULL, &w, &h); // 获取纹理大小
 
     ImVec2 output_size(w * config.manga_page_zoom, h * config.manga_page_zoom);
 
-    switch(flag)
+    switch(config.page_outpt_flag)
     {
     case PageOutputFlag::None:
     {
@@ -198,4 +200,25 @@ ImGui_Window_Manga_list(bool* is_show) // 显示漫画列表
     ImGui::End();
 
     ImGui::PopFont();
+}
+
+void
+ImGui_Window_Menu(bool* is_show)
+{
+    if(is_show && !*is_show) return;
+
+    ImGui::Begin("Menu", is_show);
+
+    ImGui::Checkbox("Show Config", &config.is_show_config_window);
+    ImGui::Checkbox("Show Manga List", &config.is_show_manga_list);
+    ImGui::Checkbox("Show Console", &config.is_show_console_window);
+    config.is_running = !ImGui::Button("Quit", ImVec2(75, 25));
+
+    ImGui_Window_Manga_list(&config.is_show_manga_list);
+
+    if(config.is_show_config_window) ImGui_Window_config(config.is_running, config.manga_page_zoom);
+
+    if(config.is_show_console_window) console.Draw("Console", &config.is_show_console_window);
+
+    ImGui::End();
 }

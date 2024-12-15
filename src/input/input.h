@@ -15,6 +15,12 @@ public:
     void Process_input();
 
 public:
+    bool is_escape_pressed = false;
+    bool is_escape_clicked = false;
+
+    bool is_F11_pressed = false;
+    bool is_F11_clicked = false;
+
     // '-' '='
     bool is_minus_pressed  = false;
     bool is_equals_pressed = false;
@@ -45,6 +51,9 @@ public:
 
     bool is_key_v_pressed = false;
     bool is_key_v_clicked = false;
+
+    bool is_key_m_pressed = false;
+    bool is_key_m_clicked = false;
 
     // 'UP' 'DOWN' 'LEFT' 'RIGHT'
     bool is_arrow_up_pressed    = false;

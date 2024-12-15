@@ -233,3 +233,10 @@ Config::Init_config()
 
     printf("Config initialized.\n");
 }
+
+void
+Config::Make_fullscreen(bool fullscreen)
+{
+    is_fullscreen = fullscreen;
+    SDL_SetWindowFullscreen(imgui.window, is_fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0);
+}

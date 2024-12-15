@@ -7,6 +7,15 @@
 
 #include <cJSON.h>
 
+enum class PageOutputFlag
+{
+    None,
+    Center,
+    LeftTop,
+    NormalSize,
+    CenterInWindow
+};
+
 // 单例模式
 class Config
 {
@@ -35,6 +44,11 @@ public:
     bool is_show_demo_window    = false;
     bool is_show_console_window = false;
     bool is_show_manga_list     = false;
+    bool is_show_menu           = false; // 显示菜单
+
+public:
+    bool Is_fullscreen() const { return is_fullscreen; }
+    void Make_fullscreen(bool fullscreen);
 
 public:
     bool is_running = true;
@@ -46,6 +60,11 @@ public:
     float       manga_page_zoom = 1.0f; // 纹理缩放
 
     Color clear_color = { 0xcc, 0xcc, 0xcc, 0xff };
+
+public:
+    SDL_Texture*   tex_page        = nullptr;
+    PageOutputFlag page_outpt_flag = PageOutputFlag::None;
+
 
 private:
     bool is_fullscreen = false;

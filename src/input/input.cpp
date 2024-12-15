@@ -45,8 +45,20 @@ Input::Process_input()
         {
             switch(e.key.keysym.sym)
             {
-            case SDLK_ESCAPE: imgui.Exit_fullscreen(); break;
-            case SDLK_F11: imgui.Enter_fullscreen(); break;
+            case SDLK_ESCAPE:
+            {
+                clicked_keys.push_back(&is_escape_clicked);
+                is_escape_clicked = true;
+                is_escape_pressed = true;
+                break;
+            }
+            case SDLK_F11:
+            {
+                clicked_keys.push_back(&is_F11_clicked);
+                is_F11_clicked = true;
+                is_F11_pressed = true;
+                break;
+            }
             case SDLK_MINUS: // "-"
             {
                 clicked_keys.push_back(&is_minus_clicked);
@@ -101,6 +113,13 @@ Input::Process_input()
                 clicked_keys.push_back(&is_key_v_clicked);
                 is_key_v_clicked = true;
                 is_key_v_pressed = true;
+                break;
+            }
+            case SDLK_m: //"m"
+            {
+                clicked_keys.push_back(&is_key_m_clicked);
+                is_key_m_clicked = true;
+                is_key_m_pressed = true;
                 break;
             }
             case SDLK_UP: // 向上
@@ -223,117 +242,31 @@ Input::Process_input()
         {
             switch(e.key.keysym.sym)
             {
-            case SDLK_w: //"w"
-            {
-                is_key_w_pressed = false;
-                break;
-            }
-            case SDLK_s: //"s"
-            {
-                is_key_s_pressed = false;
-                break;
-            }
-            case SDLK_a: //"a"
-            {
-                is_key_a_pressed = false;
-                break;
-            }
-            case SDLK_d: //"d"
-            {
-                is_key_d_pressed = false;
-                break;
-            }
-            case SDLK_c: //"c"
-            {
-                is_key_c_pressed = false;
-                break;
-            }
-            case SDLK_v: //"v"
-            {
-                is_key_v_pressed = false;
-                break;
-            }
-            case SDLK_UP: // 向上
-            {
-                is_arrow_up_pressed = false;
-                break;
-            }
-            case SDLK_DOWN: // 向下
-            {
-                is_arrow_down_pressed = false;
-                break;
-            }
-            case SDLK_LEFT: // 向左
-            {
-                is_arrow_left_pressed = false;
-                break;
-            }
-            case SDLK_RIGHT: // 向右
-            {
-                is_arrow_right_pressed = false;
-                break;
-            }
-            case SDLK_COMMA: // ","
-            {
-                is_comma_pressed = false;
-                break;
-            }
-            case SDLK_PERIOD: //"."
-            {
-                is_period_pressed = false;
-                break;
-            }
-            case SDLK_1: //"1"
-            {
-                is_key_1_pressed = false;
-                break;
-            }
-            case SDLK_2: //"2"
-            {
-                is_key_2_pressed = false;
-                break;
-            }
-            case SDLK_3: //"3"
-            {
-                is_key_3_pressed = false;
-                break;
-            }
-            case SDLK_4: //"4"
-            {
-                is_key_4_pressed = false;
-                break;
-            }
-            case SDLK_5: //"5"
-            {
-                is_key_5_pressed = false;
-                break;
-            }
-            case SDLK_6: //"6"
-            {
-                is_key_6_pressed = false;
-                break;
-            }
-            case SDLK_7: //"7"
-            {
-                is_key_7_pressed = false;
-                break;
-            }
-            case SDLK_8: //"8"
-            {
-                is_key_8_pressed = false;
-                break;
-            }
-            case SDLK_9: //"9"
-            {
-                is_key_9_pressed = false;
-                break;
-            }
-            case SDLK_0: //"0"
-            {
-                is_key_0_pressed = false;
-                break;
-            }
-
+            case SDLK_ESCAPE: is_escape_pressed = false; break;
+            case SDLK_F11: is_F11_pressed = false; break;
+            case SDLK_w: is_key_w_pressed = false; break;
+            case SDLK_s: is_key_s_pressed = false; break;
+            case SDLK_a: is_key_a_pressed = false; break;
+            case SDLK_d: is_key_d_pressed = false; break;
+            case SDLK_c: is_key_c_pressed = false; break;
+            case SDLK_v: is_key_v_pressed = false; break;
+            case SDLK_m: is_key_m_pressed = false; break;
+            case SDLK_UP: is_arrow_up_pressed = false; break;
+            case SDLK_DOWN: is_arrow_down_pressed = false; break;
+            case SDLK_LEFT: is_arrow_left_pressed = false; break;
+            case SDLK_RIGHT: is_arrow_right_pressed = false; break;
+            case SDLK_COMMA: is_comma_pressed = false; break;
+            case SDLK_PERIOD: is_period_pressed = false; break;
+            case SDLK_1: is_key_1_pressed = false; break;
+            case SDLK_2: is_key_2_pressed = false; break;
+            case SDLK_3: is_key_3_pressed = false; break;
+            case SDLK_4: is_key_4_pressed = false; break;
+            case SDLK_5: is_key_5_pressed = false; break;
+            case SDLK_6: is_key_6_pressed = false; break;
+            case SDLK_7: is_key_7_pressed = false; break;
+            case SDLK_8: is_key_8_pressed = false; break;
+            case SDLK_9: is_key_9_pressed = false; break;
+            case SDLK_0: is_key_0_pressed = false; break;
             default: break;
             };
             break;

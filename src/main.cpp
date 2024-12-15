@@ -14,10 +14,7 @@ static ImGui_setup& imgui     = ImGui_setup::Instance();
 static Config&      config    = Config::Instance();
 static Input&       input     = Input::Instance();
 static Bookshelf&   bookshelf = Bookshelf::Instance();
-
-PageOutputFlag page_outpt_flag = PageOutputFlag::None;
-
-SDL_Texture* tex_page = nullptr;
+static Console&     console   = Console::Instance();
 
 struct Page_pair
 {
@@ -163,7 +160,7 @@ Change_page(int d_page = 0)
         pair.path_B = bookshelf.Get_manga_page(config.manga_title.c_str(), config.manga_volume_idx, config.manga_page_idx + 1);
     }
 
-    Load_page(pair, tex_page);
+    Load_page(pair, config.tex_page);
 }
 
 int
@@ -174,28 +171,41 @@ main()
 
     config.Init();
 
-    Change_page(0);
-
-    Console console;
     console.AddLog("Welcome to ImGui Console!");
+
+    Change_page();
 
     while(config.is_running)
     {
         imgui.On_frame_begin();
 
+        if(input.is_escape_clicked)
+        {
+            if(config.Is_fullscreen())
+            {
+                config.Make_fullscreen(false);
+            }
+            else
+            {
+                config.is_running = false;
+            }
+        }
+        if(input.is_F11_clicked) config.Make_fullscreen(!config.Is_fullscreen());
+
         if(input.is_key_c_clicked) config.is_show_config_window = !config.is_show_config_window;
         if(input.is_key_v_clicked) config.is_show_manga_list = !config.is_show_manga_list;
+        if(input.is_key_m_clicked) config.is_show_menu = !config.is_show_menu;
 
         if(input.is_arrow_right_clicked) Change_page(2);
         if(input.is_arrow_left_clicked) Change_page(-2);
         if(input.is_arrow_up_clicked) Change_page(-1);
         if(input.is_arrow_down_clicked) Change_page(1);
 
-        page_outpt_flag = PageOutputFlag::None;
-        if(input.is_key_1_clicked) page_outpt_flag = PageOutputFlag::Center;
-        if(input.is_key_2_clicked) page_outpt_flag = PageOutputFlag::LeftTop;
-        if(input.is_key_3_clicked) page_outpt_flag = PageOutputFlag::NormalSize;
-        if(input.is_key_4_clicked) page_outpt_flag = PageOutputFlag::CenterInWindow;
+        config.page_outpt_flag = PageOutputFlag::None;
+        if(input.is_key_1_clicked) config.page_outpt_flag = PageOutputFlag::Center;
+        if(input.is_key_2_clicked) config.page_outpt_flag = PageOutputFlag::LeftTop;
+        if(input.is_key_3_clicked) config.page_outpt_flag = PageOutputFlag::NormalSize;
+        if(input.is_key_4_clicked) config.page_outpt_flag = PageOutputFlag::CenterInWindow;
 
         input.Process_input();
 
@@ -225,18 +235,14 @@ main()
             config.manga_page_pos.y = center.y + dv.y;
         }
 
-        ImGui_Window_Book(tex_page, page_outpt_flag);
+        ImGui_Window_Book(config.tex_page);
 
-        ImGui_Window_Manga_list(&config.is_show_manga_list);
-
-        if(config.is_show_config_window) ImGui_Window_config(config.is_running, config.manga_page_zoom);
-
-        if(config.is_show_console_window) console.Draw("Console", &config.is_show_console_window);
+        ImGui_Window_Menu(&config.is_show_menu);
 
         imgui.On_frame_end(&config.clear_color);
     }
 
-    SDL_DestroyTexture(tex_page);
+    SDL_DestroyTexture(config.tex_page);
 
     config.Quit();
 
