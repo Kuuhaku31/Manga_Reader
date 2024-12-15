@@ -8,6 +8,7 @@ aux_source_directory(./ SRC_FILES)
 aux_source_directory(./config SRC_FILES)
 aux_source_directory(./bookshelf SRC_FILES)
 aux_source_directory(./input SRC_FILES)
+aux_source_directory(./imgui_windows SRC_FILES)
 
 aux_source_directory(../lib SRC_FILES)
 
@@ -22,6 +23,7 @@ include_directories(./)
 include_directories(./config)
 include_directories(./bookshelf)
 include_directories(./input)
+include_directories(./imgui_windows)
 
 # 添加链接库
 # 查找cJSON
