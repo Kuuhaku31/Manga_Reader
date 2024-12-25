@@ -65,6 +65,8 @@ Config::Init()
     font_default = font_default = ImGui::GetIO().Fonts->AddFontDefault();
     // 加载支持中文的字体文件
     font_SmileySans_Oblique = ImGui::GetIO().Fonts->AddFontFromFileTTF("SmileySans-Oblique.ttf", 18.0f, nullptr, ImGui::GetIO().Fonts->GetGlyphRangesChineseFull());
+    // msmincho.ttc
+    font_msmincho = ImGui::GetIO().Fonts->AddFontFromFileTTF("msmincho.ttc", 18.0f, nullptr, ImGui::GetIO().Fonts->GetGlyphRangesJapanese());
 
     // 加载漫画配置
     cJSON* manga_config = cJSON_GetObjectItem(json_root, "manga_config");

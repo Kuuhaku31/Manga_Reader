@@ -38,6 +38,7 @@ public:
 public:
     ImFont* font_default            = nullptr;
     ImFont* font_SmileySans_Oblique = nullptr;
+    ImFont* font_msmincho           = nullptr;
 
 public:
     bool is_show_menu           = false; // 显示菜单

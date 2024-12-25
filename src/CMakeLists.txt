@@ -10,8 +10,6 @@ aux_source_directory(./bookshelf SRC_FILES)
 aux_source_directory(./input SRC_FILES)
 aux_source_directory(./imgui_windows SRC_FILES)
 
-aux_source_directory(../lib SRC_FILES)
-
 # 打印找到的源文件列表
 message(STATUS "Source files: ${SRC_FILES}")
 

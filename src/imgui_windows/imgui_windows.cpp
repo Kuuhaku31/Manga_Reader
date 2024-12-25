@@ -247,7 +247,7 @@ ImGui_Window_Select_Manga(bool* is_show)
 {
     if(is_show && !*is_show) return;
 
-    ImGui::PushFont(config.font_SmileySans_Oblique);
+    ImGui::PushFont(config.font_msmincho);
 
     // 首次出现时居中
     ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x / 2, ImGui::GetIO().DisplaySize.y / 2), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
