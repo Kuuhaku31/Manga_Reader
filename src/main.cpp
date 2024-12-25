@@ -5,14 +5,12 @@
 #include "config.h"
 #include "console.h"
 #include "imgui_windows.h"
-#include "input.h"
 
 #define D_MOVE 10
 #define D_ZOOM 0.01f
 
 static ImGui_setup& imgui     = ImGui_setup::Instance();
 static Config&      config    = Config::Instance();
-static Input&       input     = Input::Instance();
 static Bookshelf&   bookshelf = Bookshelf::Instance();
 static Console&     console   = Console::Instance();
 
@@ -179,7 +177,16 @@ main()
 
         imgui.On_frame_begin();
 
-        if(input.is_escape_clicked)
+
+        static Event e;
+        while(SDL_PollEvent(&e))
+        {
+            ImGui_ImplSDL2_ProcessEvent(&e);
+            if(e.type == SDL_QUIT) config.Stop_running();
+        }
+
+
+        if(ImGui::IsKeyPressed(ImGuiKey_Escape))
         {
             if(config.Is_fullscreen())
             {
@@ -190,33 +197,32 @@ main()
                 config.Stop_running();
             }
         }
-        if(input.is_F11_clicked) config.Make_fullscreen(!config.Is_fullscreen());
+        if(ImGui::IsKeyPressed(ImGuiKey_F11)) config.Make_fullscreen(!config.Is_fullscreen());
 
-        if(input.is_key_c_clicked) config.is_show_config_window = !config.is_show_config_window;
-        if(input.is_key_v_clicked) config.is_show_manga_list = !config.is_show_manga_list;
-        if(input.is_key_m_clicked) config.is_show_menu = !config.is_show_menu;
+        if(ImGui::IsKeyPressed(ImGuiKey_C)) config.is_show_config_window = !config.is_show_config_window;
+        if(ImGui::IsKeyPressed(ImGuiKey_V)) config.is_show_console_window = !config.is_show_console_window;
+        if(ImGui::IsKeyPressed(ImGuiKey_M)) config.is_show_manga_list = !config.is_show_manga_list;
 
-        if(input.is_arrow_right_clicked) Change_page(2);
-        if(input.is_arrow_left_clicked) Change_page(-2);
-        if(input.is_arrow_up_clicked) Change_page(-1);
-        if(input.is_arrow_down_clicked) Change_page(1);
+        if(ImGui::IsKeyPressed(ImGuiKey_RightArrow)) Change_page(2);
+        if(ImGui::IsKeyPressed(ImGuiKey_LeftArrow)) Change_page(-2);
+        if(ImGui::IsKeyPressed(ImGuiKey_UpArrow)) Change_page(-1);
+        if(ImGui::IsKeyPressed(ImGuiKey_DownArrow)) Change_page(1);
 
         config.page_outpt_flag = PageOutputFlag::None;
-        if(input.is_key_1_clicked) config.page_outpt_flag = PageOutputFlag::Center;
-        if(input.is_key_2_clicked) config.page_outpt_flag = PageOutputFlag::LeftTop;
-        if(input.is_key_3_clicked) config.page_outpt_flag = PageOutputFlag::NormalSize;
-        if(input.is_key_4_clicked) config.page_outpt_flag = PageOutputFlag::CenterInWindow;
+        if(ImGui::IsKeyPressed(ImGuiKey_1)) config.page_outpt_flag = PageOutputFlag::Center;
+        if(ImGui::IsKeyPressed(ImGuiKey_2)) config.page_outpt_flag = PageOutputFlag::LeftTop;
+        if(ImGui::IsKeyPressed(ImGuiKey_3)) config.page_outpt_flag = PageOutputFlag::NormalSize;
+        if(ImGui::IsKeyPressed(ImGuiKey_4)) config.page_outpt_flag = PageOutputFlag::CenterInWindow;
 
-        input.Process_input();
 
-        if(input.is_key_w_pressed) config.manga_page_pos.y += D_MOVE;
-        if(input.is_key_s_pressed) config.manga_page_pos.y -= D_MOVE;
-        if(input.is_key_a_pressed) config.manga_page_pos.x += D_MOVE;
-        if(input.is_key_d_pressed) config.manga_page_pos.x -= D_MOVE;
+        if(ImGui::IsKeyDown(ImGuiKey_W)) config.manga_page_pos.y += D_MOVE;
+        if(ImGui::IsKeyDown(ImGuiKey_S)) config.manga_page_pos.y -= D_MOVE;
+        if(ImGui::IsKeyDown(ImGuiKey_A)) config.manga_page_pos.x += D_MOVE;
+        if(ImGui::IsKeyDown(ImGuiKey_D)) config.manga_page_pos.x -= D_MOVE;
 
         float d_zoom = 1.0f;
-        if(input.is_comma_pressed) d_zoom = (1 - D_ZOOM);
-        if(input.is_period_pressed) d_zoom = (1 + D_ZOOM);
+        if(ImGui::IsKeyDown(ImGuiKey_Comma)) d_zoom = (1 - D_ZOOM);
+        if(ImGui::IsKeyDown(ImGuiKey_Period)) d_zoom = (1 + D_ZOOM);
 
         if(d_zoom != 1.0f)
         {
