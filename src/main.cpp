@@ -169,7 +169,7 @@ main()
 
     config.Init();
 
-    console.AddLog("Welcome to ImGui Console!");
+    console.ConsoleAddLog("Welcome to ImGui Console!");
 
     while(config.Is_running())
     {
@@ -201,7 +201,7 @@ main()
 
         if(ImGui::IsKeyPressed(ImGuiKey_C)) config.is_show_config_window = !config.is_show_config_window;
         if(ImGui::IsKeyPressed(ImGuiKey_V)) config.is_show_console_window = !config.is_show_console_window;
-        if(ImGui::IsKeyPressed(ImGuiKey_M)) config.is_show_manga_list = !config.is_show_manga_list;
+        if(ImGui::IsKeyPressed(ImGuiKey_M)) config.is_show_menu = !config.is_show_menu;
 
         if(ImGui::IsKeyPressed(ImGuiKey_RightArrow)) Change_page(2);
         if(ImGui::IsKeyPressed(ImGuiKey_LeftArrow)) Change_page(-2);
@@ -241,9 +241,9 @@ main()
             config.manga_page_pos.y = center.y + dv.y;
         }
 
-        ImGui_Window_Book();
+        ImGuiWin_Book();
 
-        ImGui_Window_Menu(&config.is_show_menu);
+        ImGuiWin_UI(&config.is_show_menu);
 
         imgui.On_frame_end(&config.clear_color);
     }

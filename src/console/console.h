@@ -3,7 +3,6 @@
 
 #pragma once
 
-#include <imgui.h>
 #include <string>
 #include <vector>
 
@@ -12,19 +11,27 @@
 class Console
 {
 public:
-    static Console& Instance();
+    typedef std::vector<std::string> Logs;
 
 public:
-    void AddLog(const char* fmt, ...) IM_FMTARGS(2);
+    bool scroll_to_bottom = false;
 
-    void Draw(const char* title, bool* p_open = NULL);
+public:
+    void ConsoleAddLog(const char* fmt, ...);
 
     void ScrollToBottom();
 
-private:
-    std::vector<std::string> logs;
+public:
+    void ClearLogs() { logs.clear(); }
 
-    bool scroll_to_bottom = false;
+    const Logs& GetLogs() const { return logs; }
+
+private:
+    Logs logs;
+
+
+public:
+    static Console& Instance();
 
 private:
     Console()                          = default;
