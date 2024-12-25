@@ -9,6 +9,7 @@ aux_source_directory(./config SRC_FILES)
 aux_source_directory(./bookshelf SRC_FILES)
 aux_source_directory(./console SRC_FILES)
 aux_source_directory(./imgui_windows SRC_FILES)
+aux_source_directory(./combin_page SRC_FILES)
 
 # 打印找到的源文件列表
 message(STATUS "Source files: ${SRC_FILES}")
@@ -22,6 +23,7 @@ include_directories(./config)
 include_directories(./bookshelf)
 include_directories(./console)
 include_directories(./imgui_windows)
+include_directories(./combin_page)
 
 # 添加链接库
 # 查找cJSON
@@ -37,6 +39,9 @@ if(cJSON_FOUND)
 else()
     message(FATAL_ERROR "cJSON not found!")
 endif()
+
+# 链接stb
+include_directories(E:/software/msys64/mingw64/include/stb)
 
 # 添加imgui_setup库
 include_directories(${IMGUISETUP_INCLUDE_DIRS})
