@@ -201,7 +201,7 @@ main()
 
         if(ImGui::IsKeyPressed(ImGuiKey_C)) config.is_show_config_window = !config.is_show_config_window;
         if(ImGui::IsKeyPressed(ImGuiKey_V)) config.is_show_console_window = !config.is_show_console_window;
-        if(ImGui::IsKeyPressed(ImGuiKey_M)) config.is_show_menu = !config.is_show_menu;
+        if(ImGui::IsKeyPressed(ImGuiKey_M)) config.is_show_ui = !config.is_show_ui;
 
         if(ImGui::IsKeyPressed(ImGuiKey_RightArrow)) Change_page(2);
         if(ImGui::IsKeyPressed(ImGuiKey_LeftArrow)) Change_page(-2);
@@ -243,7 +243,7 @@ main()
 
         ImGuiWin_Book();
 
-        ImGuiWin_UI(&config.is_show_menu);
+        ImGuiWin_UI(&config.is_show_ui);
 
         imgui.On_frame_end(&config.clear_color);
     }

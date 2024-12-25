@@ -82,7 +82,7 @@ Config::Init()
 
     // 加载imgui窗口配置
     cJSON* imgui_config    = cJSON_GetObjectItem(json_root, "imgui_config");
-    is_show_menu           = cJSON_IsTrue(cJSON_GetObjectItem(imgui_config, "is_show_menu"));
+    is_show_ui             = cJSON_IsTrue(cJSON_GetObjectItem(imgui_config, "is_show_menu"));
     is_show_config_window  = cJSON_IsTrue(cJSON_GetObjectItem(imgui_config, "is_show_config_window"));
     is_show_console_window = cJSON_IsTrue(cJSON_GetObjectItem(imgui_config, "is_show_console_window"));
     is_show_manga_list     = cJSON_IsTrue(cJSON_GetObjectItem(imgui_config, "is_show_manga_list"));
@@ -143,7 +143,7 @@ Config::Quit()
 
     // 保存imgui窗口配置
     cJSON* imgui_config = cJSON_GetObjectItem(json_root, "imgui_config");
-    cJSON_ReplaceItemInObject(imgui_config, "is_show_menu", cJSON_CreateBool(is_show_menu));
+    cJSON_ReplaceItemInObject(imgui_config, "is_show_menu", cJSON_CreateBool(is_show_ui));
     cJSON_ReplaceItemInObject(imgui_config, "is_show_config_window", cJSON_CreateBool(is_show_config_window));
     cJSON_ReplaceItemInObject(imgui_config, "is_show_console_window", cJSON_CreateBool(is_show_console_window));
     cJSON_ReplaceItemInObject(imgui_config, "is_show_manga_list", cJSON_CreateBool(is_show_manga_list));

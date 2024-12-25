@@ -15,9 +15,7 @@ static Console&     console   = Console::Instance();
 void
 ImGuiWin_TopMenu(bool* is_show)
 {
-    static bool showAboutWindow  = false;
-    static bool showLoadResource = false;
-    static bool showSelectManga  = false;
+    static bool showAboutWindow = false;
 
     if(is_show && !*is_show) return;
 
@@ -30,7 +28,7 @@ ImGuiWin_TopMenu(bool* is_show)
             {
                 if(ImGui::MenuItem("Load Resource"))
                 {
-                    showLoadResource = true;
+                    config.is_show_load_resources = true;
                 }
                 if(ImGui::MenuItem("Load Config"))
                 {
@@ -56,7 +54,7 @@ ImGuiWin_TopMenu(bool* is_show)
         {
             if(ImGui::MenuItem("Select Manga"))
             {
-                showSelectManga = true;
+                config.is_show_select_manga = true;
             }
             ImGui::EndMenu();
         }

@@ -41,12 +41,14 @@ public:
     ImFont* font_msmincho           = nullptr;
 
 public:
-    bool is_show_menu           = false; // 显示菜单
+    bool is_show_ui             = false; // 显示ui
+    bool is_show_top_menu       = true;  // 显示菜单
     bool is_show_config_window  = false;
     bool is_show_console_window = false;
+    bool is_show_select_manga   = false;
+    bool is_show_load_resources = false;
     bool is_show_manga_list     = false;
-
-    bool is_show_demo_window = false;
+    bool is_show_demo_window    = false;
 
 public:
     bool Is_fullscreen() const { return is_fullscreen; }
