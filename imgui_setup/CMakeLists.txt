@@ -3,8 +3,6 @@ project(imgui_setup)
 # 设置lib的输出路径
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/../lib)
 
-message(STATUS "lib path: ${PROJECT_SOURCE_DIR}")
-
 set(IMGUI_DIR D:/Project/GitHub/imgui)
 set(IMGUI_BACKENDS_DIR D:/Project/GitHub/imgui/backends)
 
@@ -30,9 +28,6 @@ if(SDL2_FOUND)
     message(STATUS "==SDL2 FOUND==")
     message(STATUS "SDL2_INCLUDE_DIRS: ${SDL2_INCLUDE_DIRS}")
     message(STATUS "SDL2_LIBRARIES: ${SDL2_LIBRARIES}")
-
-    target_include_directories(${PROJECT_NAME} PUBLIC ${SDL2_INCLUDE_DIRS})
-    target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
 else()
     message(FATAL_ERROR "SDL2 not found!")
 endif()
@@ -41,9 +36,6 @@ if(SDL_image_FOUND)
     message(STATUS "==SDL_image FOUND==")
     message(STATUS "SDL_image_INCLUDE_DIRS: ${SDL_image_INCLUDE_DIRS}")
     message(STATUS "SDL_image_LIBRARIES: ${SDL_image_LIBRARIES}")
-
-    target_include_directories(${PROJECT_NAME} PUBLIC ${SDL_image_INCLUDE_DIRS})
-    target_link_libraries(${PROJECT_NAME} ${SDL_image_LIBRARIES})
 else()
     message(FATAL_ERROR "SDL_image not found!")
 endif()
@@ -52,9 +44,6 @@ if(SDL2_GFX_FOUND)
     message(STATUS "==SDL2_GFX FOUND==")
     message(STATUS "SDL2_GFX_INCLUDE_DIRS: ${SDL2_GFX_INCLUDE_DIRS}")
     message(STATUS "SDL2_GFX_LIBRARIES: ${SDL2_GFX_LIBRARIES}")
-
-    target_include_directories(${PROJECT_NAME} PUBLIC ${SDL2_GFX_INCLUDE_DIRS})
-    target_link_libraries(${PROJECT_NAME} ${SDL2_GFX_LIBRARIES})
 else()
     message(FATAL_ERROR "SDL2_gfx not found!")
 endif()
@@ -63,9 +52,6 @@ if(SDL2_TTF_FOUND)
     message(STATUS "==SDL2_TTF FOUND==")
     message(STATUS "SDL2_TTF_INCLUDE_DIRS: ${SDL2_TTF_INCLUDE_DIRS}")
     message(STATUS "SDL2_TTF_LIBRARIES: ${SDL2_TTF_LIBRARIES}")
-
-    target_include_directories(${PROJECT_NAME} PUBLIC ${SDL2_TTF_INCLUDE_DIRS})
-    target_link_libraries(${PROJECT_NAME} ${SDL2_TTF_LIBRARIES})
 else()
     message(FATAL_ERROR "SDL2_ttf not found!")
 endif()
@@ -74,12 +60,26 @@ if(SDL2_MIXER_FOUND)
     message(STATUS "==SDL2_MIXER FOUND==")
     message(STATUS "SDL2_MIXER_INCLUDE_DIRS: ${SDL2_MIXER_INCLUDE_DIRS}")
     message(STATUS "SDL2_MIXER_LIBRARIES: ${SDL2_MIXER_LIBRARIES}")
-
-    target_include_directories(${PROJECT_NAME} PUBLIC ${SDL2_MIXER_INCLUDE_DIRS})
-    target_link_libraries(${PROJECT_NAME} ${SDL2_MIXER_LIBRARIES})
 else()
     message(FATAL_ERROR "SDL2_mixer not found!")
 endif()
+
+target_include_directories(${PROJECT_NAME}
+    PUBLIC
+    ${SDL2_INCLUDE_DIRS}
+    ${SDL_image_INCLUDE_DIRS}
+    ${SDL2_GFX_INCLUDE_DIRS}
+    ${SDL2_TTF_INCLUDE_DIRS}
+    ${SDL2_MIXER_INCLUDE_DIRS}
+)
+
+target_link_libraries(${PROJECT_NAME}
+    ${SDL2_LIBRARIES}
+    ${SDL_image_LIBRARIES}
+    ${SDL2_GFX_LIBRARIES}
+    ${SDL2_TTF_LIBRARIES}
+    ${SDL2_MIXER_LIBRARIES}
+)
 
 # 设置include目录
 set(IMGUISETUP_INCLUDE_DIRS
