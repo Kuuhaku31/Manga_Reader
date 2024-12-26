@@ -23,6 +23,25 @@ convert_BGR_to_RGB(unsigned char* data, int width, int height, int channels)
 }
 
 void
+save_image(SDL_Surface* surface, const char* output_path, uint32_t page_idx)
+{
+    // 保存
+    static char output_file[256];
+    if(!output_path) output_path = DEFAULT_OUTPUT_PATH;
+    sprintf(output_file, "%s/%04d.jpg", output_path, page_idx++);
+    stbi_write_jpg(
+        output_file,
+        surface->w,
+        surface->h,
+        4,
+        surface->pixels,
+        100
+
+    );
+    printf("output_file: %s\n", output_file);
+}
+
+void
 Combine(cJSON* page_list, uint32_t idx, bool is_single_page, bool is_right_to_left, const char* output_path)
 {
     // 检查合法性
@@ -49,23 +68,7 @@ Combine(cJSON* page_list, uint32_t idx, bool is_single_page, bool is_right_to_le
             if(surface_A) surface_B = SDL_ConvertSurfaceFormat(surface_A, SDL_PIXELFORMAT_RGBA32, 0);
         }
 
-        if(surface_B)
-        {
-            // 保存
-            char output_file[256];
-            if(!output_path) output_path = DEFAULT_OUTPUT_PATH;
-            sprintf(output_file, "%s/%04d.png", output_path, page_idx++);
-            stbi_write_png(
-                output_file,
-                surface_B->w,
-                surface_B->h,
-                4,
-                surface_B->pixels,
-                surface_B->pitch
-
-            );
-            printf("output_file: %s\n", output_file);
-        }
+        if(surface_B) save_image(surface_B, output_path, page_idx++);
 
         // 清理
         SDL_FreeSurface(surface_A);
@@ -173,19 +176,7 @@ Combine(cJSON* page_list, uint32_t idx, bool is_single_page, bool is_right_to_le
 
         );
 
-        // 保存纹理为png
-        char output_file[256];
-        if(!output_path) output_path = DEFAULT_OUTPUT_PATH;
-        // 用0填充，保证文件名长度相同
-        sprintf(output_file, "%s/%04d.png", output_path, page_idx++);
-        stbi_write_png(
-            output_file,
-            mergedImage->w,
-            mergedImage->h,
-            4,
-            mergedImage->pixels,
-            texture_w * 4);
-        printf("output_file: %s\n", output_file);
+        save_image(mergedImage, output_path, page_idx++);
 
         // 清理
         SDL_FreeSurface(surface_A);
