@@ -1,48 +1,66 @@
 
 project(reader)
 
-# 项目信息↑
+# 添加路径
+set(PATHS
+    config
+    bookshelf
+    console
+    imgui_windows
+    combin_page
+    imgui_setup
+)
 
-# 添加源文件
-aux_source_directory(./ SRC_FILES)
-aux_source_directory(./config SRC_FILES)
-aux_source_directory(./bookshelf SRC_FILES)
-aux_source_directory(./console SRC_FILES)
-aux_source_directory(./imgui_windows SRC_FILES)
-aux_source_directory(./combin_page SRC_FILES)
+foreach(PATH ${PATHS})
+    file(GLOB SRC_FILES ${SRC_FILES} ${PATH}/*.cpp)
+    set(INCLUDE_DIRS ${INCLUDE_DIRS} ${PATH})
+endforeach()
 
-# 打印找到的源文件列表
-message(STATUS "Source files: ${SRC_FILES}")
+#
+# 添加imgui
+set(IMGUI_DIR D:/Project/GitHub/imgui)
+set(IMGUI_BACKENDS_DIR D:/Project/GitHub/imgui/backends)
+set(MINGW64_INCLUDE_DIRS E:/software/msys64/mingw64/include)
 
-# 生成可执行文件
-add_executable(${PROJECT_NAME} ${SRC_FILES})
+aux_source_directory(${IMGUI_DIR} SRC_FILES)
+set(SRC_FILES
+    main.cpp
+    ${SRC_FILES}
+    ${IMGUI_BACKENDS_DIR}/imgui_impl_sdl2.cpp
+    ${IMGUI_BACKENDS_DIR}/imgui_impl_sdlrenderer2.cpp
+)
+
+foreach(SRC_FILE ${SRC_FILES})
+    message(STATUS "Source file: ${SRC_FILE}")
+endforeach()
+
+add_executable(${PROJECT_NAME} ${SRC_FILES}) # 生成可执行文件
 
 # 添加头文件
-include_directories(./)
-include_directories(./config)
-include_directories(./bookshelf)
-include_directories(./console)
-include_directories(./imgui_windows)
-include_directories(./combin_page)
+include_directories(
+    ${INCLUDE_DIRS}
+
+    ${MINGW64_INCLUDE_DIRS}/cJSON
+    ${MINGW64_INCLUDE_DIRS}/stb
+    ${MINGW64_INCLUDE_DIRS}/SDL2
+
+    ${IMGUI_DIR}
+    ${IMGUI_BACKENDS_DIR}
+)
 
 # 添加链接库
-# 查找cJSON
-find_package(cJSON REQUIRED)
+target_link_libraries(${PROJECT_NAME} PRIVATE
+    SDL2
+    SDL2_image
+    cJSON
+)
 
-if(cJSON_FOUND)
-    message(STATUS "==cJSON FOUND==")
-    message(STATUS "CJSON_INCLUDE_DIRS: ${CJSON_INCLUDE_DIRS}")
-    message(STATUS "CJSON_LIBRARIES: ${CJSON_LIBRARIES}")
+# 复制 DLL 文件到输出目录
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
 
-    include_directories(${CJSON_INCLUDE_DIRS}/cjson)
-    target_link_libraries(${PROJECT_NAME} ${CJSON_LIBRARIES})
-else()
-    message(FATAL_ERROR "cJSON not found!")
-endif()
+    E:/software/msys64/mingw64/bin/SDL2.dll
+    E:/software/msys64/mingw64/bin/SDL2_image.dll
 
-# 链接stb
-include_directories(E:/software/msys64/mingw64/include/stb)
-
-# 添加imgui_setup库
-include_directories(${IMGUISETUP_INCLUDE_DIRS})
-target_link_libraries(${PROJECT_NAME} imgui_setup)
+    $<TARGET_FILE_DIR:${PROJECT_NAME}>
+)

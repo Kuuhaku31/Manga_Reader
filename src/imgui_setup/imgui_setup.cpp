@@ -28,10 +28,6 @@ ImGui_setup::Init(const std::string& window_title, const Rect& window_rect, bool
     }
 
     IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG);
-    Mix_Init(MIX_INIT_MP3);
-    TTF_Init();
-
-    Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048); // 打开音频设备
 
     // From 2.0.18: Enable native IME.
     SDL_SetHint(SDL_HINT_IME_SHOW_UI, "1");
@@ -101,11 +97,8 @@ ImGui_setup::Quit()
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
 
-    Mix_CloseAudio(); // 关闭音频设备
-
-    TTF_Quit(); // 退出TTF
-    Mix_Quit(); // 退出Mixer
     IMG_Quit(); // 退出IMG
+
     SDL_Quit(); // 退出SDL
 
     return 0;

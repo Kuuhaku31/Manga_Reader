@@ -3,17 +3,12 @@
 
 #pragma once
 
-#define SDL_MAIN_HANDLED
-
 #include "imgui.h"
 #include "imgui_impl_sdl2.h"
 #include "imgui_impl_sdlrenderer2.h"
 
 #include <SDL.h>
-#include <SDL2_gfxPrimitives.h>
 #include <SDL_image.h>
-#include <SDL_mixer.h>
-#include <SDL_ttf.h>
 
 #include <string>
 #include <windows.h>

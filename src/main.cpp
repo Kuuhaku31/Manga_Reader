@@ -1,6 +1,8 @@
 
 // main.cpp
 
+#define SDL_MAIN_HANDLED
+
 #include "bookshelf.h"
 #include "config.h"
 #include "console.h"
@@ -162,7 +164,7 @@ Change_page(int d_page = 0)
 }
 
 int
-main()
+main(int argc, char* args[])
 {
     // 设置控制台输出编码为 UTF-8
     SetConsoleOutputCP(CP_UTF8);
