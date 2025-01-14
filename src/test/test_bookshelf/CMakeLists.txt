@@ -2,3 +2,7 @@
 
 # 设置二进制文件输出路径
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/test)
+
+project(test_bookshelf)
+set(SRC main.cpp)
+add_executable(${PROJECT_NAME} ${SRC})
