@@ -3,14 +3,46 @@
 
 #include "combin_page.h"
 
-#include "imgui_setup.h"
-
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
 
-static ImGui_setup& imgui = ImGui_setup::Instance();
+#include <avif.h>
+
+#include <SDL.h>
+#include <SDL_image.h>
+#include <filesystem>
+#include <fstream>
+#include <iostream>
+#include <vector>
 
 #define DEFAULT_OUTPUT_PATH "output"
+
+void
+stb_test()
+{
+    int width = 256, height = 256;
+
+    std::vector<unsigned char> image(width * height * 3); // RGB 图像
+
+    // 填充图像数据（生成简单的渐变图像）
+    for(int y = 0; y < height; ++y)
+    {
+        for(int x = 0; x < width; ++x)
+        {
+            int index        = (y * width + x) * 3;
+            image[index]     = static_cast<unsigned char>(x); // 红色分量
+            image[index + 1] = static_cast<unsigned char>(y); // 绿色分量
+            image[index + 2] = 128;                           // 蓝色分量
+        }
+    }
+
+    // 保存为 PNG 文件
+    if(!stbi_write_png("output.png", width, height, 3, image.data(), width * 3))
+    {
+        printf("Error: stbi_write_png failed.\n");
+        return;
+    }
+}
 
 void
 convert_BGR_to_RGB(unsigned char* data, int width, int height, int channels)
@@ -23,32 +55,111 @@ convert_BGR_to_RGB(unsigned char* data, int width, int height, int channels)
 }
 
 void
-save_image(SDL_Surface* surface, const char* output_path, uint32_t page_idx)
+write_file(const char* filename, const uint8_t* data, size_t size)
 {
-    // 保存
-    static char output_file[256];
-    if(!output_path) output_path = DEFAULT_OUTPUT_PATH;
-    sprintf(output_file, "%s/%04d.jpg", output_path, page_idx++);
-    stbi_write_jpg(
-        output_file,
-        surface->w,
-        surface->h,
-        4,
-        surface->pixels,
-        100
+    namespace fs = std::filesystem;
 
-    );
-    printf("output_file: %s\n", output_file);
+    fs::path filepath = filename;
+
+    std::ofstream ofs(filepath, std::ios::binary);
+    if(!ofs)
+    {
+        std::cerr << "Error opening file: " << filepath << std::endl;
+        return;
+    }
+
+    ofs.write(reinterpret_cast<const char*>(data), size);
+    ofs.close();
+
+    std::cout << "File '" << std::filesystem::path(filepath).string() << "' created successfully." << std::endl;
+}
+
+// 保存 SDL_Surface 为 AVIF 文件
+void
+SaveSurfaceAsAVIF(SDL_Surface* surface, const char* filename, int quality)
+{
+    if(!surface)
+    {
+        std::cerr << "Surface is null, cannot save as AVIF!" << std::endl;
+        return;
+    }
+
+    // 确保像素格式为 RGB 或 RGBA
+    if(surface->format->BytesPerPixel != 3 && surface->format->BytesPerPixel != 4)
+    {
+        std::cerr << "Unsupported pixel format! Use RGB or RGBA surfaces only." << std::endl;
+        return;
+    }
+
+    // 初始化 avifImage
+    avifImage* avif = avifImageCreate(surface->w, surface->h, 8, AVIF_PIXEL_FORMAT_YUV444);
+    if(!avif)
+    {
+        std::cerr << "Failed to create avifImage!" << std::endl;
+        return;
+    }
+
+    // 填充像素数据（将 SDL_Surface 转换为 YUV）
+    unsigned char* pixels = static_cast<unsigned char*>(surface->pixels);
+    avifRGBImage   rgb;
+    avifRGBImageSetDefaults(&rgb, avif);
+    rgb.format   = (surface->format->BytesPerPixel == 3) ? AVIF_RGB_FORMAT_RGB : AVIF_RGB_FORMAT_RGBA;
+    rgb.depth    = 8;
+    rgb.rowBytes = surface->pitch;
+    rgb.pixels   = pixels;
+
+    if(avifImageRGBToYUV(avif, &rgb) != AVIF_RESULT_OK)
+    {
+        std::cerr << "Failed to convert RGB to YUV!" << std::endl;
+        avifImageDestroy(avif);
+        return;
+    }
+
+    // 编码 AVIF
+    avifEncoder* encoder  = avifEncoderCreate();
+    encoder->maxThreads   = 4;
+    encoder->minQuantizer = 63 - (quality * 63 / 100); // 根据质量调整量化器
+    encoder->maxQuantizer = encoder->minQuantizer;
+
+    avifRWData encodedData = AVIF_DATA_EMPTY;
+    avifResult result      = avifEncoderWrite(encoder, avif, &encodedData);
+    if(result != AVIF_RESULT_OK)
+    {
+        std::cerr << "Failed to encode AVIF: " << avifResultToString(result) << std::endl;
+    }
+    else
+    {
+        // 写入文件
+        write_file(filename, encodedData.data, encodedData.size);
+    }
+
+    // 释放资源
+    avifRWDataFree(&encodedData);
+    avifEncoderDestroy(encoder);
+    avifImageDestroy(avif);
 }
 
 void
-Combine(cJSON* page_list, uint32_t idx, bool is_single_page, bool is_right_to_left, const char* output_path)
+save_image(SDL_Surface* surface, const char* output_path, uint32_t page_idx)
 {
+    // 生成输出文件名
+    static char output_file[256];
+    if(!output_path) output_path = DEFAULT_OUTPUT_PATH;
+    sprintf(output_file, "%s\\%04d.avif", output_path, page_idx);
+    printf("output_file: %s\n", output_file);
+
+    // 保存为 avif 文件
+    SaveSurfaceAsAVIF(surface, output_file, 100);
+}
+
+void
+Combine(SDL_Renderer* renderer, cJSON* page_list, uint32_t idx, bool is_single_page, bool is_right_to_left, const char* output_path)
+{
+    if(!renderer) return;
+
     // 检查合法性
     if(!cJSON_IsArray(page_list)) return;
     if(idx >= cJSON_GetArraySize(page_list)) return;
-
-    SDL_Renderer* renderer = imgui.renderer;
 
     SDL_Surface* surface_A   = nullptr;
     SDL_Surface* surface_B   = nullptr;

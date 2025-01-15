@@ -5,6 +5,18 @@
 
 #include <cJSON.h>
 #include <stdint.h>
+#include <string>
+#include <vector>
+
+class MangaVolume
+{
+private:
+    std::vector<std::string> pages_paths;
+};
+
+class MangaBook
+{
+};
 
 // 单例模式
 class Bookshelf
@@ -34,6 +46,7 @@ private:
     static const cJSON* find_volume(const cJSON* manga, uint32_t target_volume_index); // 查找卷
     static const char*  find_page(const cJSON* volume, uint32_t target_page_index);    // 查找页
 
+public:
     static void load_volume_pages_paths(cJSON* pages_paths, const char* volume_path); // 加载卷页路径
 
 private:
