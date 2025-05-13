@@ -9,17 +9,17 @@ set(SRC main.cpp)
 aux_source_directory(${MOD_PATH_BOOKSHELF} SRC)
 aux_source_directory(${MOD_PATH_COMBIN_PAGE} SRC)
 include_directories(
+    ${THIRD_PARTY_INC_PATHS}
+
     ${MOD_PATH_BOOKSHELF}
     ${MOD_PATH_COMBIN_PAGE}
-    E:/software/msys64/mingw64/include/cjson
     E:/software/msys64/mingw64/include/stb
     E:/software/msys64/mingw64/include/SDL2
     E:/software/msys64/mingw64/include/avif
 )
 add_executable(${PROJECT_NAME} ${SRC})
 target_link_libraries(${PROJECT_NAME} PRIVATE
-    cJSON
-    SDL2
-    SDL2_image
+    third_party
+
     avif
 )
